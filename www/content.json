@@ -1,0 +1,2181 @@
+{
+  "version": "v3.0.0",
+  "updatedAt": "2026-05-16",
+  "schemaVersion": 3,
+  "hero": {
+    "title": "Construye agentes IA reales en ocho semanas.",
+    "subtitle": "Tres módulos, doce sesiones y tres proyectos integradores: de los fundamentos teóricos de Anthropic a un sistema agéntico funcionando en producción — PulseCore."
+  },
+  "modules": [
+    {
+      "id": 1,
+      "num": "I",
+      "title": "Fundamentos",
+      "sub": "De qué hablamos cuando hablamos de agentes"
+    },
+    {
+      "id": 2,
+      "num": "II",
+      "title": "Arquitectura",
+      "sub": "Memoria, modelos y orquestación"
+    },
+    {
+      "id": 3,
+      "num": "III",
+      "title": "PulseCore",
+      "sub": "Construyendo el producto real"
+    }
+  ],
+  "weeks": [
+    {
+      "n": 1,
+      "title": "Fundamentos del agente",
+      "duration": "~2.2 h",
+      "sessions": [
+        1,
+        2
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Patrones y prompts",
+      "duration": "~2.2 h",
+      "sessions": [
+        3,
+        4
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Memoria + Proyecto 1",
+      "duration": "~5 h",
+      "sessions": [
+        5
+      ],
+      "extra": "Proyecto 1 — Diseña tu primer agente"
+    },
+    {
+      "n": 4,
+      "title": "Modelos y orquestación",
+      "duration": "~2.1 h",
+      "sessions": [
+        6,
+        7
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Los 5 Guards + Proyecto 2",
+      "duration": "~7 h",
+      "sessions": [
+        8
+      ],
+      "extra": "Proyecto 2 — Arquitectura multi-agente"
+    },
+    {
+      "n": 6,
+      "title": "Multi-tenant y observabilidad",
+      "duration": "~2.1 h",
+      "sessions": [
+        9,
+        10
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Setup del entorno",
+      "duration": "~1 h",
+      "sessions": [
+        11
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Primer commit + Proyecto 3",
+      "duration": "~1.3 h",
+      "sessions": [
+        12
+      ],
+      "extra": "Proyecto 3 — PulseCore en producción"
+    }
+  ],
+  "projects": [
+    {
+      "n": 1,
+      "after": "Después del Módulo I",
+      "duration": "3–5 h",
+      "difficulty": "Práctico",
+      "tone": "b1",
+      "icon": "ic-puzzle",
+      "title": "Diseña tu primer agente",
+      "desc": "Aplica todo lo del Módulo I en papel: documento de propósito, system prompt de 200–280 palabras, catálogo de 5 tools con JSON schemas, plan de evaluación y ADR de decisiones."
+    },
+    {
+      "n": 2,
+      "after": "Después del Módulo II",
+      "duration": "5–8 h",
+      "difficulty": "Diseño técnico",
+      "tone": "b2",
+      "icon": "ic-network",
+      "title": "Arquitectura multi-agente",
+      "desc": "Diseña la V2 de tu sistema: diagrama completo, framework agéntico, vector DB, routing de modelos, multi-tenant con RLS y plan de observabilidad — todo documentado en ADRs."
+    },
+    {
+      "n": 3,
+      "after": "Final del curso",
+      "duration": "12 semanas",
+      "difficulty": "Implementación real",
+      "tone": "b3",
+      "icon": "ic-rocket",
+      "title": "PulseCore en producción",
+      "desc": "Bloque por bloque, con tests, observabilidad y disciplina: 11 bloques de implementación, beta privada con 3 clientes piloto y plan de go-to-market inicial."
+    }
+  ],
+  "rules": [
+    {
+      "title": "Simplicidad progresiva",
+      "desc": "Empieza con la solución más simple. Sube en complejidad solo cuando los datos lo justifiquen — no antes."
+    },
+    {
+      "title": "Agent-Computer Interface",
+      "desc": "Dedica tanto esfuerzo a diseñar buenas tools, schemas y errores estructurados como dedicas a la UI para humanos."
+    },
+    {
+      "title": "El control siempre es tuyo",
+      "desc": "El LLM nunca toca tu DB ni tus APIs. Solo solicita acciones. Tu código ejecuta o rechaza. Esa separación es la seguridad."
+    },
+    {
+      "title": "Sweet spot 150–300 palabras",
+      "desc": "El system prompt como contrato. Ni demasiado corto ni un ensayo: 150–300 palabras es donde Claude rinde mejor."
+    },
+    {
+      "title": "XML > Markdown para Claude",
+      "desc": "Claude fue entrenado con énfasis especial en XML tags. Para Claude, estructurar el prompt con XML supera a Markdown."
+    },
+    {
+      "title": "Permiso explícito para no sé",
+      "desc": "Si nunca le das esa opción, el modelo inventa. Una línea autorizando INSUFFICIENT_DATA reduce alucinaciones drásticamente."
+    },
+    {
+      "title": "Regla 70/20/10",
+      "desc": "Haiku para el 70% del tráfico, Sonnet para el 20%, Opus reservado para el 10% crítico. Así no quemas dinero."
+    },
+    {
+      "title": "Errores estructurados",
+      "desc": "Cada tool retorna success / error_code / suggestion. No excepciones. El agente debe poder corregirse con la información que recibe."
+    },
+    {
+      "title": "Bloques funcionales",
+      "desc": "Cada bloque deja el sistema funcional pero no completo. Acumulas funcionalidad sin nunca romper lo previo."
+    },
+    {
+      "title": "Multi-tenant no-negociable",
+      "desc": "RLS, defense in depth, audit log append-only. Un solo bug de aislamiento puede destruir tu empresa. Sin atajos."
+    }
+  ],
+  "resources": {
+    "anthropic": [
+      {
+        "title": "Tool use with Claude — guía oficial",
+        "author": "Anthropic Platform Docs",
+        "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+        "official": true,
+        "icon": "ic-file"
+      },
+      {
+        "title": "Introducing advanced tool use (Tool Search, PTC, Examples)",
+        "author": "Anthropic Engineering Blog",
+        "url": "https://www.anthropic.com/engineering/advanced-tool-use",
+        "official": true,
+        "icon": "ic-code"
+      },
+      {
+        "title": "Building Effective AI Agents — Architecture Patterns (PDF)",
+        "author": "Anthropic Resources",
+        "url": "https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf",
+        "official": true,
+        "icon": "ic-layers"
+      },
+      {
+        "title": "Prompting best practices for tool use",
+        "author": "Anthropic Docs",
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+        "official": true,
+        "icon": "ic-book"
+      },
+      {
+        "title": "Claude API Pricing",
+        "author": "Anthropic Platform Docs",
+        "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+        "official": true,
+        "icon": "ic-file"
+      }
+    ],
+    "sdk": [
+      {
+        "title": "Best practices for Claude Code",
+        "author": "code.claude.com",
+        "url": "https://code.claude.com/docs/en/best-practices",
+        "official": true,
+        "icon": "ic-code"
+      },
+      {
+        "title": "Agent SDK overview",
+        "author": "code.claude.com",
+        "url": "https://code.claude.com/docs/en/agent-sdk/overview",
+        "official": true,
+        "icon": "ic-code"
+      },
+      {
+        "title": "Agent SDK Quickstart",
+        "author": "platform.claude.com",
+        "url": "https://platform.claude.com/docs/en/agent-sdk/quickstart",
+        "official": true,
+        "icon": "ic-zap"
+      },
+      {
+        "title": "Building agents with the Claude Agent SDK",
+        "author": "Anthropic Engineering",
+        "url": "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
+        "official": true,
+        "icon": "ic-layers"
+      },
+      {
+        "title": "Claude Code Advanced Patterns (PDF)",
+        "author": "Anthropic Resources",
+        "url": "https://resources.anthropic.com/hubfs/Claude%20Code%20Advanced%20Patterns_%20Subagents,%20MCP,%20and%20Scaling%20to%20Real%20Codebases.pdf",
+        "official": true,
+        "icon": "ic-layers"
+      }
+    ],
+    "mcp": [
+      {
+        "title": "Model Context Protocol — overview",
+        "author": "Anthropic",
+        "url": "https://www.anthropic.com/news/model-context-protocol",
+        "official": true,
+        "icon": "ic-network"
+      },
+      {
+        "title": "MCP Specification & SDKs",
+        "author": "modelcontextprotocol.io",
+        "url": "https://modelcontextprotocol.io/",
+        "official": true,
+        "icon": "ic-code"
+      },
+      {
+        "title": "Code execution with MCP",
+        "author": "Anthropic Engineering",
+        "url": "https://www.anthropic.com/engineering/code-execution-with-mcp",
+        "official": true,
+        "icon": "ic-zap"
+      },
+      {
+        "title": "Introduction to MCP (curso gratuito)",
+        "author": "Anthropic Skilljar",
+        "url": "https://anthropic.skilljar.com/introduction-to-model-context-protocol",
+        "official": true,
+        "icon": "ic-book"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Building Effective Agents",
+        "author": "Schluntz & Zhang · Anthropic (2024)",
+        "url": "https://www.anthropic.com/research/building-effective-agents",
+        "official": true,
+        "icon": "ic-file"
+      },
+      {
+        "title": "ReAct: Synergizing Reasoning and Acting",
+        "author": "Yao et al. · ICLR 2023 (arXiv:2210.03629)",
+        "url": "https://arxiv.org/abs/2210.03629",
+        "official": false,
+        "icon": "ic-file"
+      },
+      {
+        "title": "Rethinking the Role of Demonstrations",
+        "author": "Min et al. · EMNLP 2022 (arXiv:2202.12837)",
+        "url": "https://arxiv.org/abs/2202.12837",
+        "official": false,
+        "icon": "ic-file"
+      }
+    ],
+    "otros": [
+      {
+        "title": "Building AI Agents with Anthropic's 6 Composable Patterns",
+        "author": "AIMultiple (2026)",
+        "url": "https://aimultiple.com/building-ai-agents",
+        "official": false,
+        "icon": "ic-book"
+      },
+      {
+        "title": "Demystifying ReAct — Why Reasoning + Acting is Standard",
+        "author": "DEV Community",
+        "url": "https://dev.to/4484ho/demystifying-react-why-reasoning-and-acting-is-the-standard-for-llm-agents-1ii6",
+        "official": false,
+        "icon": "ic-book"
+      },
+      {
+        "title": "What is a ReAct Agent?",
+        "author": "IBM Think",
+        "url": "https://www.ibm.com/think/topics/react-agent",
+        "official": false,
+        "icon": "ic-book"
+      },
+      {
+        "title": "OpenTelemetry for LLMs (Guide 2026)",
+        "author": "OpenObserve",
+        "url": "https://openobserve.ai/blog/opentelemetry-for-llms/",
+        "official": false,
+        "icon": "ic-book"
+      },
+      {
+        "title": "Multi-tenant data isolation con PostgreSQL RLS",
+        "author": "AWS Database Blog",
+        "url": "https://aws.amazon.com/blogs/database/multi-tenant-data-isolation-with-postgresql-row-level-security/",
+        "official": false,
+        "icon": "ic-book"
+      }
+    ]
+  },
+  "sessions": [
+    {
+      "n": 1,
+      "mod": 1,
+      "id": 1,
+      "module": 1,
+      "title": "Qué es un agente de IA",
+      "sub": "LLM vs workflow vs agente verdadero",
+      "duration": "45 min",
+      "hours": 1.0,
+      "objs": [
+        "Distinguir LLM puro, workflow y agente con precisión técnica",
+        "Identificar los 3 componentes irreducibles: cerebro, tools, objetivo",
+        "Comprender el ciclo ReAct (Reasoning + Acting) en detalle",
+        "Reconocer los 5 anti-patrones que destruyen sistemas agénticos"
+      ],
+      "reading": "Building Effective Agents (Schluntz & Zhang, Anthropic 2024) — secciones 1-3",
+      "exercise": "Diseña conceptualmente HealthGuard: objetivo + 3 tools + criterios de éxito.",
+      "deep": {
+        "intro": "Antes de definir qué es un agente, hay que entender **por qué fueron necesarios**. Los modelos de lenguaje grandes (LLMs) son amnésicos: solo transforman texto en texto. No saben qué hora es, no pueden leer un archivo, no pueden enviar un email, no pueden verificar si un servidor está vivo. Su universo es solo texto.\n\nEsa limitación es invisible en una conversación casual, pero apenas el problema requiere información que el modelo no tiene o acciones que no puede ejecutar, el LLM puro se queda corto.\n\nUn agente conecta el cerebro del LLM con el mundo real. Anthropic, en *Building Effective Agents* (Schluntz & Zhang, 2024), lo define con precisión quirúrgica:\n\n> \"Los agentes son sistemas donde los LLMs **dirigen dinámicamente** sus propios procesos y uso de herramientas, manteniendo el control sobre cómo cumplen las tareas.\"\n\nTres palabras importan: **dinámicamente** (el agente decide en cada paso qué hacer), **sus propios procesos** (planifica, no solo ejecuta) y **uso de herramientas** (puede invocar funciones reales).\n\nNo todo lo que usa un LLM es un agente. Un *workflow* tiene los pasos escritos en código — siempre el mismo orden. Un *agente* tiene los pasos decididos por el LLM — orden dinámico según el contexto. Esta distinción cuesta dinero: workflows son baratos y predecibles; agentes son flexibles pero más caros y difíciles de debuggear.",
+        "sections": [
+          {
+            "title": "Los 3 componentes irreducibles",
+            "body": "Todo agente — por simple o complejo que sea — tiene exactamente tres componentes. Si te falta uno, no es un agente. Si tienes los tres, lo es:\n\n**1. Cerebro (el LLM)** — el modelo que razona, planifica y decide. En PulseCore: Claude Haiku 4.5 para tareas simples, Sonnet 4.6 para razonamiento medio, Opus 4.7 para decisiones críticas.\n\n**2. Herramientas (tools)** — funciones de código que el agente puede invocar. Por ejemplo: `ping_service()`, `restart_service()`, `send_slack()`. El agente *solicita* la invocación; tu código la ejecuta.\n\n**3. Objetivo (system prompt)** — para qué existe el agente, expresado en lenguaje natural. Ejemplo: \"Vigila que FleetPro responda bajo 3 segundos. Si falla 3 veces consecutivas, notifica al canal #alerts con contexto del último deploy.\"\n\nSin cerebro no hay razonamiento. Sin herramientas no hay acción posible en el mundo real. Sin objetivo, el cerebro no sabe qué resolver. **Los tres se diseñan juntos**, no en serie.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Esqueleto de un agente con Claude Agent SDK",
+                "src": "from anthropic import Anthropic\n\nclient = Anthropic()\n\nSYSTEM_PROMPT = \"\"\"Eres HealthGuard, un agente que vigila la disponibilidad de servicios.\nObjetivo: verificar si un servicio responde. Si falla 3 veces, notificar.\nTienes acceso a ping_service y send_slack.\"\"\"\n\nTOOLS = [\n    {\n        \"name\": \"ping_service\",\n        \"description\": \"Hace ping a un endpoint HTTP. Devuelve si responde.\",\n        \"input_schema\": {\n            \"type\": \"object\",\n            \"properties\": {\"url\": {\"type\": \"string\"}},\n            \"required\": [\"url\"]\n        }\n    },\n    {\n        \"name\": \"send_slack\",\n        \"description\": \"Envía un mensaje a un canal de Slack.\",\n        \"input_schema\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"channel\": {\"type\": \"string\"},\n                \"message\": {\"type\": \"string\"}\n            },\n            \"required\": [\"channel\", \"message\"]\n        }\n    }\n]\n\nresponse = client.messages.create(\n    model=\"claude-haiku-4-5\",\n    max_tokens=1024,\n    system=SYSTEM_PROMPT,\n    tools=TOOLS,\n    messages=[{\"role\": \"user\", \"content\": \"Verifica FleetPro: https://api.fleetpro.com/health\"}]\n)\nprint(response.content)"
+              }
+            ]
+          },
+          {
+            "title": "El ciclo ReAct: cómo piensa un agente",
+            "body": "ReAct es el mecanismo central de todo agente moderno. Propuesto por Yao et al. (ICLR 2023, arXiv:2210.03629), significa **Reasoning + Acting**. El ciclo tiene cuatro fases que se repiten:\n\n**1. PIENSA** — el LLM recibe el estado actual y razona \"en voz alta\": *\"Necesito averiguar si el servidor responde. Voy a hacer ping primero.\"* Esa cadena se llama *chain-of-thought*. Wei et al. (2022) demostró que escribirla explícitamente mejora la precisión dramáticamente.\n\n**2. ACTÚA** — el LLM decide qué herramienta invocar y con qué argumentos. No la ejecuta él mismo: le dice a tu sistema *\"Llama a `ping_service(url='https://api.fleetpro.com/health')`\"*. Tu código ejecuta.\n\n**3. OBSERVA** — tu sistema devuelve al LLM el resultado: *\"El servidor no respondió en 5 segundos (timeout)\"*. Esa observación se convierte en parte del contexto.\n\n**4. DECIDE** — con la nueva observación, el LLM razona de nuevo. ¿Tiene ya suficiente información? Si sí, termina. Si no, vuelve al paso 1 con más contexto.\n\nEl ciclo puede iterar 2 veces o 50. **El propio agente decide cuándo terminar.** Tú le pones un `max_iterations` (10-20 típicamente) para evitar loops infinitos.",
+            "code": [
+              {
+                "lang": "text",
+                "label": "Trace real de HealthGuard ejecutándose",
+                "src": "[ITERACIÓN 1]\nPIENSA: \"Mi objetivo es verificar si FleetPro está vivo.\n        Voy a empezar haciendo ping al endpoint de salud.\"\nACTÚA:  ping_service(url=\"https://api.fleetpro.com/health\")\nOBSERVA: { \"responded\": false, \"error\": \"timeout 5s\" }\n\n[ITERACIÓN 2]\nPIENSA: \"No responde. Pero un solo ping puede ser ruido de red.\n        Hago otro intento para confirmar.\"\nACTÚA:  ping_service(url=\"https://api.fleetpro.com/health\")\nOBSERVA: { \"responded\": false, \"error\": \"timeout 5s\" }\n\n[ITERACIÓN 3]\nPIENSA: \"Confirmado, está caído. Antes de notificar, reviso si\n        hubo un deploy reciente que podría explicar el problema.\"\nACTÚA:  list_recent_deploys(service=\"fleetpro\", hours=1)\nOBSERVA: { \"deploys\": [{\"time\": \"12 min ago\", \"version\": \"v2.4.1\"}] }\n\n[ITERACIÓN 4]\nPIENSA: \"Hubo deploy hace 12 minutos. Notifico con contexto completo.\"\nACTÚA:  send_slack(\n          channel=\"#alerts\",\n          message=\"🚨 FleetPro API caída. Causa probable: deploy v2.4.1 hace 12 min.\"\n        )\nOBSERVA: { \"sent\": true }\n\n[ITERACIÓN 5]\nPIENSA: \"Notificación enviada. Objetivo cumplido.\"\nTERMINA."
+              }
+            ]
+          },
+          {
+            "title": "Workflow vs Agente: la decisión que cuesta dinero",
+            "body": "La diferencia es operacional: en un **workflow**, los pasos están escritos en código — siempre se ejecutan en el mismo orden, con la misma lógica. En un **agente**, los pasos los decide el LLM — el orden depende del contexto.\n\n**Workflow es mejor cuando:**\n- La tarea es repetitiva y predecible.\n- Los costos importan (workflows son 5-20× más baratos).\n- Necesitas garantías estrictas (compliance, finanzas, healthcare).\n- Quieres tests deterministas.\n\n**Agente es mejor cuando:**\n- La entrada es ambigua o variable (\"resuelve esta incidencia\").\n- No conoces los pasos de antemano.\n- El espacio de soluciones es grande y la mejor varía caso a caso.\n- El usuario está dispuesto a pagar por flexibilidad.\n\nAnthropic recomienda **simplicidad progresiva**: empieza con un prompt simple. Si no alcanza, añade tools. Si no alcanza, monta un workflow. Solo después subes a agente. Solo después a multi-agente. **Cada paso requiere justificar por qué el anterior no funcionó.**"
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Usar agente para tareas determinísticas",
+            "desc": "Si tu tarea siempre hace los mismos 4 pasos en el mismo orden, no necesitas un agente — necesitas un script.",
+            "fix": "Pregúntate: '¿el orden de los pasos cambia según el input?' Si no, usa un workflow. Pagarás menos y debuggearás más fácil."
+          },
+          {
+            "title": "No medir éxito antes de construir",
+            "desc": "Sin criterio de éxito, no sabes si el agente funciona. Solo sabes que respondió algo.",
+            "fix": "Antes del primer prompt, define: ¿qué cuenta como tarea cumplida? ¿con qué métrica lo mides? Aunque sea cualitativa: 'el humano dice que la respuesta es útil 90% del tiempo'."
+          },
+          {
+            "title": "Olvidar max_iterations",
+            "desc": "En el paper ReAct los autores notaron que los modelos pueden quedar atrapados en loops repetitivos. En producción esto puede consumir cientos de dólares en API calls antes de detenerse.",
+            "fix": "Siempre configura `max_iterations` (10-20) y un timeout total (60s). Es 3 líneas de código que te ahorran facturas catastróficas."
+          },
+          {
+            "title": "Esperar que el modelo lea tu mente",
+            "desc": "Si no le dices al agente qué hacer cuando faltan datos, inventará.",
+            "fix": "Da permiso explícito en el system prompt: 'Si no tienes suficiente información, responde con INSUFFICIENT_DATA en lugar de adivinar.'"
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Cuál de estos NO es un componente irreducible de un agente?",
+            "options": [
+              "Cerebro (LLM)",
+              "Herramientas (tools)",
+              "Base de datos vectorial",
+              "Objetivo (system prompt)"
+            ],
+            "correct": 2,
+            "explain": "Los 3 componentes irreducibles son cerebro, herramientas y objetivo. La memoria vectorial es útil pero no necesaria — un agente puede operar sin ella (HealthGuard del ejemplo no usa memoria)."
+          },
+          {
+            "q": "En el ciclo ReAct, ¿quién ejecuta la herramienta?",
+            "options": [
+              "El LLM directamente",
+              "Tu sistema (el LLM solo la solicita)",
+              "Anthropic en sus servidores",
+              "La base de datos"
+            ],
+            "correct": 1,
+            "explain": "El LLM nunca ejecuta tools directamente. Solo emite una solicitud estructurada (nombre + args). Tu código ejecuta la función real y devuelve el resultado como observación. Esa separación es la base de la seguridad."
+          },
+          {
+            "q": "¿Cuándo es MEJOR usar un workflow que un agente?",
+            "options": [
+              "Cuando la tarea es ambigua",
+              "Cuando la tarea es predecible y necesitas costos bajos",
+              "Cuando quieres más flexibilidad",
+              "Cuando tienes presupuesto ilimitado"
+            ],
+            "correct": 1,
+            "explain": "Workflows son 5-20× más baratos que agentes y son testeables determinísticamente. Si tu tarea siempre hace los mismos pasos, un workflow es la elección correcta."
+          },
+          {
+            "q": "¿Qué hace la fase 'OBSERVA' del ciclo ReAct?",
+            "options": [
+              "El LLM mira el código",
+              "Tu sistema devuelve al LLM el resultado de la tool",
+              "El usuario observa al agente",
+              "Se envía telemetría a Datadog"
+            ],
+            "correct": 1,
+            "explain": "Después de actuar (invocar una tool), el sistema ejecuta la tool real y devuelve el resultado al LLM como observación. Esa observación se vuelve parte del contexto para el siguiente paso de razonamiento."
+          },
+          {
+            "q": "Según Anthropic, ¿cuál es el principio de 'simplicidad progresiva'?",
+            "options": [
+              "Empieza con multi-agente y simplifica",
+              "Empieza simple y sube en complejidad solo cuando se justifique",
+              "Usa siempre el modelo más caro",
+              "Implementa los 5 patrones desde el día 1"
+            ],
+            "correct": 1,
+            "explain": "Anthropic recomienda: prompt simple → añade tools → workflow → agente → multi-agente. Cada paso requiere evidencia de que el anterior no alcanzaba. La mayoría de problemas se resuelven en los 2 primeros pasos."
+          }
+        ],
+        "references": [
+          {
+            "title": "Building Effective Agents",
+            "url": "https://www.anthropic.com/research/building-effective-agents",
+            "kind": "anthropic-research",
+            "relevance": "primary"
+          },
+          {
+            "title": "Architecture Patterns and Implementation Frameworks (PDF)",
+            "url": "https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf",
+            "kind": "anthropic-pdf",
+            "relevance": "primary"
+          },
+          {
+            "title": "ReAct: Synergizing Reasoning and Acting (Yao et al., 2023)",
+            "url": "https://arxiv.org/abs/2210.03629",
+            "kind": "paper",
+            "relevance": "primary"
+          },
+          {
+            "title": "What is a ReAct Agent? (IBM Think)",
+            "url": "https://www.ibm.com/think/topics/react-agent",
+            "kind": "blog",
+            "relevance": "supporting"
+          },
+          {
+            "title": "Chain-of-Thought Prompting (Wei et al., 2022)",
+            "url": "https://arxiv.org/abs/2201.11903",
+            "kind": "paper",
+            "relevance": "supporting"
+          },
+          {
+            "title": "Tool use overview (Anthropic platform docs)",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+            "kind": "anthropic-docs",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 2,
+      "mod": 1,
+      "id": 2,
+      "module": 1,
+      "title": "Tools — el mecanismo interior",
+      "sub": "Las 6 características de una tool de producción",
+      "duration": "55 min",
+      "hours": 1.2,
+      "objs": [
+        "Aplicar las 6 características de una tool bien diseñada (Anthropic ACI)",
+        "Escribir JSON schemas claros con descripciones y ejemplos",
+        "Diseñar errores estructurados y accionables",
+        "Crear el catálogo de tools para tu primer agente"
+      ],
+      "reading": "Anthropic Engineering — Advanced Tool Use + Tool Use Overview",
+      "exercise": "Reescribe una tool aplicando las 6 características y diseña un error estructurado accionable.",
+      "deep": {
+        "intro": "Anthropic acuñó el término **ACI** (*Agent-Computer Interface*) para describir el diseño de las herramientas que un agente puede invocar. La tesis es brutal: **invertir tanto esfuerzo en diseñar buenas tools como en diseñar buenas UI para humanos**. Una mala tool puede arruinar al mejor LLM. Una buena tool puede hacer que un modelo más barato funcione mejor que uno caro mal alimentado.\n\nEn su guía oficial (*Advanced Tool Use*), Anthropic documenta seis características que distinguen una tool de juguete de una tool de producción:\n\n1. **Nombre claro y verbo-objeto** — `restart_service`, no `do_stuff_v2`.\n2. **Descripción precisa** — qué hace, cuándo usarla, cuándo NO.\n3. **JSON schema estricto** — tipos, required, defaults, enums.\n4. **Ejemplos en la descripción** — un buen ejemplo > 5 explicaciones.\n5. **Errores estructurados accionables** — el error le dice al agente qué hacer.\n6. **Idempotencia donde aplique** — llamarla 2 veces = mismo efecto que 1.\n\nEl 80% de los problemas que encontrarás en producción se reducen a tools mal diseñadas. Y casi siempre se traducen en el mismo síntoma: el agente entra en loops o decide mal porque no entiende qué hacer con la herramienta.",
+        "sections": [
+          {
+            "title": "Las 6 características en detalle",
+            "body": "**1. Nombre claro (verbo-objeto):** Usa el formato `verbo_objeto` o `verbo_objeto_modificador`. `get_user_by_email` es mejor que `user_lookup`. `restart_service_safely` es mejor que `restart`.\n\n**2. Descripción precisa:** Tres componentes — qué hace, cuándo usarla, cuándo NO. Esta descripción es lo que el LLM lee cada vez que decide si invocar la tool, así que vale oro.\n\n**3. JSON schema estricto:** Todos los campos tipados. `required` explícito. `enum` cuando los valores son finitos. `description` por cada parámetro. Defaults documentados.\n\n**4. Ejemplos:** En la descripción, incluye 1-2 ejemplos concretos de uso. *\"Ejemplo: para verificar si la API de pagos está viva, usa `ping_service(url='https://api.payments.com/health')`.\"*\n\n**5. Errores estructurados:** Nunca devuelvas excepciones crudas. Devuelve `{success: false, error_code: 'TIMEOUT', suggestion: 'Reintenta con timeout más alto o verifica conexión'}`.\n\n**6. Idempotencia:** Llamar la tool 2 veces debería dar el mismo resultado que 1. Si no es posible (ej. `create_invoice`), incluye un `idempotency_key` en el schema.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Una tool MAL diseñada (anti-ejemplo)",
+                "src": "# ❌ ANTI-EJEMPLO — esto causa loops y decisiones erráticas\nBAD_TOOL = {\n    \"name\": \"do_thing\",                       # Nombre vago\n    \"description\": \"Does the thing\",          # Inútil\n    \"input_schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n            \"x\": {\"type\": \"string\"},          # Sin descripción\n            \"y\": {\"type\": \"string\"}\n        }\n    }\n    # Sin required, sin ejemplos, sin enum, sin defaults\n}\n\n# La función real lanza excepciones crudas:\ndef do_thing(x, y):\n    if not x:\n        raise ValueError(\"missing x\")\n    # ... el agente recibe el stacktrace y no sabe qué hacer"
+              },
+              {
+                "lang": "python",
+                "label": "La misma tool BIEN diseñada",
+                "src": "# ✅ BUENA — sigue las 6 características\nGOOD_TOOL = {\n    \"name\": \"restart_service_safely\",\n    \"description\": (\n        \"Reinicia un servicio en producción de forma segura. \"\n        \"Usa esta tool cuando un servicio responde con errores 5xx o timeout \"\n        \"y necesitas restaurar disponibilidad. \"\n        \"NO la uses para hacer deploy nuevo — usa `deploy_service` para eso. \"\n        \"Es idempotente: llamarla varias veces es seguro. \"\n        \"Ejemplo: restart_service_safely(name='fleetpro-api', drain_seconds=10)\"\n    ),\n    \"input_schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n            \"name\": {\n                \"type\": \"string\",\n                \"description\": \"Nombre exacto del servicio (ej. 'fleetpro-api')\",\n                \"enum\": [\"fleetpro-api\", \"dealimus-api\", \"pulsecore-api\"]\n            },\n            \"drain_seconds\": {\n                \"type\": \"integer\",\n                \"description\": \"Segundos de drain antes del restart. Default 10. Max 60.\",\n                \"default\": 10,\n                \"minimum\": 0,\n                \"maximum\": 60\n            }\n        },\n        \"required\": [\"name\"]\n    }\n}\n\ndef restart_service_safely(name: str, drain_seconds: int = 10) -> dict:\n    \"\"\"Returns structured success or error.\"\"\"\n    try:\n        # ... lógica real ...\n        return {\"success\": True, \"restarted_at\": \"2026-05-16T18:30:00Z\"}\n    except TimeoutError:\n        return {\n            \"success\": False,\n            \"error_code\": \"DRAIN_TIMEOUT\",\n            \"suggestion\": \"El servicio no terminó conexiones en \"\n                          f\"{drain_seconds}s. Reintenta con drain_seconds=30.\"\n        }\n    except PermissionError:\n        return {\n            \"success\": False,\n            \"error_code\": \"INSUFFICIENT_PERMISSIONS\",\n            \"suggestion\": \"Esta tool requiere rol 'sre'. Escala a un humano.\"\n        }"
+              }
+            ]
+          },
+          {
+            "title": "Errores accionables: el detalle que separa juguetes de productos",
+            "body": "Cuando una tool falla, el agente recibe el output como una observación. Si esa observación es `Error: TimeoutError at line 42`, el agente no tiene información para corregirse. Va a reintentar la misma operación, va a entrar en loop, o va a abandonar la tarea.\n\nUn error estructurado tiene **tres campos siempre**:\n\n- `success: false`\n- `error_code: <string corto, en MAYÚSCULAS>` — ej. `TIMEOUT`, `RATE_LIMIT`, `NOT_FOUND`, `INVALID_INPUT`, `INSUFFICIENT_PERMISSIONS`.\n- `suggestion: <string accionable en lenguaje natural>` — qué hacer al respecto.\n\nLa `suggestion` debe estar escrita pensando en el agente como lector. *\"Reintenta con timeout más alto\"* es más útil que *\"Failed: timeout\"*. *\"El usuario fred@acme.com no existe. Verifica el email o crea el usuario primero con `create_user`.\"* es más útil que *\"NotFoundError\"*.\n\nLos modelos de Claude responden particularmente bien a errores estructurados — fueron entrenados con énfasis en seguir instrucciones en este formato.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Patrón estándar de error estructurado",
+                "src": "from typing import TypedDict, Literal, Union\n\nclass ToolSuccess(TypedDict):\n    success: Literal[True]\n    data: dict\n\nclass ToolError(TypedDict):\n    success: Literal[False]\n    error_code: str\n    suggestion: str\n    retry_after_seconds: int  # opcional, si aplica\n\nToolResult = Union[ToolSuccess, ToolError]\n\ndef get_user_by_email(email: str) -> ToolResult:\n    if not is_valid_email(email):\n        return {\n            \"success\": False,\n            \"error_code\": \"INVALID_INPUT\",\n            \"suggestion\": f\"El email '{email}' no es válido. \"\n                          \"Verifica el formato (debe contener @ y dominio).\"\n        }\n    user = db.users.find_one({\"email\": email})\n    if not user:\n        return {\n            \"success\": False,\n            \"error_code\": \"NOT_FOUND\",\n            \"suggestion\": f\"No hay usuario con email '{email}'. \"\n                          \"Para crear uno, usa create_user(email, name).\"\n        }\n    return {\"success\": True, \"data\": user}"
+              }
+            ]
+          },
+          {
+            "title": "Idempotencia: por qué importa para agentes",
+            "body": "Los agentes reintentan. Pueden reintentar porque dudaron, porque hubo timeout, porque tu sistema reenvió la solicitud, porque el usuario tocó 'continuar'. Si tu tool no es idempotente, vas a duplicar acciones.\n\n**Ejemplos de tools naturalmente idempotentes:**\n- `get_user_by_email` (lectura, sin side effects)\n- `set_user_status(id='u123', status='active')` (asignar a un estado fijo, no incrementar)\n- `cancel_order(id='o456')` (cancelar dos veces = cancelado)\n\n**Ejemplos de tools NO idempotentes naturalmente:**\n- `send_email(to=..., subject=...)` — cada llamada manda un email nuevo\n- `create_invoice(customer=..., amount=...)` — crea factura cada vez\n- `charge_card(card=..., amount=...)` — cobra cada vez (😱)\n\nPara las que no lo son naturalmente, **añade un `idempotency_key`** al schema. El cliente (el código que ejecuta la tool) usa esa key para detectar si ya procesó esa solicitud y devuelve el resultado previo en lugar de re-ejecutar.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Patrón de idempotency_key",
+                "src": "import hashlib\nfrom functools import lru_cache\n\n# Cache simple en memoria (en prod usa Redis o tu DB)\n_idempotency_cache = {}\n\ndef send_email_idempotent(to: str, subject: str, body: str, idempotency_key: str) -> dict:\n    \"\"\"Envía email solo si no se envió ya con esa key.\"\"\"\n    cache_key = f\"send_email:{idempotency_key}\"\n    if cache_key in _idempotency_cache:\n        # Ya se envió. Devuelve el resultado original.\n        return {**_idempotency_cache[cache_key], \"idempotent_hit\": True}\n\n    # Primer envío — ejecuta de verdad\n    message_id = mail_provider.send(to=to, subject=subject, body=body)\n    result = {\"success\": True, \"message_id\": message_id, \"sent_at\": now()}\n    _idempotency_cache[cache_key] = result\n    return result\n\n# Schema con idempotency_key explícito\nSCHEMA = {\n    \"name\": \"send_email\",\n    \"description\": (\n        \"Envía un email. Es idempotente vía idempotency_key — usa el mismo key \"\n        \"si quieres asegurar que el email se envía exactamente una vez. \"\n        \"Genera el key como hash determinístico del contenido (ej. SHA256 de to+subject+body).\"\n    ),\n    \"input_schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n            \"to\": {\"type\": \"string\", \"description\": \"Email del destinatario\"},\n            \"subject\": {\"type\": \"string\"},\n            \"body\": {\"type\": \"string\"},\n            \"idempotency_key\": {\n                \"type\": \"string\",\n                \"description\": \"Identificador único de esta operación. \"\n                              \"Llamadas con la misma key no duplican el envío.\"\n            }\n        },\n        \"required\": [\"to\", \"subject\", \"body\", \"idempotency_key\"]\n    }\n}"
+              }
+            ]
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Nombres vagos como `process` o `handle`",
+            "desc": "El LLM no sabe qué hace `process(data)`. Termina invocándola cuando no debería o evitándola cuando sí.",
+            "fix": "Usa siempre `verbo_objeto`. Reescribe `process` como `process_invoice_payment` o `process_user_signup` según corresponda."
+          },
+          {
+            "title": "Schemas sin descripción por campo",
+            "desc": "Un schema `{type: 'string'}` no le dice al modelo qué pasar. ¿Es un nombre? ¿Un email? ¿Un ID?",
+            "fix": "Cada propiedad debe tener `description`. Si los valores son finitos, usa `enum`. Si hay default, documéntalo."
+          },
+          {
+            "title": "Excepciones en lugar de errores estructurados",
+            "desc": "Si tu tool lanza `RuntimeError('something broke')`, el agente recibe basura y no sabe corregirse.",
+            "fix": "Envuelve en try/except y devuelve `{success: false, error_code, suggestion}`. Convierte CADA excepción posible en un código accionable."
+          },
+          {
+            "title": "Tools con side effects sin idempotencia",
+            "desc": "Un reintento del agente puede cobrar dos veces la misma tarjeta. Es una clase de bug que cuesta dinero real.",
+            "fix": "Para tools con side effects, añade `idempotency_key` al schema. Cliente genera key determinístico; servidor cachea."
+          },
+          {
+            "title": "Más de 20 tools en el catálogo",
+            "desc": "Con muchas tools, el modelo se confunde sobre cuál usar. La precisión cae notablemente.",
+            "fix": "Si tienes 20+, considera Tool Search Tool (Anthropic Engineering): tools se recuperan dinámicamente por relevancia. O divide en agentes especializados."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Qué siglas usa Anthropic para describir el diseño de tools?",
+            "options": [
+              "UCI (User-Computer Interface)",
+              "ACI (Agent-Computer Interface)",
+              "API (Application Programming Interface)",
+              "RPC (Remote Procedure Call)"
+            ],
+            "correct": 1,
+            "explain": "Anthropic acuñó ACI (Agent-Computer Interface) para subrayar que las tools son al agente lo que la UI es al humano — y merecen tanto esfuerzo de diseño."
+          },
+          {
+            "q": "¿Cuál es la mejor estructura para el error de una tool?",
+            "options": [
+              "Lanzar una excepción RuntimeError",
+              "Devolver string 'failed'",
+              "Devolver {success: false, error_code, suggestion}",
+              "Devolver null"
+            ],
+            "correct": 2,
+            "explain": "El agente necesita información estructurada para corregirse. `error_code` clasifica el tipo de fallo; `suggestion` le dice al agente qué hacer."
+          },
+          {
+            "q": "¿Cuándo necesitas idempotency_key en una tool?",
+            "options": [
+              "Nunca",
+              "Siempre",
+              "Cuando la tool tiene side effects no naturalmente idempotentes (envío de email, cobro)",
+              "Solo en tools de lectura"
+            ],
+            "correct": 2,
+            "explain": "Tools de lectura son idempotentes naturalmente. Tools que crean recursos o disparan acciones externas (emails, cobros, invoices) necesitan idempotency_key para evitar duplicados cuando el agente reintenta."
+          },
+          {
+            "q": "¿Qué incluye una buena descripción de tool?",
+            "options": [
+              "Solo qué hace",
+              "Qué hace, cuándo usarla, cuándo NO",
+              "Solo el nombre del autor",
+              "El código fuente completo"
+            ],
+            "correct": 1,
+            "explain": "La descripción es lo que el LLM lee cada vez que decide invocar la tool. Debe incluir: qué hace, cuándo es apropiada, cuándo NO usarla (referencia a alternativas), y un ejemplo concreto."
+          },
+          {
+            "q": "Si tienes 30 tools en tu catálogo, ¿qué problema surge?",
+            "options": [
+              "Ninguno, más es mejor",
+              "El modelo se confunde y la precisión de selección cae",
+              "El API rate limit te bloquea",
+              "Los costos aumentan exponencialmente"
+            ],
+            "correct": 1,
+            "explain": "Con muchas tools, el modelo tiene que considerar más opciones y la precisión cae. Anthropic recomienda Tool Search Tool (dynamic retrieval) o agentes especializados con catálogos más pequeños."
+          }
+        ],
+        "references": [
+          {
+            "title": "Advanced Tool Use (Anthropic Engineering)",
+            "url": "https://www.anthropic.com/engineering/advanced-tool-use",
+            "kind": "anthropic-engineering",
+            "relevance": "primary"
+          },
+          {
+            "title": "Tool use overview (platform docs)",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+            "kind": "anthropic-docs",
+            "relevance": "primary"
+          },
+          {
+            "title": "Anthropic ACI explicado (Cobus Greyling)",
+            "url": "https://cobusgreyling.medium.com/anthropic-aci-ai-agent-computer-interface-d972da8f560b",
+            "kind": "blog",
+            "relevance": "supporting"
+          },
+          {
+            "title": "Building Effective Agents — sección Tool Use",
+            "url": "https://www.anthropic.com/research/building-effective-agents",
+            "kind": "anthropic-research",
+            "relevance": "primary"
+          },
+          {
+            "title": "Prompt engineering best practices",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+            "kind": "anthropic-docs",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 3,
+      "mod": 1,
+      "id": 3,
+      "module": 1,
+      "title": "Workflows vs Agentes",
+      "sub": "Los 5 patrones de Anthropic",
+      "duration": "50 min",
+      "hours": 1.1,
+      "objs": [
+        "Dominar los 5 patrones: Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer",
+        "Aplicar el principio de simplicidad progresiva",
+        "Diseñar un workflow de Voting para un caso real",
+        "Decidir cuándo NO usar un agente"
+      ],
+      "reading": "Building Effective Agents — sección de patrones (con su PDF extendido)",
+      "exercise": "Diseña la arquitectura completa de tu proyecto usando los 5 patrones, marcando cuál usas dónde.",
+      "deep": {
+        "intro": "Anthropic publicó cinco patrones agénticos canónicos. No son patrones de agente vs no-agente: son **bloques de composición** que puedes mezclar. La mayoría de sistemas productivos no son \"un agente\" — son **un workflow con uno o dos pasos agénticos**.\n\nLa decisión de qué patrón usar no es estética. Cada patrón tiene un trade-off entre **flexibilidad** (qué tan variado puede ser el camino) y **previsibilidad** (qué tan fácil es debuggear, testear, y predecir el costo). Cuanto más arriba en la jerarquía, más flexible y menos previsible.\n\n**Jerarquía de complejidad creciente:**\n\n1. **Prompt Chaining** — secuencia fija de prompts. Cada paso usa el output del anterior.\n2. **Routing** — un clasificador decide qué especialista atiende.\n3. **Parallelization** — varios LLMs trabajan en paralelo (sectioning o voting).\n4. **Orchestrator-Workers** — un orquestador descompone dinámicamente.\n5. **Evaluator-Optimizer** — uno genera, otro critica y refina iterativamente.\n\nY al final, el patrón 'puro': **Agente autónomo** — el ciclo ReAct sin restricciones. Pero ese ya lo cubrimos en la Sesión 1.",
+        "sections": [
+          {
+            "title": "Patrones 1 y 2: Prompt Chaining y Routing",
+            "body": "**Prompt Chaining** es lo más simple. Defines N pasos en código; cada paso es una llamada al LLM cuya entrada incluye el output del anterior.\n\nÚsalo cuando: la tarea se descompone naturalmente en pasos secuenciales y cada paso es lo suficientemente bien-definido para escribirlo en código. Ejemplos: *escribir un blog post* (outline → draft → edit), *procesar una factura* (extraer datos → validar → categorizar).\n\nVentajas: barato, predecible, debuggeable. Desventajas: si los pasos no son siempre los mismos, no funciona.\n\n**Routing** añade una decisión: un primer LLM (típicamente Haiku, barato) clasifica la entrada y la dirige a un especialista. Es ideal para sistemas multi-propósito: chatbots, soporte técnico, intake de tickets.\n\nÚsalo cuando: tienes distintos tipos de entrada y cada tipo merece un prompt/modelo distinto. Ejemplos: clasificar email como 'soporte', 'ventas' o 'spam' antes de delegar.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Prompt Chaining — flujo blog post",
+                "src": "from anthropic import Anthropic\nclient = Anthropic()\n\ndef chain_blog_post(topic: str) -> str:\n    # Paso 1: outline\n    outline = client.messages.create(\n        model=\"claude-haiku-4-5\", max_tokens=500,\n        messages=[{\"role\": \"user\", \"content\": f\"Genera outline de blog post sobre: {topic}\"}]\n    ).content[0].text\n\n    # Paso 2: draft completo desde outline\n    draft = client.messages.create(\n        model=\"claude-sonnet-4-6\", max_tokens=2000,\n        messages=[{\"role\": \"user\", \"content\": f\"Escribe el blog post siguiendo este outline:\\n{outline}\"}]\n    ).content[0].text\n\n    # Paso 3: edición y polishing\n    polished = client.messages.create(\n        model=\"claude-sonnet-4-6\", max_tokens=2000,\n        messages=[{\"role\": \"user\", \"content\": f\"Pule este draft, mejora flow y elimina redundancia:\\n{draft}\"}]\n    ).content[0].text\n    return polished"
+              },
+              {
+                "lang": "python",
+                "label": "Routing — clasificar y delegar",
+                "src": "def route_request(user_query: str) -> str:\n    # Paso 1: clasificar (modelo barato)\n    routing = client.messages.create(\n        model=\"claude-haiku-4-5\", max_tokens=20,\n        system=\"Clasifica la query en una categoría: SUPPORT, SALES, BILLING, OTHER. Solo devuelve la categoría.\",\n        messages=[{\"role\": \"user\", \"content\": user_query}]\n    ).content[0].text.strip()\n\n    # Paso 2: delegar al especialista correcto\n    specialists = {\n        \"SUPPORT\": {\"system\": \"Eres un agente de soporte técnico...\", \"model\": \"claude-sonnet-4-6\"},\n        \"SALES\":   {\"system\": \"Eres un agente de ventas consultivo...\", \"model\": \"claude-sonnet-4-6\"},\n        \"BILLING\": {\"system\": \"Eres especialista en facturación...\", \"model\": \"claude-haiku-4-5\"},\n        \"OTHER\":   {\"system\": \"Eres un asistente general...\", \"model\": \"claude-haiku-4-5\"}\n    }\n    spec = specialists.get(routing, specialists[\"OTHER\"])\n    response = client.messages.create(\n        model=spec[\"model\"], max_tokens=1024,\n        system=spec[\"system\"],\n        messages=[{\"role\": \"user\", \"content\": user_query}]\n    )\n    return response.content[0].text"
+              }
+            ]
+          },
+          {
+            "title": "Patrones 3 y 4: Parallelization y Orchestrator-Workers",
+            "body": "**Parallelization** tiene dos variantes:\n\n- **Sectioning** — divides la tarea en subtareas independientes y procesas en paralelo. Útil para análisis multi-dimensional (revisar código por seguridad + por performance + por estilo, todo en paralelo).\n- **Voting** — la misma tarea se ejecuta N veces en paralelo y agregas resultados (mayoría, promedio, etc.). Útil cuando la respuesta es ambigua y quieres robustez.\n\n**Orchestrator-Workers** es el patrón más poderoso del 'mid-tier'. Un agente orquestador recibe la tarea, decide qué workers necesita y en qué orden los invoca. Cada worker es típicamente más simple, especializado.\n\nÚsalo cuando: la tarea es lo bastante grande/variable que un solo agente lineal se confunde. Ejemplos: investigación profunda (orchestrator delega búsqueda, lectura, síntesis), debug de issues complejos (orchestrator delega diagnóstico, reproducción, fix).\n\nCuidado: agrega latencia (cada worker es una llamada) y complejidad de debug.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Voting — robusto pero más caro",
+                "src": "import asyncio\nfrom collections import Counter\n\nasync def vote_classification(text: str, n_voters: int = 5) -> str:\n    \"\"\"Pregunta a N modelos en paralelo y toma la mayoría.\"\"\"\n    async def single_vote():\n        return await client_async.messages.create(\n            model=\"claude-haiku-4-5\", max_tokens=10,\n            system=\"Clasifica el sentimiento como POSITIVE, NEGATIVE o NEUTRAL. Solo la palabra.\",\n            messages=[{\"role\": \"user\", \"content\": text}]\n        )\n    responses = await asyncio.gather(*[single_vote() for _ in range(n_voters)])\n    votes = [r.content[0].text.strip() for r in responses]\n    return Counter(votes).most_common(1)[0][0]  # respuesta más votada"
+              }
+            ]
+          },
+          {
+            "title": "Patrón 5: Evaluator-Optimizer",
+            "body": "Dos agentes en loop: uno **genera** una propuesta, el otro **evalúa** y propone mejoras. El primero re-genera con feedback. Iteran hasta que el evaluador aprueba o se alcanza un límite.\n\nÚsalo cuando: la calidad importa más que la velocidad y hay un criterio claro de evaluación. Ejemplos: pulir copy de marketing, refinar respuestas legales, optimizar prompts.\n\nVentajas: calidad notablemente mejor que single-shot. Desventajas: 3-10× más costoso, lento. No lo uses para tareas time-sensitive.\n\nUna variante poderosa: **Self-critique** — el mismo modelo genera y luego evalúa su propio output. Más barato que dos agentes pero menos diverso en la crítica.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Evaluator-Optimizer para copy de email",
+                "src": "def evaluator_optimizer(brief: str, max_rounds: int = 3) -> str:\n    draft = generate_initial(brief)\n    for round_n in range(max_rounds):\n        critique = evaluate(draft, brief)\n        if critique[\"approved\"]:\n            return draft\n        draft = generate_revision(draft, critique[\"feedback\"])\n    return draft  # devuelve el último, incluso si no aprobado\n\ndef generate_initial(brief: str) -> str:\n    return client.messages.create(\n        model=\"claude-sonnet-4-6\", max_tokens=600,\n        system=\"Eres un copywriter senior. Escribe el email solicitado.\",\n        messages=[{\"role\": \"user\", \"content\": brief}]\n    ).content[0].text\n\ndef evaluate(draft: str, brief: str) -> dict:\n    resp = client.messages.create(\n        model=\"claude-sonnet-4-6\", max_tokens=400,\n        system=(\n            \"Eres editor crítico. Evalúa si el draft cumple el brief. \"\n            \"Devuelve JSON: {approved: bool, feedback: 'qué mejorar'}\"\n        ),\n        messages=[{\"role\": \"user\", \"content\": f\"BRIEF:\\n{brief}\\n\\nDRAFT:\\n{draft}\"}]\n    )\n    import json\n    return json.loads(resp.content[0].text)\n\ndef generate_revision(draft: str, feedback: str) -> str:\n    return client.messages.create(\n        model=\"claude-sonnet-4-6\", max_tokens=600,\n        messages=[{\"role\": \"user\",\n                   \"content\": f\"Revisa este draft según el feedback:\\n\\nDRAFT:\\n{draft}\\n\\nFEEDBACK:\\n{feedback}\"}]\n    ).content[0].text"
+              }
+            ]
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Usar Orchestrator-Workers cuando un workflow basta",
+            "desc": "Si tu tarea siempre hace los mismos pasos en orden similar, un workflow lineal es 3-5× más barato y más fácil de debuggear.",
+            "fix": "Pregunta: '¿necesito que el orden de pasos cambie según el input?'. Si no, usa Prompt Chaining."
+          },
+          {
+            "title": "Voting en todo para 'mejor calidad'",
+            "desc": "Multiplica el costo por N. Solo justifica para decisiones críticas o ambiguas.",
+            "fix": "Reserva voting para clasificación de alto stake o cuando observas variance alta. Para tareas estables, single-shot."
+          },
+          {
+            "title": "Evaluator-Optimizer sin límite de rounds",
+            "desc": "Sin cap, dos agentes pueden iterar 50 veces antes de converger.",
+            "fix": "Define `max_rounds` (3-5) y un criterio de aprobación claro. Si no converge, devuelve el mejor draft con un flag."
+          },
+          {
+            "title": "Multi-agente prematuro",
+            "desc": "Empezar con orchestrator-workers para una tarea que un agente lineal resolvía es overengineering. Costo 3×, debug 10×.",
+            "fix": "Empieza single-agent. Solo sube a orchestrator cuando observes que el agente lineal falla por confusión o saturación de contexto."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Cuál de estos NO es uno de los 5 patrones de Anthropic?",
+            "options": [
+              "Prompt Chaining",
+              "Routing",
+              "Evaluator-Optimizer",
+              "Recursive Auto-Refinement"
+            ],
+            "correct": 3,
+            "explain": "Los 5 patrones canónicos son Prompt Chaining, Routing, Parallelization, Orchestrator-Workers y Evaluator-Optimizer."
+          },
+          {
+            "q": "Tienes una tarea: clasificar emails como SUPPORT/SALES/BILLING/OTHER y luego responder. ¿Qué patrón usas?",
+            "options": [
+              "Voting",
+              "Routing",
+              "Evaluator-Optimizer",
+              "Orchestrator-Workers"
+            ],
+            "correct": 1,
+            "explain": "Routing: un primer LLM (Haiku barato) clasifica; un segundo LLM especializado responde. Es el patrón canónico para sistemas multi-propósito."
+          },
+          {
+            "q": "¿Cuándo usarías Voting (parallelization)?",
+            "options": [
+              "Cuando quieres ir más rápido",
+              "Cuando la respuesta es ambigua y quieres robustez",
+              "Para ahorrar dinero",
+              "Para tareas simples de extracción"
+            ],
+            "correct": 1,
+            "explain": "Voting multiplica el costo por N pero te da robustez contra outliers. Útil para clasificación ambigua o decisiones críticas. NO para tareas simples."
+          },
+          {
+            "q": "¿Qué diferencia un workflow de un agente puro?",
+            "options": [
+              "El workflow usa código, el agente usa LLM",
+              "En workflow los pasos los decide código; en agente los decide el LLM",
+              "Workflow es siempre paralelo",
+              "No hay diferencia"
+            ],
+            "correct": 1,
+            "explain": "En un workflow tú escribes la secuencia de pasos en código. En un agente puro, el LLM decide qué hacer en cada paso vía ReAct loop."
+          },
+          {
+            "q": "¿Cuándo NO conviene usar Evaluator-Optimizer?",
+            "options": [
+              "Cuando la calidad es crítica",
+              "Cuando hay tiempo y presupuesto",
+              "Cuando la respuesta debe ser instantánea (latencia <1s)",
+              "Cuando trabajas con copy de marketing"
+            ],
+            "correct": 2,
+            "explain": "Evaluator-Optimizer agrega latencia (cada round es una llamada extra). Si necesitas respuesta sub-segundo, no es viable. Usa single-shot con buen prompt."
+          }
+        ],
+        "references": [
+          {
+            "title": "Building Effective Agents — sección Workflows vs Agents",
+            "url": "https://www.anthropic.com/research/building-effective-agents",
+            "kind": "anthropic-research",
+            "relevance": "primary"
+          },
+          {
+            "title": "Architecture Patterns (PDF)",
+            "url": "https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf",
+            "kind": "anthropic-pdf",
+            "relevance": "primary"
+          },
+          {
+            "title": "Building AI Agents with Anthropic's 6 Composable Patterns",
+            "url": "https://aimultiple.com/building-ai-agents",
+            "kind": "blog",
+            "relevance": "supporting"
+          },
+          {
+            "title": "Naitive: case studies de patrones",
+            "url": "https://blog.naitive.cloud/building-effective-agents/",
+            "kind": "blog",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 4,
+      "mod": 1,
+      "id": 4,
+      "module": 1,
+      "title": "Prompt Engineering para Agentes",
+      "sub": "El system prompt como contrato",
+      "duration": "50 min",
+      "hours": 1.1,
+      "objs": [
+        "Estructurar system prompts con XML tags (preferido por Claude)",
+        "Diseñar few-shot examples diversos según Min et al. (2022)",
+        "Detectar anti-patrones en prompts existentes",
+        "Escribir el system prompt completo de un agente real"
+      ],
+      "reading": "Prompt Engineering Best Practices + Context Engineering Guide 2026",
+      "exercise": "Escribe un system prompt de 200-280 palabras para un agente real, con XML tags y 3 few-shot examples diversos.",
+      "deep": {
+        "intro": "El system prompt es el **contrato** entre tú y el agente. Define quién es, qué hace, qué no hace, y cómo responde. No es decoración: es lo que el modelo lee cada turno antes de responder.\n\nDos consejos de Anthropic que sorprenden al venir de otros modelos:\n\n1. **XML > Markdown para Claude.** Claude fue entrenado con énfasis especial en XML tags. Estructurar el prompt con `<task>`, `<rules>`, `<examples>` supera a usar # ## ###.\n\n2. **Sweet spot 150-300 palabras.** Más corto y le faltará contexto. Más largo y el modelo prioriza mal. Si tu prompt pasa de 400 palabras, está mal diseñado.\n\nY el principio crítico: **dale permiso explícito para decir 'no sé'**. Si nunca le das esa opción, el modelo inventa. Una línea autorizando `INSUFFICIENT_DATA` o `NEEDS_CLARIFICATION` reduce alucinaciones drásticamente.",
+        "sections": [
+          {
+            "title": "Estructura canónica con XML tags",
+            "body": "Un buen system prompt para un agente tiene esta estructura:\n\n```\n<role>\nUna línea: quién es el agente y para qué existe.\n</role>\n\n<task>\nEl objetivo concreto: qué debe lograr.\n</task>\n\n<rules>\n- Regla 1\n- Regla 2 (incluyendo qué NO hacer)\n- Regla N\n</rules>\n\n<tools_guidance>\nCuándo usar cada tool. Cuándo NO usarla.\n</tools_guidance>\n\n<output_format>\nCómo debe responder. Si hay schema, especifícalo.\n</output_format>\n\n<examples>\n<example>\n<input>...</input>\n<output>...</output>\n</example>\n</examples>\n\n<escape_hatch>\nQué hacer cuando no tiene info suficiente.\n</escape_hatch>\n```\n\nClaude lee tags XML como señales fuertes de estructura. La precisión sube notablemente vs. el mismo contenido en prosa.",
+            "code": [
+              {
+                "lang": "text",
+                "label": "System prompt completo: HealthGuard",
+                "src": "<role>\nEres HealthGuard, un agente que vigila la disponibilidad de servicios en producción.\n</role>\n\n<task>\nVerificar continuamente que el servicio FleetPro responde bajo 3 segundos. Si falla 3 veces consecutivas en una ventana de 5 minutos, notificar al canal #alerts de Slack con contexto del incidente.\n</task>\n\n<rules>\n- Solo invoca tools del catálogo provisto. No inventes URLs, IDs ni endpoints.\n- Espera mínimo 30 segundos entre pings al mismo servicio.\n- Antes de alertar, valida que el servicio falló de verdad (3 pings fallidos, no 1).\n- Si el servicio responde lento (>3s pero <10s), registra warning pero no alertes.\n- No reintentes más de 5 veces en total por ciclo.\n</rules>\n\n<tools_guidance>\n- ping_service: úsala para verificar disponibilidad. Idempotente, segura de reintentar.\n- list_recent_deploys: úsala antes de alertar — si hubo deploy reciente, inclúyelo en el contexto.\n- send_slack: úsala SOLO cuando confirmes que el servicio está caído. NO la uses para warnings de latencia.\n</tools_guidance>\n\n<output_format>\nResponde siempre con uno de tres estados:\n- HEALTHY: servicio responde bajo 3s.\n- DEGRADED: servicio responde lento (3-10s). Registra warning.\n- DOWN: servicio no responde 3 veces. Envía Slack con contexto.\n</output_format>\n\n<escape_hatch>\nSi una tool devuelve error que no entiendes o no tienes información suficiente, responde con INSUFFICIENT_DATA y describe qué necesitarías para continuar. No inventes el estado.\n</escape_hatch>"
+              }
+            ]
+          },
+          {
+            "title": "Few-shot examples: diversidad > perfección",
+            "body": "Min et al. (EMNLP 2022, arXiv:2202.12837) demostraron algo contraintuitivo: **3-5 ejemplos diversos baten a 10 ejemplos perfectos pero similares**.\n\nLa razón: el modelo aprende el *patrón de mapeo* entrada→salida más que el contenido específico. Si tus 10 ejemplos son todos del mismo tipo, el modelo solo aprende ese tipo.\n\n**Reglas para ejemplos diversos:**\n\n- Cubre los **casos comunes** (1-2 ejemplos).\n- Cubre los **casos límite** (1-2 ejemplos: input ambiguo, input incompleto).\n- Cubre el **caso de escape** (1 ejemplo: qué hacer cuando no se puede).\n- Varía el formato, longitud, dominio si aplica.\n\n**Anti-patrón común:** tener 5 ejemplos que son básicamente el mismo caso con datos distintos. Eso no enseña al modelo a generalizar — le enseña a memorizar un molde.",
+            "code": [
+              {
+                "lang": "xml",
+                "label": "Few-shot examples diversos en XML",
+                "src": "<examples>\n  <!-- Caso común: servicio sano -->\n  <example>\n    <input>Estado de api.fleetpro.com/health</input>\n    <reasoning>Hago ping. Responde en 800ms. Está sano.</reasoning>\n    <output>HEALTHY (response time: 800ms)</output>\n  </example>\n\n  <!-- Caso degraded -->\n  <example>\n    <input>Estado de api.fleetpro.com/health</input>\n    <reasoning>Ping responde en 4.2s. Lento pero responde. Registro warning, no alerto.</reasoning>\n    <output>DEGRADED (response time: 4200ms, threshold: 3000ms)</output>\n  </example>\n\n  <!-- Caso down: ejecuta el flujo completo -->\n  <example>\n    <input>Estado de api.fleetpro.com/health</input>\n    <reasoning>Ping 1: timeout. Ping 2: timeout. Ping 3: timeout. Confirmado down. Reviso deploys recientes. Hubo deploy v2.4.1 hace 12 min. Notifico con contexto.</reasoning>\n    <output>DOWN — Slack enviado a #alerts. Causa probable: deploy v2.4.1 (12 min ago).</output>\n  </example>\n\n  <!-- Caso de escape: datos insuficientes -->\n  <example>\n    <input>Estado de api.unknown-service.com</input>\n    <reasoning>El servicio no está en mi catálogo de hosts conocidos. No puedo verificar sin contexto.</reasoning>\n    <output>INSUFFICIENT_DATA — el servicio 'unknown-service' no está registrado. Necesito que se añada al catálogo antes de monitorear.</output>\n  </example>\n</examples>"
+              }
+            ]
+          },
+          {
+            "title": "Anti-patrones de prompt",
+            "body": "Estos cuatro anti-patrones aparecen una y otra vez en prompts de producción:\n\n**1. Prompts gigantes (500+ palabras).** Cada palabra extra diluye el peso de las reglas críticas. Si tu prompt es largo, está mal organizado. Pode sin piedad.\n\n**2. Instrucciones contradictorias.** \"Sé conciso pero detallado\". \"Responde siempre con código pero a veces solo con explicaciones\". El modelo elige una arbitrariamente.\n\n**3. Sin ejemplos.** Decir \"responde en formato JSON\" sin mostrar uno = el modelo inventa el formato. Siempre incluye al menos 1 ejemplo de output.\n\n**4. Sin escape hatch.** Si nunca le das permiso para decir 'no sé', va a inventar. Es la principal causa de alucinaciones operativas.\n\n**5. Polite filler.** \"Por favor, te agradecería mucho si pudieras...\". El modelo no se ofende. Sé directo. Cada palabra cuenta."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Markdown en lugar de XML para Claude",
+            "desc": "Funciona, pero peor. Claude responde notablemente mejor a XML tags estructurando el prompt.",
+            "fix": "Convierte tus #/## a <role>, <task>, <rules>, etc. Test A/B muestra mejora en seguimiento de instrucciones."
+          },
+          {
+            "title": "Prompt sin escape hatch",
+            "desc": "El modelo alucina antes de admitir no saber.",
+            "fix": "Añade <escape_hatch> autorizando INSUFFICIENT_DATA. Reduce alucinaciones operativas drásticamente."
+          },
+          {
+            "title": "5 ejemplos del mismo tipo",
+            "desc": "El modelo memoriza el molde y falla en casos distintos.",
+            "fix": "Asegúrate de cubrir: caso común, caso límite, caso de escape. Diversidad > cantidad."
+          },
+          {
+            "title": "System prompt mutable cada release",
+            "desc": "Si lo cambias frecuentemente sin medir, no sabes qué cambio rompió qué.",
+            "fix": "Versiona el system prompt. Mantén un dataset de regresión (10-30 inputs con outputs esperados) y ejecútalo con cada cambio."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Qué estructura es PREFERIDA para system prompts en Claude?",
+            "options": [
+              "Markdown con # ##",
+              "XML tags como <role> <task>",
+              "JSON anidado",
+              "Prosa libre"
+            ],
+            "correct": 1,
+            "explain": "Claude fue entrenado con énfasis especial en XML tags. Estructurar el prompt con XML supera a Markdown en seguimiento de instrucciones."
+          },
+          {
+            "q": "Según Min et al. (2022), ¿qué importa más en few-shot examples?",
+            "options": [
+              "Cantidad: 10+ ejemplos",
+              "Perfección individual de cada ejemplo",
+              "Diversidad: 3-5 ejemplos que cubran distintos casos",
+              "Uso de XML"
+            ],
+            "correct": 2,
+            "explain": "Min et al. demostró que 3-5 ejemplos diversos baten a 10 ejemplos perfectos pero similares. El modelo aprende el patrón, no el contenido."
+          },
+          {
+            "q": "¿Cuál es el 'sweet spot' de longitud para un system prompt según Anthropic?",
+            "options": [
+              "50-100 palabras",
+              "150-300 palabras",
+              "500-1000 palabras",
+              "Más es siempre mejor"
+            ],
+            "correct": 1,
+            "explain": "150-300 palabras. Más corto y falta contexto; más largo y el modelo prioriza mal. Si superas 400 palabras, hay que podar."
+          },
+          {
+            "q": "¿Qué es un 'escape hatch' en un prompt?",
+            "options": [
+              "Una palabra clave para salir del modelo",
+              "Permiso explícito para decir 'no sé' o INSUFFICIENT_DATA",
+              "Una tool especial",
+              "Un timeout"
+            ],
+            "correct": 1,
+            "explain": "Sin permiso explícito para decir 'no sé', el modelo alucina antes de admitir desconocimiento. Una línea autorizando INSUFFICIENT_DATA reduce alucinaciones drásticamente."
+          },
+          {
+            "q": "Tienes un prompt de 800 palabras. ¿Qué haces?",
+            "options": [
+              "Lo dejas, más contexto es mejor",
+              "Lo divides en 2 agentes especializados",
+              "Lo podas a 200-300 palabras esenciales",
+              "Lo conviertes a Markdown"
+            ],
+            "correct": 2,
+            "explain": "Prompts largos diluyen reglas críticas. 800 palabras casi siempre indica mal organización. Pode sin piedad. Si después de podar sigue siendo necesario, considera dividir en agentes especializados."
+          }
+        ],
+        "references": [
+          {
+            "title": "Prompt Engineering Best Practices (Anthropic)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+            "kind": "anthropic-docs",
+            "relevance": "primary"
+          },
+          {
+            "title": "Rethinking the Role of Demonstrations (Min et al., 2022)",
+            "url": "https://arxiv.org/abs/2202.12837",
+            "kind": "paper",
+            "relevance": "primary"
+          },
+          {
+            "title": "Best Practices for Prompt Engineering (Claude blog)",
+            "url": "https://claude.com/blog/best-practices-for-prompt-engineering",
+            "kind": "blog",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 5,
+      "mod": 2,
+      "id": 5,
+      "module": 2,
+      "title": "Memoria de Agentes",
+      "sub": "Los 4 tipos de memoria de un agente",
+      "duration": "60 min",
+      "hours": 1.3,
+      "objs": [
+        "Distinguir los 4 tipos de memoria: working, episodic, semantic, procedural",
+        "Diseñar schema multi-tenant con pgvector",
+        "Implementar Agentic RAG",
+        "Decidir qué guardar y qué descartar"
+      ],
+      "reading": "Agent Memory Architectures 2026 + RAG Architecture for AI Agents 2026",
+      "exercise": "Diseña el flujo Agentic RAG de tu proyecto con pgvector. Define collections, embedding strategy y política de retención.",
+      "deep": {
+        "intro": "Un LLM puro no tiene memoria: cada llamada es independiente. Para que un agente tenga **identidad coherente** a lo largo del tiempo, necesita memoria explícita. Pero memoria no es una cosa: son **cuatro cosas distintas** que se diseñan separadas.\n\n**Los 4 tipos (analogía con cognición humana):**\n\n1. **Working memory** — el contexto de la conversación actual. Vive en la ventana del LLM. Se pierde al terminar.\n2. **Episodic memory** — recuerdos específicos de eventos pasados. \"La semana pasada el usuario me dijo que prefiere TypeScript.\"\n3. **Semantic memory** — conocimiento general acumulado. \"FleetPro tiene 3 servicios principales: API, worker, scheduler.\"\n4. **Procedural memory** — cómo hacer cosas (skills aprendidas). \"Cuando un servicio cae, primero reviso deploys recientes.\"\n\nLa pregunta práctica no es \"¿uso memoria?\" sino \"¿qué tipo de memoria necesito y cómo la almaceno?\". Cada tipo se implementa con stack distinto: working en la ventana de contexto, episodic en una DB transaccional con timestamps, semantic en una vector DB para retrieval semántico, procedural típicamente en código (skills o tools).\n\nEl error #1 es vectorizar todo en pgvector y rezar. Vamos a cubrir cómo decidir qué guardar dónde.",
+        "sections": [
+          {
+            "title": "RAG vs Agentic RAG",
+            "body": "**RAG clásico:** el sistema busca documentos relevantes ANTES de llamar al LLM y los inyecta como contexto. Una sola búsqueda, un solo retrieval. Sirve para chatbots simples sobre docs.\n\n**Agentic RAG:** el agente decide CUÁNDO buscar, QUÉ buscar, y puede iterar. Si encontró algo parcial, busca con queries refinadas. Si no encontró nada, explora colecciones distintas.\n\nVentajas de Agentic RAG: maneja queries complejas, descubre lo que no sabía que buscaba, evita retrievals innecesarios. Desventajas: más caro (múltiples llamadas), más complejo de debuggear.\n\nUsa Agentic RAG cuando: queries son complejas o multi-hop. Usa RAG clásico cuando: queries son simples y predecibles.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Agentic RAG con pgvector",
+                "src": "import psycopg\nfrom anthropic import Anthropic\n\nclient = Anthropic()\nconn = psycopg.connect(\"postgresql://...\")\n\nSEARCH_TOOL = {\n    \"name\": \"search_knowledge\",\n    \"description\": (\n        \"Busca en la base de conocimiento semántica. \"\n        \"Devuelve top 5 fragmentos relevantes. \"\n        \"Úsala iterativamente: si el primer resultado no resuelve, refina la query.\"\n    ),\n    \"input_schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n            \"query\": {\"type\": \"string\", \"description\": \"Búsqueda en lenguaje natural\"},\n            \"collection\": {\"type\": \"string\", \"enum\": [\"docs\", \"incidents\", \"runbooks\"]}\n        },\n        \"required\": [\"query\"]\n    }\n}\n\ndef search_knowledge(query: str, collection: str = \"docs\", tenant_id: str = None):\n    embedding = embed(query)  # OpenAI ada-002 o voyage-3\n    rows = conn.execute(\n        \"SELECT content, source, 1 - (embedding <=> %s) AS score \"\n        \"FROM knowledge WHERE collection = %s AND tenant_id = %s \"\n        \"ORDER BY embedding <=> %s LIMIT 5\",\n        (embedding, collection, tenant_id, embedding)\n    ).fetchall()\n    return [{\"content\": r[0], \"source\": r[1], \"score\": r[2]} for r in rows]"
+              }
+            ]
+          },
+          {
+            "title": "Schema multi-tenant para pgvector",
+            "body": "Cuando guardas memoria semántica de varios clientes, debes aislar estrictamente. Una embedding del cliente A NO debe aparecer en búsquedas del cliente B. La forma canónica: **tenant_id en cada fila + Row-Level Security (RLS)**.\n\nNo confíes solo en filtros de aplicación. Si tu código tiene un bug y olvida el WHERE tenant_id, vas a leakear datos. RLS en la DB es defense in depth: aunque la app falle, la DB rechaza la query.",
+            "code": [
+              {
+                "lang": "sql",
+                "label": "Schema pgvector multi-tenant con RLS",
+                "src": "-- Habilitar pgvector\nCREATE EXTENSION IF NOT EXISTS vector;\n\nCREATE TABLE knowledge (\n  id           BIGSERIAL PRIMARY KEY,\n  tenant_id    UUID NOT NULL,\n  collection   TEXT NOT NULL,\n  content      TEXT NOT NULL,\n  source       TEXT,\n  embedding    VECTOR(1536) NOT NULL,\n  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),\n  decay_until  TIMESTAMPTZ  -- política de retención: NULL = forever\n);\n\nCREATE INDEX idx_knowledge_tenant ON knowledge(tenant_id);\nCREATE INDEX idx_knowledge_embedding ON knowledge\n  USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);\n\n-- Row-Level Security: defense in depth\nALTER TABLE knowledge ENABLE ROW LEVEL SECURITY;\nCREATE POLICY tenant_isolation ON knowledge\n  USING (tenant_id = current_setting('app.tenant_id')::uuid);\n\n-- En cada request, setea el tenant_id ANTES de queries:\n-- SET LOCAL app.tenant_id = 'uuid-del-tenant';"
+              }
+            ]
+          },
+          {
+            "title": "Política de retención: qué descartar",
+            "body": "Guardar todo es tentador pero costoso. La memoria crece, el vector DB se ralentiza, los embeddings caducan (el modelo de embedding cambia).\n\nPolíticas concretas:\n\n- **Working memory:** vive en el contexto, se descarta automáticamente al final del turno.\n- **Episodic memory:** retén 30-90 días para eventos rutinarios; permanente para eventos críticos (incidentes, decisiones de usuario).\n- **Semantic memory:** sin TTL pero re-embedeable (si cambias modelo de embedding, re-procesas).\n- **Procedural memory:** en código, versionado con el resto del repo.\n\nUna heurística útil: `decay_until` por fila. Cronjob nocturno borra filas con `decay_until < NOW()`. Para episodic memory, `decay_until = created_at + interval '30 days'` por default; ciertos eventos críticos lo extienden o lo dejan NULL."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Vectorizar todo sin filtro",
+            "desc": "Mete cualquier texto en pgvector, asume que retrieval va a funcionar. Resultados terribles.",
+            "fix": "Cada item necesita: contenido limpio (no HTML/ruido), metadata (source, timestamp), y razón clara para estar ahí. Si no sabrás cuándo recuperarlo, no lo guardes."
+          },
+          {
+            "title": "Sin tenant_id en queries",
+            "desc": "Olvidas `WHERE tenant_id = X` y leakeas datos entre clientes. Bug que destruye empresas.",
+            "fix": "RLS en la DB. Aunque la app olvide el filtro, postgres bloquea. Defense in depth no-negociable."
+          },
+          {
+            "title": "Ignorar el chunk size",
+            "desc": "Chunks demasiado grandes (5000 chars) o demasiado pequeños (50) destruyen relevancia.",
+            "fix": "Sweet spot 300-800 chars con overlap de 50. Para docs estructurados, chunkea por sección. Mide recall@5 con golden set."
+          },
+          {
+            "title": "Olvidar el decaimiento",
+            "desc": "Tu DB crece sin parar. Búsquedas se vuelven lentas. Embeddings viejos pueden estar caducados.",
+            "fix": "Política `decay_until` por tipo de memoria. Cronjob nocturno limpia. Re-embed cuando cambies modelo."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Cuál de estos NO es un tipo canónico de memoria de agente?",
+            "options": [
+              "Working memory",
+              "Episodic memory",
+              "Visual memory",
+              "Procedural memory"
+            ],
+            "correct": 2,
+            "explain": "Los 4 tipos canónicos son working, episodic, semantic y procedural. 'Visual memory' no es estándar en la literatura de agentes."
+          },
+          {
+            "q": "¿Cuál es la diferencia clave entre RAG clásico y Agentic RAG?",
+            "options": [
+              "Agentic RAG usa Claude, RAG usa GPT",
+              "En Agentic RAG el agente decide cuándo y qué buscar iterativamente",
+              "Agentic RAG es más barato",
+              "No hay diferencia"
+            ],
+            "correct": 1,
+            "explain": "RAG clásico hace UN retrieval antes de llamar al LLM. Agentic RAG deja que el agente busque iterativamente, refinando queries según resultados."
+          },
+          {
+            "q": "¿Por qué necesitas RLS además de filtrar por tenant_id en la app?",
+            "options": [
+              "RLS es más rápido",
+              "Defense in depth: si la app olvida el filtro, la DB lo bloquea",
+              "Es requisito legal",
+              "RLS reemplaza tenant_id"
+            ],
+            "correct": 1,
+            "explain": "Defense in depth. Un bug en la app puede olvidar el WHERE; RLS en la DB es la segunda capa. Multi-tenant data leak destruye empresas."
+          },
+          {
+            "q": "Tu base de conocimiento crece a 10M filas y las búsquedas son lentas. ¿Primer paso?",
+            "options": [
+              "Migrar a otra base de datos",
+              "Aplicar política de retención (decay_until) y limpiar datos viejos",
+              "Comprar hardware más caro",
+              "Reducir embeddings a menos dimensiones"
+            ],
+            "correct": 1,
+            "explain": "Antes de migrar o comprar hardware, define qué guardas y qué descartas. Política de retención por tipo de memoria. La mayoría de las veces, 70% de los datos no se vuelven a buscar."
+          },
+          {
+            "q": "¿Qué tipo de memoria vive en el contexto del LLM y se descarta al terminar?",
+            "options": [
+              "Episodic",
+              "Semantic",
+              "Working",
+              "Procedural"
+            ],
+            "correct": 2,
+            "explain": "Working memory es la ventana de contexto del LLM en el turno actual. Es transitoria — para persistir, hay que mover a episodic o semantic."
+          }
+        ],
+        "references": [
+          {
+            "title": "Agent Memory Architectures: Vector vs Graph vs Episodic",
+            "url": "https://www.digitalapplied.com/blog/agent-memory-architectures-vector-graph-episodic",
+            "kind": "blog",
+            "relevance": "primary"
+          },
+          {
+            "title": "RAG Architecture for AI Agents 2026",
+            "url": "https://rapidclaw.dev/blog/rag-architecture-ai-agents-guide-2026",
+            "kind": "blog",
+            "relevance": "primary"
+          },
+          {
+            "title": "pgvector (repo oficial)",
+            "url": "https://github.com/pgvector/pgvector",
+            "kind": "repo",
+            "relevance": "primary"
+          },
+          {
+            "title": "Vector Database Benchmarks 2026",
+            "url": "https://callsphere.ai/blog/vector-database-benchmarks-2026-pgvector-qdrant-weaviate-milvus-lancedb",
+            "kind": "blog",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 6,
+      "mod": 2,
+      "id": 6,
+      "module": 2,
+      "title": "Router de Modelos",
+      "sub": "Haiku, Sonnet, Opus — y la regla 70/20/10",
+      "duration": "45 min",
+      "hours": 1.0,
+      "objs": [
+        "Asignar el modelo correcto a cada tarea según costo y capacidad",
+        "Calcular el ahorro real de prompt caching (hasta 90%)",
+        "Modelar unit economics de un sistema agéntico",
+        "Aplicar el principio 'small first, escalate when needed'"
+      ],
+      "reading": "Claude API Pricing oficial + Anthropic Engineering sobre selección de modelo",
+      "exercise": "Calcula unit economics completos de tu proyecto a 100, 1K y 10K usuarios. Decide modelo por tarea.",
+      "deep": {
+        "intro": "Los tres modelos de Claude tienen un orden de magnitud de diferencia en precio. Opus puede costar 50-100× más que Haiku. **Esa diferencia define si tu negocio funciona o no.**\n\n**Regla 70/20/10** (heurística operativa de equipos que ya han escalado):\n\n- **70% del tráfico → Haiku.** Tareas simples: clasificación, extracción, formato, validación, resumen corto. Haiku es sorprendentemente bueno cuando el prompt está bien diseñado.\n- **20% del tráfico → Sonnet.** Razonamiento medio, código de complejidad moderada, conversación con cierta complejidad.\n- **10% del tráfico → Opus.** Decisiones críticas, planificación profunda, código complejo, edge cases que importan.\n\nEsto es una distribución, no una regla rígida. Pero si tu sistema usa Sonnet/Opus para 100% de las llamadas, casi seguro estás quemando dinero.\n\n**Y el segundo descubrimiento:** prompt caching reduce el costo del input hasta 90%. Si tus prompts tienen partes comunes (system prompt grande, ejemplos repetidos), caching cambia las matemáticas radicalmente.",
+        "sections": [
+          {
+            "title": "Cuándo usar cada modelo",
+            "body": "**Haiku** es para:\n- Clasificación, routing, intent detection.\n- Extracción de campos de un texto.\n- Validación rápida de input.\n- Resúmenes muy cortos.\n- Cualquier tarea con prompt + few-shot que ya funcionaba en GPT-3.5.\n\n**Sonnet** es para:\n- Conversación con contexto.\n- Código de complejidad media (200-500 líneas).\n- Análisis de un documento.\n- La mayoría de chatbots de soporte.\n- Tareas que necesitan razonamiento de 2-3 pasos.\n\n**Opus** es para:\n- Decisiones con consecuencias serias (médico, legal, financiero).\n- Planificación compleja con muchos constraints.\n- Código de arquitectura.\n- Razonamiento sobre situaciones ambiguas.\n- Casos donde la diferencia entre 95% y 98% de accuracy justifica el costo 5×.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Router de modelos simple",
+                "src": "MODEL_FOR_TASK = {\n    \"classify\":     \"claude-haiku-4-5\",\n    \"extract\":      \"claude-haiku-4-5\",\n    \"summarize\":    \"claude-haiku-4-5\",\n    \"converse\":     \"claude-sonnet-4-6\",\n    \"code_review\":  \"claude-sonnet-4-6\",\n    \"plan\":         \"claude-opus-4-7\",\n    \"critical\":     \"claude-opus-4-7\",\n}\n\ndef route_to_model(task: str) -> str:\n    return MODEL_FOR_TASK.get(task, \"claude-haiku-4-5\")  # default barato\n\n# Patrón escalonado: empieza barato, sube si confianza es baja\ndef escalate_if_needed(query: str) -> str:\n    haiku_resp = call_model(query, \"claude-haiku-4-5\")\n    if haiku_resp[\"confidence\"] > 0.85:\n        return haiku_resp[\"answer\"]\n    # No confiable — sube a Sonnet\n    sonnet_resp = call_model(query, \"claude-sonnet-4-6\")\n    return sonnet_resp[\"answer\"]"
+              }
+            ]
+          },
+          {
+            "title": "Prompt caching: el descuento del 90%",
+            "body": "Si tu sistema usa el mismo system prompt (con ejemplos, reglas, etc.) en todas las llamadas, Anthropic puede **cachearlo** y cobrarte 90% menos por los tokens cacheados en llamadas subsecuentes.\n\n**Cómo activarlo:**\n```python\nresponse = client.messages.create(\n    model=\"claude-sonnet-4-6\",\n    system=[\n        {\"type\": \"text\", \"text\": LARGE_SYSTEM_PROMPT, \"cache_control\": {\"type\": \"ephemeral\"}}\n    ],\n    messages=[{\"role\": \"user\", \"content\": user_query}]\n)\n```\n\nReglas:\n- El cache vive ~5 minutos (ephemeral) o 1 hora (extended, beta).\n- Necesita mínimo ~1024 tokens cacheables para activar.\n- Primer hit: cobras 25% más por escribir al cache. Hits subsecuentes: 90% menos.\n\n**Break-even:** si reusas el mismo system prompt >4 veces en 5 minutos, ya ahorras. En agentes en producción esto es trivialmente cierto."
+          },
+          {
+            "title": "Unit economics: la matemática que tienes que saber",
+            "body": "Calcula el costo por usuario antes de scale-up. Ejemplo realista de un chatbot SaaS:\n\n**Por interacción del usuario:**\n- 1 routing call (Haiku, 100 tokens in / 20 out): ~$0.0001\n- 1 respuesta principal (Sonnet, 2000 in / 500 out): ~$0.015\n- 1 recap personalizado (Haiku, 1000 in / 200 out): ~$0.002\n- **Total:** ~$0.017 por interacción.\n\n**Por usuario activo mensual** (asumiendo 30 interacciones/mes):\n- Sin caching: 30 × $0.017 = **$0.51/MAU**\n- Con caching del system prompt: 30 × $0.011 ≈ **$0.33/MAU**\n\nA 10,000 MAU = $3,300/mes en API costs. Si cobras $10/usuario/mes, queda $66,700/mes de margen bruto. Si cobras $5, queda $36,700. Si cobras $1, **pierdes dinero**.\n\nEste cálculo decide tu modelo de negocio."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Default a Opus por miedo a errores",
+            "desc": "Usas Opus para todo 'por si acaso'. Quemas dinero 50× más rápido que con Haiku.",
+            "fix": "Empieza con Haiku. Mide accuracy en un golden set. Solo sube a Sonnet/Opus si Haiku falla y la diferencia justifica el costo."
+          },
+          {
+            "title": "Sin tracking de costo por request",
+            "desc": "No sabes qué llamadas son caras. Imposible optimizar.",
+            "fix": "Loguea cada llamada con: model, input_tokens, output_tokens, latency, task_id. Dashboard semanal de costo por tarea."
+          },
+          {
+            "title": "No usar prompt caching",
+            "desc": "Dejas 90% de ahorro en la mesa.",
+            "fix": "Si tu system prompt es >1024 tokens y reusas en múltiples llamadas, agrega `cache_control: ephemeral`. Es una línea."
+          },
+          {
+            "title": "Asumir que más caro = más rápido",
+            "desc": "Opus es más capaz pero también más lento. Para tareas latency-sensitive, Haiku puede ser mejor.",
+            "fix": "Mide latencia P50/P95 por modelo en tu workload. Haiku suele ser 2-3× más rápido que Opus."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "Según la regla 70/20/10, ¿qué porcentaje de tráfico debería ir a Haiku?",
+            "options": [
+              "10%",
+              "20%",
+              "70%",
+              "100%"
+            ],
+            "correct": 2,
+            "explain": "70% Haiku, 20% Sonnet, 10% Opus. La mayoría de tareas (clasificar, extraer, resumir) son perfectas para Haiku."
+          },
+          {
+            "q": "¿Cuánto ahorras con prompt caching en llamadas con cache hit?",
+            "options": [
+              "10%",
+              "50%",
+              "90% en tokens cacheados",
+              "100%"
+            ],
+            "correct": 2,
+            "explain": "Hasta 90% menos en los tokens cacheados (en cache hits). La primera escritura cobra 25% más, pero a partir del segundo hit ahorras 90%."
+          },
+          {
+            "q": "Para clasificar emails (SPAM/NOT_SPAM), ¿qué modelo usas?",
+            "options": [
+              "Opus",
+              "Sonnet",
+              "Haiku",
+              "Depende del idioma"
+            ],
+            "correct": 2,
+            "explain": "Clasificación es el caso de uso ideal para Haiku. Es rápido, barato y con buen prompt achieve >95% accuracy."
+          },
+          {
+            "q": "¿Cuándo NO usar prompt caching?",
+            "options": [
+              "Cuando el system prompt es <1024 tokens",
+              "Cuando reusas el mismo prompt frecuentemente",
+              "Cuando trabajas con Claude",
+              "Nunca, siempre úsalo"
+            ],
+            "correct": 0,
+            "explain": "Caching tiene un mínimo de ~1024 tokens cacheables. Si tu system prompt es más corto, no se activa."
+          },
+          {
+            "q": "Tu chatbot cuesta $0.51/MAU sin caching. ¿Cómo bajarías el costo primero?",
+            "options": [
+              "Migrar a otro proveedor",
+              "Activar prompt caching",
+              "Reducir features",
+              "Subir precios"
+            ],
+            "correct": 1,
+            "explain": "Prompt caching es la primera optimización. Es trivial de activar y reduce 30-40% del costo en sistemas con system prompts repetidos."
+          }
+        ],
+        "references": [
+          {
+            "title": "Claude API Pricing (oficial)",
+            "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+            "kind": "anthropic-docs",
+            "relevance": "primary"
+          },
+          {
+            "title": "Prompt caching docs",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+            "kind": "anthropic-docs",
+            "relevance": "primary"
+          },
+          {
+            "title": "Claude API Pricing 2026 Guide (Finout)",
+            "url": "https://www.finout.io/blog/anthropic-api-pricing",
+            "kind": "blog",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 7,
+      "mod": 2,
+      "id": 7,
+      "module": 2,
+      "title": "Orchestrator-Workers",
+      "sub": "Cuándo realmente necesitas multi-agente",
+      "duration": "50 min",
+      "hours": 1.1,
+      "objs": [
+        "Diseñar el rol del Orchestrator y los Workers",
+        "Decidir multi-agente vs single-agent con criterios objetivos",
+        "Detectar anti-patrones: over-orchestration, workers tontos",
+        "Implementar handoffs entre agentes"
+      ],
+      "reading": "Building Effective Agents — patrón Orchestrator-Workers (PDF de patrones)",
+      "exercise": "Diseña el Orchestrator de tu sistema con 3+ workers, especificando handoffs y criterios de delegación.",
+      "deep": {
+        "intro": "Multi-agente es el patrón más sobreusado en sistemas que no lo necesitan. Equipos saltan a 'orchestrator con 5 workers' porque suena sofisticado, sin haber agotado un agente lineal bien diseñado primero.\n\n**Cuándo necesitas multi-agente, de verdad:**\n\n1. **La tarea es muy grande y satura el contexto.** Si un solo agente con contexto de 200K tokens se confunde porque acumula demasiada historia, divide.\n2. **Subtareas requieren especialización fuerte.** Si una requiere razonamiento y otra requiere precisión numérica, distintos system prompts ayudan.\n3. **Paralelizable.** Si las subtareas son independientes, paralelizarlas baja la latencia 3-5×.\n4. **Necesitas role-play estructurado.** Debates, simulaciones, A/B de perspectivas distintas.\n\n**Cuándo NO lo necesitas:** la mayoría de las veces. Un buen system prompt + tools + ciclo ReAct resuelve el 80% de problemas que la gente intenta resolver con multi-agente.",
+        "sections": [
+          {
+            "title": "Anatomía del Orchestrator",
+            "body": "El Orchestrator es un agente con un objetivo distinto: **descomponer la tarea y delegar**, no resolver directamente. Su system prompt enfatiza:\n\n- Cuáles workers tiene disponibles y qué hace cada uno.\n- Criterios para delegar a uno u otro.\n- Cómo agregar resultados de varios workers.\n- Cuándo terminar.\n\nLos Workers son agentes (o llamadas LLM) especializados con system prompts enfocados. Su salida es predictible (idealmente JSON estructurado) para que el Orchestrator pueda agregar.\n\n**Modelo:** Orchestrator suele ser Sonnet u Opus (necesita razonar sobre la tarea completa). Workers suelen ser Haiku (cada uno tiene scope estrecho).",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Patrón Orchestrator-Workers básico",
+                "src": "from anthropic import Anthropic\nimport json\n\nclient = Anthropic()\n\nORCHESTRATOR_PROMPT = \"\"\"<role>\nEres el Orchestrator de un sistema de diagnóstico de incidentes.\nDescompones la tarea y delegas a workers especializados.\n</role>\n\n<workers>\n- log_analyzer: analiza logs y extrae errores relevantes\n- deploy_checker: revisa deploys recientes y cambios en config\n- metric_checker: revisa metrics de CPU, memoria, latencia\n</workers>\n\n<rules>\n- Delega a UN worker a la vez. Espera el resultado antes de delegar al siguiente.\n- Si dos workers son independientes, puedes paralelizarlos.\n- Después de 3-5 workers, sintetiza diagnóstico final.\n</rules>\"\"\"\n\ndef run_worker(worker_name: str, task: str) -> dict:\n    worker_prompts = {\n        \"log_analyzer\":    \"Analiza logs. Devuelve JSON: {errors: [...], severity: ...}\",\n        \"deploy_checker\":  \"Revisa deploys recientes. Devuelve JSON: {deploys: [...]}\",\n        \"metric_checker\":  \"Revisa metrics. Devuelve JSON: {anomalies: [...]}\"\n    }\n    resp = client.messages.create(\n        model=\"claude-haiku-4-5\", max_tokens=600,\n        system=worker_prompts[worker_name],\n        messages=[{\"role\": \"user\", \"content\": task}]\n    )\n    return json.loads(resp.content[0].text)\n\ndef orchestrate(incident: str) -> str:\n    # Orchestrator decide qué workers usar\n    plan = client.messages.create(\n        model=\"claude-sonnet-4-6\", max_tokens=400,\n        system=ORCHESTRATOR_PROMPT,\n        messages=[{\"role\": \"user\", \"content\": f\"INCIDENTE: {incident}\\n\\nDecide qué workers invocar (JSON list).\"}]\n    )\n    plan = json.loads(plan.content[0].text)\n\n    # Ejecuta workers (paralelo si posible)\n    results = {w: run_worker(w, incident) for w in plan[\"workers\"]}\n\n    # Síntesis final\n    final = client.messages.create(\n        model=\"claude-sonnet-4-6\", max_tokens=800,\n        system=ORCHESTRATOR_PROMPT,\n        messages=[{\"role\": \"user\", \"content\":\n                   f\"INCIDENTE: {incident}\\n\\nRESULTADOS:\\n{json.dumps(results, indent=2)}\\n\\nDiagnostica.\"}]\n    )\n    return final.content[0].text"
+              }
+            ]
+          },
+          {
+            "title": "Handoffs entre agentes: el contrato",
+            "body": "Cuando un agente le pasa trabajo a otro, define **explícitamente**:\n\n1. **Qué se le pasa.** Schema del input (ideally JSON con campos tipados).\n2. **Qué devuelve.** Schema del output. Si es texto libre, especifica formato/idioma.\n3. **Qué errores puede emitir.** Códigos de error estructurados.\n4. **Quién decide si retry.** El orchestrator, no el worker.\n\nSin contrato claro, los handoffs se vuelven misteriosos: el worker devuelve algo que el orchestrator no esperaba, el flujo se rompe en formas difíciles de debuggear."
+          },
+          {
+            "title": "Anti-patrones de multi-agente",
+            "body": "Tres anti-patrones aparecen una y otra vez:\n\n**Over-orchestration:** delegas a 5 workers algo que un solo agente con buen prompt resolvía. Costo 5×, latencia 5×, debug 10×.\n\n**Workers tontos:** workers que solo pasan datos sin razonar. Si tu 'worker' es básicamente una función → es una tool, no un agente.\n\n**Comunicación implícita:** orchestrator y workers asumen estructura sin contratos. Cuando algo cambia, todo se rompe.\n\n**Sin observabilidad:** no tracas trace IDs entre agentes. Cuando hay un problema, no puedes seguir qué pasó. Trace ID compartido es no-negociable."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Saltar a multi-agente sin probar single-agent",
+            "desc": "Empezar con orchestrator es overengineering. Pago triple por incertidumbre triple.",
+            "fix": "Construye single-agent primero. Solo divide cuando observes confusión por saturación de contexto o falta de especialización."
+          },
+          {
+            "title": "Workers sin observabilidad compartida",
+            "desc": "Cada worker tiene sus propios logs. Cuando algo falla, no puedes correlacionar.",
+            "fix": "Trace ID compartido en todos los workers. Mismo trace_id en logs/metrics/traces. OpenTelemetry para correlación."
+          },
+          {
+            "title": "Orchestrator usando Haiku",
+            "desc": "El orchestrator necesita razonar sobre toda la tarea. Haiku falla en sintetizar resultados de 3+ workers.",
+            "fix": "Orchestrator = Sonnet o Opus. Workers = Haiku (scope pequeño). El presupuesto se justifica porque hay 1 orchestrator vs N workers."
+          },
+          {
+            "title": "Pasar todo el contexto a cada worker",
+            "desc": "Cada worker recibe 50KB de contexto que no necesita. Costos explotan.",
+            "fix": "Cada worker recibe SOLO el contexto relevante a su scope. El orchestrator filtra antes de delegar."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Cuándo NO necesitas multi-agente?",
+            "options": [
+              "Cuando la tarea es muy grande",
+              "Cuando un single-agent bien diseñado puede resolver la tarea",
+              "Cuando hay subtareas paralelas",
+              "Cuando necesitas especialización fuerte"
+            ],
+            "correct": 1,
+            "explain": "Si un single-agent con buen prompt y tools resuelve, no agregues multi-agente. La complejidad no justifica el costo."
+          },
+          {
+            "q": "¿Qué modelo es típicamente correcto para el Orchestrator?",
+            "options": [
+              "Haiku (es solo coordinación)",
+              "Sonnet o Opus (necesita razonar sobre toda la tarea)",
+              "GPT-4",
+              "Es indiferente"
+            ],
+            "correct": 1,
+            "explain": "El Orchestrator razona sobre la tarea completa, descompone, y sintetiza. Necesita capacidad de razonamiento alta. Workers especializados pueden ser Haiku."
+          },
+          {
+            "q": "¿Qué define el contrato de un handoff entre agentes?",
+            "options": [
+              "Solo el input",
+              "Schema input + schema output + errores posibles",
+              "Solo el modelo a usar",
+              "Solo la timeout"
+            ],
+            "correct": 1,
+            "explain": "Sin schema explícito de input/output y catálogo de errores, los handoffs se rompen impredeciblemente. Define el contrato como API entre microservicios."
+          },
+          {
+            "q": "Tu sistema tiene 7 'workers' que solo extraen datos sin razonar. ¿Qué son?",
+            "options": [
+              "Agentes válidos",
+              "Probablemente deberían ser tools, no agentes",
+              "Workers correctos",
+              "Sistema bien diseñado"
+            ],
+            "correct": 1,
+            "explain": "Si un 'worker' no razona y solo ejecuta lógica deterministica, es una tool. Multi-agente con workers tontos = overhead sin beneficio."
+          },
+          {
+            "q": "¿Cómo correlacionas qué pasó entre 5 agentes que colaboran?",
+            "options": [
+              "Logs separados por agente",
+              "Trace ID compartido (OpenTelemetry)",
+              "Timestamps",
+              "No se puede"
+            ],
+            "correct": 1,
+            "explain": "Trace ID compartido propagado entre todas las llamadas. OpenTelemetry GenAI Conventions es el estándar. Sin esto, debug es imposible."
+          }
+        ],
+        "references": [
+          {
+            "title": "Building Effective Agents — Orchestrator-Workers",
+            "url": "https://www.anthropic.com/research/building-effective-agents",
+            "kind": "anthropic-research",
+            "relevance": "primary"
+          },
+          {
+            "title": "Architecture Patterns (PDF)",
+            "url": "https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf",
+            "kind": "anthropic-pdf",
+            "relevance": "primary"
+          },
+          {
+            "title": "Multi-agent vs Single-agent (Naitive)",
+            "url": "https://blog.naitive.cloud/building-effective-agents/",
+            "kind": "blog",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 8,
+      "mod": 3,
+      "id": 8,
+      "module": 3,
+      "title": "Los 5 Guards de PulseCore",
+      "sub": "La implementación completa del corazón del sistema",
+      "duration": "55 min",
+      "hours": 1.2,
+      "objs": [
+        "Mapear cada Guard a su patrón agéntico y modelo óptimo",
+        "Diseñar guardrails finales para acciones críticas",
+        "Diseñar el ciclo Learner offline",
+        "Conectar los Guards entre sí (event bus, memoria compartida)"
+      ],
+      "reading": "Architecture Patterns and Implementation Frameworks (PDF Anthropic)",
+      "exercise": "Diseña el contrato entre 2 Guards de tu sistema: eventos, payload, error handling, idempotencia.",
+      "deep": {
+        "intro": "PulseCore es el sistema agéntico que vas a construir. Tiene cinco agentes especializados (\"Guards\") que colaboran para monitorear, diagnosticar y remediar incidentes en infraestructura del cliente.\n\nLos cinco Guards:\n\n1. **HealthGuard** — monitorea continuamente la salud de servicios. Detecta cuándo algo está mal.\n2. **Diagnostician** — cuando HealthGuard detecta problema, investiga la causa raíz.\n3. **Remediator** — propone (y opcionalmente ejecuta) acciones correctivas.\n4. **Auditor** — registra cada decisión y acción con trazabilidad completa.\n5. **Learner** — offline, analiza incidentes pasados y mejora system prompts y runbooks.\n\nCada Guard tiene su patrón. HealthGuard es polling simple (workflow). Diagnostician es Orchestrator-Workers (multi-investigación paralela). Remediator es Evaluator-Optimizer (genera plan, evalúa, refina). Auditor es append-only (sin LLM, solo persistencia). Learner es batch offline con Opus.\n\nEsta arquitectura es ejemplar porque **mezcla patrones según necesidad** — no fuerza todo a multi-agente.",
+        "sections": [
+          {
+            "title": "Cada Guard, su patrón y su modelo",
+            "body": "| Guard | Patrón | Modelo | Por qué |\n|---|---|---|---|\n| HealthGuard | Polling + Single Agent | Haiku | Tarea repetitiva, debe ser barata, escalable a miles de servicios |\n| Diagnostician | Orchestrator-Workers | Sonnet (orch), Haiku (workers) | Investigación paralela: logs + deploys + metrics simultáneo |\n| Remediator | Evaluator-Optimizer | Sonnet | Acciones críticas: necesita revisión antes de ejecutar |\n| Auditor | Append-only (no LLM) | — | Persistencia inmutable, debe ser determinista |\n| Learner | Batch offline | Opus | 1 corrida/día, profundidad de razonamiento sobre histórico |\n\nNota crucial: solo el Learner usa Opus, y solo offline. La pipeline en vivo (HealthGuard → Diagnostician → Remediator) es Haiku + Sonnet. Esto mantiene costos bajos."
+          },
+          {
+            "title": "Guardrails finales para Remediator",
+            "body": "Remediator puede ejecutar acciones que afectan producción del cliente. **Nunca debe ejecutar sin guardrails finales.** Tres capas:\n\n1. **Whitelist de acciones.** Remediator solo puede invocar tools de un set aprobado. Cada tool tiene scope explícito (qué afecta, qué no).\n\n2. **Human-in-the-loop para acciones críticas.** Reiniciar un servicio: ok automático. Borrar datos: requiere aprobación humana. La línea la decide el dueño del cliente.\n\n3. **Dry-run primero.** Antes de ejecutar, Remediator describe qué va a hacer. Si la simulación falla validaciones (impacto > threshold), pausa para humano.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Guardrails finales en Remediator",
+                "src": "ACTIONS_REQUIRING_APPROVAL = {\n    \"delete_data\", \"modify_billing\", \"change_dns\",\n    \"rollback_production\", \"scale_to_zero\"\n}\nSAFE_ACTIONS = {\n    \"restart_service\", \"clear_cache\", \"increase_replicas\"\n}\n\ndef execute_remediation(plan: dict, tenant_id: str) -> dict:\n    action = plan[\"action\"]\n    impact = plan[\"estimated_impact\"]\n\n    # 1. Whitelist check\n    if action not in (SAFE_ACTIONS | ACTIONS_REQUIRING_APPROVAL):\n        return {\"success\": False, \"reason\": \"action not allowed\"}\n\n    # 2. Dry-run\n    simulation = simulate_action(action, plan[\"params\"], tenant_id)\n    if simulation[\"users_affected\"] > 100:\n        return {\"success\": False, \"reason\": \"impact too high\",\n                \"requires\": \"human_approval\"}\n\n    # 3. Human gate para acciones críticas\n    if action in ACTIONS_REQUIRING_APPROVAL:\n        approval = request_human_approval(plan)\n        if not approval[\"approved\"]:\n            return {\"success\": False, \"reason\": \"human rejected\"}\n\n    # 4. Ejecuta de verdad\n    result = execute(action, plan[\"params\"])\n    return {\"success\": True, \"result\": result, \"audit_id\": log_action(plan)}"
+              }
+            ]
+          },
+          {
+            "title": "El ciclo Learner offline",
+            "body": "Learner corre cada noche. Lee todos los incidentes del día (vía Auditor). Identifica patrones:\n\n- ¿Hubo incidentes recurrentes con la misma causa?\n- ¿Qué prompts del Diagnostician llevaron a diagnóstico incorrecto?\n- ¿Qué acciones del Remediator necesitaron rollback?\n\nGenera dos outputs:\n\n1. **Patch propuesto al system prompt** del Guard relevante (ej. \"Cuando hay timeout, considerar deploys recientes ANTES de alertar\").\n2. **Nueva entrada en el runbook** semántico (memoria semantica, para Agentic RAG).\n\nLos patches no se aplican automáticamente. Llegan a un humano (tú) para revisión. Una vez aprobados, se commitean al repo y se reflejan en producción en el siguiente deploy.\n\nEsto es learning con humano en el loop — el sistema mejora pero no muta solo."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Guards muy acoplados",
+            "desc": "Si HealthGuard llama directamente a Diagnostician (in-process), no puedes escalar ni testear independientemente.",
+            "fix": "Event bus entre Guards (Redis pubsub, Postgres NOTIFY, o Kafka). Cada Guard publica eventos; otros se suscriben. Coupling bajo, escalado independiente."
+          },
+          {
+            "title": "Remediator sin guardrails finales",
+            "desc": "Le das tools de write y rezas. Tarde o temprano, ejecuta algo destructivo.",
+            "fix": "Whitelist + dry-run + human gate para acciones críticas. Sin atajos. Tu cliente confía en que no rompes producción."
+          },
+          {
+            "title": "Learner sin revisión humana",
+            "desc": "Auto-patcheas prompts en producción. Bug de Learner → prompts corruptos en todos los clientes.",
+            "fix": "Learner propone, tú revisas, deploy normal. Process change debe pasar code review como cualquier otro."
+          },
+          {
+            "title": "Auditor con LLM",
+            "desc": "Algunos equipos ponen LLM en el Auditor 'para resumir'. Pierde inmutabilidad y reproducibilidad.",
+            "fix": "Auditor es código puro: append-only, JSON estructurado, índices por tenant_id y timestamp. Sin LLM. El resumen lo hace el Diagnostician si hace falta."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Qué modelo usa el HealthGuard?",
+            "options": [
+              "Opus",
+              "Sonnet",
+              "Haiku (barato, repetitivo, escalable)",
+              "GPT-4"
+            ],
+            "correct": 2,
+            "explain": "HealthGuard hace polling constante de cientos de servicios. Necesita ser barato. Haiku con buen prompt es perfecto."
+          },
+          {
+            "q": "¿Cuál es el único Guard que usa Opus?",
+            "options": [
+              "HealthGuard",
+              "Diagnostician",
+              "Remediator",
+              "Learner (offline, batch)"
+            ],
+            "correct": 3,
+            "explain": "Learner corre 1 vez al día, razona profundamente sobre histórico. Justifica Opus. El resto de la pipeline en vivo es Haiku/Sonnet para mantener costos."
+          },
+          {
+            "q": "¿Qué patrón usa el Diagnostician?",
+            "options": [
+              "Single agent",
+              "Evaluator-Optimizer",
+              "Orchestrator-Workers (paralelo: logs + deploys + metrics)",
+              "Prompt chaining"
+            ],
+            "correct": 2,
+            "explain": "Diagnostician investiga múltiples ángulos en paralelo (logs, deploys, metrics). Orchestrator-Workers es el patrón natural: 1 orchestrator + 3 workers especializados."
+          },
+          {
+            "q": "¿Por qué Remediator NO debe ejecutar acciones críticas automáticamente?",
+            "options": [
+              "Es más lento",
+              "Necesita guardrails: whitelist + dry-run + human gate para acciones destructivas",
+              "Le falta capacidad",
+              "Por costo"
+            ],
+            "correct": 1,
+            "explain": "Acciones que afectan producción del cliente requieren defense in depth. Sin guardrails, un bug del agente puede causar incidentes peores que el original."
+          },
+          {
+            "q": "El Learner detecta un patrón nuevo y propone cambio al system prompt. ¿Qué pasa?",
+            "options": [
+              "Se aplica automáticamente",
+              "Se descarta",
+              "Llega a un humano para revisión antes de aplicarse",
+              "Solo se logea"
+            ],
+            "correct": 2,
+            "explain": "Learning con humano en el loop. Auto-mutar prompts sin revisión es riesgo no-aceptable. Process change debe pasar code review."
+          }
+        ],
+        "references": [
+          {
+            "title": "Architecture Patterns (PDF)",
+            "url": "https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf",
+            "kind": "anthropic-pdf",
+            "relevance": "primary"
+          },
+          {
+            "title": "Building Effective Agents",
+            "url": "https://www.anthropic.com/research/building-effective-agents",
+            "kind": "anthropic-research",
+            "relevance": "primary"
+          }
+        ]
+      }
+    },
+    {
+      "n": 9,
+      "mod": 3,
+      "id": 9,
+      "module": 3,
+      "title": "Multi-tenant y Seguridad",
+      "sub": "Aislamiento RLS sin un solo bug que rompa todo",
+      "duration": "50 min",
+      "hours": 1.1,
+      "objs": [
+        "Aplicar defense-in-depth: RLS + filtros de app + tenant_id en contexto del agente",
+        "Configurar PostgreSQL RLS para multi-tenancy",
+        "Detectar vulnerabilidades de aislamiento",
+        "Diseñar audit_log a prueba de manipulación"
+      ],
+      "reading": "AWS Multi-tenant Data Isolation con PostgreSQL RLS + sample repo",
+      "exercise": "Diseña setup RLS completo para una tabla sensible. Define policies para SELECT, INSERT, UPDATE, DELETE.",
+      "deep": {
+        "intro": "Multi-tenant en SaaS B2B significa **un solo schema/DB compartido entre N clientes**. Es la arquitectura más común porque es la más simple de operar. Pero un solo bug de aislamiento — un `WHERE tenant_id = X` olvidado — y leakeas datos entre clientes. Tu empresa puede no sobrevivir ese incidente.\n\nLa solución es **defense in depth**: tres capas que se validan independientemente. Si una falla, las otras protegen.\n\n**Las 3 capas:**\n\n1. **Database (RLS).** Row-Level Security en Postgres. La DB se niega a devolver filas de otros tenants, aunque la query no tenga WHERE.\n2. **Application.** Filtros explícitos por tenant_id en cada query. Tests unitarios que verifican.\n3. **Agente.** El tenant_id viaja en el system prompt y en el contexto de tools. El agente nunca toca DB; pide acción vía tool; tool valida tenant_id antes de ejecutar.\n\nNinguna capa es suficiente sola. Las tres juntas hacen el aislamiento robusto.",
+        "sections": [
+          {
+            "title": "PostgreSQL RLS: setup canónico",
+            "body": "Row-Level Security en Postgres permite definir policies que filtran filas automáticamente. La policy usa una expresión SQL que debe ser TRUE para que la fila sea visible.\n\nEl truco: la policy usa una variable de sesión (`current_setting('app.tenant_id')`). Tu aplicación setea esa variable al inicio de cada request, antes de cualquier query. Si olvidas setear, la query no devuelve nada (porque NULL != tenant_id).",
+            "code": [
+              {
+                "lang": "sql",
+                "label": "RLS setup completo",
+                "src": "-- 1. Tabla con tenant_id\nCREATE TABLE incidents (\n  id          BIGSERIAL PRIMARY KEY,\n  tenant_id   UUID NOT NULL,\n  title       TEXT NOT NULL,\n  severity    TEXT NOT NULL,\n  status      TEXT NOT NULL DEFAULT 'open',\n  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()\n);\nCREATE INDEX idx_incidents_tenant ON incidents(tenant_id);\n\n-- 2. Habilita RLS\nALTER TABLE incidents ENABLE ROW LEVEL SECURITY;\n\n-- 3. Policies por operación\nCREATE POLICY tenant_select ON incidents\n  FOR SELECT\n  USING (tenant_id = current_setting('app.tenant_id', true)::uuid);\n\nCREATE POLICY tenant_insert ON incidents\n  FOR INSERT\n  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);\n\nCREATE POLICY tenant_update ON incidents\n  FOR UPDATE\n  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)\n  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);\n\nCREATE POLICY tenant_delete ON incidents\n  FOR DELETE\n  USING (tenant_id = current_setting('app.tenant_id', true)::uuid);\n\n-- 4. En la app, al inicio de cada request:\n-- SET LOCAL app.tenant_id = 'uuid-del-tenant';"
+              },
+              {
+                "lang": "python",
+                "label": "Middleware FastAPI que setea tenant_id",
+                "src": "from fastapi import Request, HTTPException\nfrom contextvars import ContextVar\nimport asyncpg\n\n_tenant_ctx: ContextVar[str] = ContextVar(\"tenant_id\")\n\nasync def set_tenant_middleware(request: Request, call_next):\n    tenant_id = request.headers.get(\"x-tenant-id\")\n    if not tenant_id:\n        raise HTTPException(401, \"missing tenant\")\n    _tenant_ctx.set(tenant_id)\n    return await call_next(request)\n\nasync def get_db_conn():\n    \"\"\"Conexión que setea tenant_id automáticamente.\"\"\"\n    conn = await asyncpg.connect(DATABASE_URL)\n    await conn.execute(\n        \"SET LOCAL app.tenant_id = $1\",\n        _tenant_ctx.get()\n    )\n    return conn\n\n# Cualquier query a través de get_db_conn() está filtrada por RLS\n# Aunque olvides WHERE tenant_id, postgres bloquea"
+              }
+            ]
+          },
+          {
+            "title": "Tenant_id en el contexto del agente",
+            "body": "El LLM nunca debe decidir tenant_id por sí mismo. **Siempre** viene del contexto de la sesión (autenticación del usuario), nunca del input del usuario.\n\nDos prácticas:\n\n1. **System prompt menciona tenant_id implícitamente:** \"Estás operando en el contexto del cliente actual. Nunca preguntes ni asumas un tenant distinto.\"\n\n2. **Tools reciben tenant_id automáticamente, no como argumento del LLM.** Tu código añade `tenant_id=session.tenant_id` antes de ejecutar la tool. El LLM no puede especificarlo.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Tool con tenant_id automático (no del LLM)",
+                "src": "def execute_tool(tool_name: str, args_from_llm: dict, session: Session) -> dict:\n    \"\"\"Ejecuta una tool. tenant_id viene de la sesión, NO del LLM.\"\"\"\n    if tool_name == \"search_incidents\":\n        # El LLM solo pasa query. tenant_id lo inyectamos NOSOTROS.\n        return search_incidents(\n            query=args_from_llm[\"query\"],\n            tenant_id=session.tenant_id  # ← crucial: del contexto, no del modelo\n        )\n    # Si el LLM intenta especificar tenant_id en args, lo ignoramos:\n    if \"tenant_id\" in args_from_llm:\n        log_security_event(\"LLM tried to set tenant_id\", session)\n        del args_from_llm[\"tenant_id\"]"
+              }
+            ]
+          },
+          {
+            "title": "Audit log append-only",
+            "body": "Cada acción del agente que afecta datos del cliente debe registrarse en un log inmutable. \"Inmutable\" significa: nadie (ni tú) puede modificar filas existentes. Solo insert.\n\nUsos:\n- Compliance: SOC 2, GDPR exigen auditabilidad.\n- Debug: cuando algo va mal, sabes exactamente qué hizo el agente.\n- Forensic: si hay sospecha de leak, puedes reconstruir.\n- Trust: tu cliente puede ver qué hiciste a sus datos.\n\n**Implementación:** tabla con tenant_id, agent_name, action, params (JSONB), result, timestamp. Trigger en Postgres que rechaza UPDATE/DELETE. Backup a S3 cada hora."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "RLS habilitado pero sin policies",
+            "desc": "Si habilitas RLS pero no creas policies, ningún tenant puede leer nada. La DB queda inaccesible.",
+            "fix": "Verifica que hay 4 policies por tabla (SELECT, INSERT, UPDATE, DELETE) y que las queries pasan tests."
+          },
+          {
+            "title": "Usar SET en lugar de SET LOCAL",
+            "desc": "`SET app.tenant_id = X` persiste en la conexión. Si tu pool reusa conexiones, el siguiente request hereda el tenant anterior.",
+            "fix": "Siempre `SET LOCAL` — vive solo en la transacción actual. Si tu app no usa transacciones, envuelve en BEGIN/COMMIT."
+          },
+          {
+            "title": "Confiar solo en filtros de app",
+            "desc": "Un bug en código olvida WHERE tenant_id, y leakeas. Tests no siempre lo capturan.",
+            "fix": "RLS + filtros + tests. Defense in depth no-negociable. Aunque tests pasen, RLS te salva del bug que no tested."
+          },
+          {
+            "title": "Audit_log mutable",
+            "desc": "Bug o malicia puede editar el log. Pierde valor forensic.",
+            "fix": "Trigger Postgres que rechaza UPDATE/DELETE en la tabla. Backup periódico a S3 con object lock."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Qué hace RLS en PostgreSQL?",
+            "options": [
+              "Encripta datos",
+              "Filtra filas automáticamente según policies",
+              "Hace backup",
+              "Acelera queries"
+            ],
+            "correct": 1,
+            "explain": "Row-Level Security define policies que filtran qué filas son visibles. Aunque la query no tenga WHERE, la DB aplica la policy."
+          },
+          {
+            "q": "¿Cuántas capas tiene defense in depth para multi-tenant?",
+            "options": [
+              "1: solo RLS",
+              "2: app + RLS",
+              "3: RLS + app + agente",
+              "5: una por cada Guard"
+            ],
+            "correct": 2,
+            "explain": "Las 3 capas: DB (RLS), app (filtros), agente (tenant_id en contexto). Cada una se valida independientemente. Si una falla, las otras protegen."
+          },
+          {
+            "q": "¿Quién especifica el tenant_id en el agente?",
+            "options": [
+              "El LLM lo decide",
+              "El usuario lo manda en el input",
+              "El sistema lo inyecta desde la sesión autenticada",
+              "Es opcional"
+            ],
+            "correct": 2,
+            "explain": "Nunca el LLM, nunca el input del usuario. tenant_id viene de la sesión autenticada y se inyecta automáticamente en tools."
+          },
+          {
+            "q": "¿Por qué usar SET LOCAL en lugar de SET?",
+            "options": [
+              "Es más rápido",
+              "SET LOCAL vive solo en la transacción, evitando leak entre requests con pool",
+              "Es más legible",
+              "SET no funciona en Postgres"
+            ],
+            "correct": 1,
+            "explain": "SET persiste en la conexión. Si tu pool reusa conexiones, el siguiente request hereda el tenant anterior. SET LOCAL vive solo en la transacción actual."
+          },
+          {
+            "q": "¿Por qué el audit_log debe ser append-only?",
+            "options": [
+              "Por performance",
+              "Por inmutabilidad: debug, compliance, forensic, trust",
+              "Por costo",
+              "No es necesario"
+            ],
+            "correct": 1,
+            "explain": "Audit log mutable pierde valor forensic. Compliance (SOC 2, GDPR), debug, y trust del cliente requieren inmutabilidad. Trigger Postgres rechaza UPDATE/DELETE."
+          }
+        ],
+        "references": [
+          {
+            "title": "Multi-tenant data isolation con PostgreSQL RLS (AWS)",
+            "url": "https://aws.amazon.com/blogs/database/multi-tenant-data-isolation-with-postgresql-row-level-security/",
+            "kind": "blog",
+            "relevance": "primary"
+          },
+          {
+            "title": "AWS SaaS Factory: PostgreSQL RLS sample",
+            "url": "https://github.com/aws-samples/aws-saas-factory-postgresql-rls",
+            "kind": "repo",
+            "relevance": "primary"
+          },
+          {
+            "title": "PostgreSQL RLS docs",
+            "url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html",
+            "kind": "docs",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 10,
+      "mod": 3,
+      "id": 10,
+      "module": 3,
+      "title": "Auditoría y Observabilidad",
+      "sub": "Traces, metrics y logs de cada agente",
+      "duration": "45 min",
+      "hours": 1.0,
+      "objs": [
+        "Implementar OpenTelemetry GenAI Semantic Conventions",
+        "Diseñar spans con atributos GenAI completos",
+        "Definir alertas operacionales: latencia, costo, error rate",
+        "Propagar traces en arquitecturas Orchestrator-Workers"
+      ],
+      "reading": "OpenTelemetry for LLMs Guide 2026",
+      "exercise": "Diseña dashboard de observabilidad con 6 métricas clave + define 3 alertas con thresholds y owners.",
+      "deep": {
+        "intro": "Sin observabilidad, tu sistema agéntico es una caja negra. **Si no puedes ver qué pasó, no puedes mejorarlo, no puedes debuggear, no puedes confiar en él.**\n\nLa observabilidad de agentes tiene 3 pilares (igual que cualquier sistema distribuido moderno):\n\n1. **Traces** — el flujo de una request a través de agentes y tools. Cada llamada al LLM, cada tool, cada handoff entre agentes es un span.\n2. **Metrics** — agregados sobre el tiempo: latencia P50/P95/P99, costo por request, error rate, tokens consumidos.\n3. **Logs** — eventos discretos con contexto: prompts completos, responses, errores.\n\nEl estándar de la industria: **OpenTelemetry GenAI Semantic Conventions**. Define exactamente qué atributos debe tener un span de LLM (modelo, tokens, finish_reason, etc.) para que tu observability stack (Datadog, Grafana, etc.) los entienda.",
+        "sections": [
+          {
+            "title": "Spans con GenAI Semantic Conventions",
+            "body": "Un span de llamada a Claude debe incluir como mínimo:\n\n- `gen_ai.system = anthropic`\n- `gen_ai.request.model = claude-sonnet-4-6`\n- `gen_ai.request.max_tokens = 1024`\n- `gen_ai.request.temperature = 0.0`\n- `gen_ai.usage.input_tokens = 1234`\n- `gen_ai.usage.output_tokens = 567`\n- `gen_ai.response.finish_reason = end_turn`\n- `gen_ai.cost.usd = 0.018`  (calculado por tu código)\n\nCon estos atributos, tu observability backend (Grafana, Datadog, Honeycomb, etc.) puede mostrarte: costo total por endpoint, latencia por modelo, ratio de truncation, etc.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "Instrumentar llamada Claude con OpenTelemetry",
+                "src": "from opentelemetry import trace\nfrom anthropic import Anthropic\n\ntracer = trace.get_tracer(__name__)\nclient = Anthropic()\n\nPRICING = {\n    \"claude-haiku-4-5\":  {\"in\": 1.0,  \"out\": 5.0},   # $/M tokens\n    \"claude-sonnet-4-6\": {\"in\": 3.0,  \"out\": 15.0},\n    \"claude-opus-4-7\":   {\"in\": 5.0,  \"out\": 25.0},\n}\n\ndef cost_usd(model: str, input_t: int, output_t: int) -> float:\n    p = PRICING[model]\n    return (input_t * p[\"in\"] + output_t * p[\"out\"]) / 1_000_000\n\ndef call_claude_instrumented(model: str, system: str, messages: list) -> dict:\n    with tracer.start_as_current_span(\"claude.messages.create\") as span:\n        span.set_attribute(\"gen_ai.system\", \"anthropic\")\n        span.set_attribute(\"gen_ai.request.model\", model)\n        span.set_attribute(\"gen_ai.request.max_tokens\", 1024)\n\n        resp = client.messages.create(\n            model=model, max_tokens=1024,\n            system=system, messages=messages\n        )\n\n        usage = resp.usage\n        span.set_attribute(\"gen_ai.usage.input_tokens\", usage.input_tokens)\n        span.set_attribute(\"gen_ai.usage.output_tokens\", usage.output_tokens)\n        span.set_attribute(\"gen_ai.response.finish_reason\", resp.stop_reason)\n        span.set_attribute(\"gen_ai.cost.usd\",\n                           cost_usd(model, usage.input_tokens, usage.output_tokens))\n\n        return resp"
+              }
+            ]
+          },
+          {
+            "title": "Trace propagation en Orchestrator-Workers",
+            "body": "En arquitecturas multi-agente, cada handoff debe propagar el trace ID. Sin esto, una request que pasa por orchestrator → 3 workers → síntesis se ve como 5 spans desconectados.\n\nOpenTelemetry maneja esto vía **context propagation**. El trace ID se inyecta en headers HTTP entre servicios. Si todos están in-process (mismo Python), la propagación es automática vía ContextVar.\n\n**Resultado:** en tu dashboard, puedes ver la cascada completa: orchestrator → log_analyzer (paralelo con deploy_checker, paralelo con metric_checker) → síntesis. Latencia total, costo total, qué worker tomó más tiempo. Indispensable para optimizar."
+          },
+          {
+            "title": "Alertas operacionales que importan",
+            "body": "No alertes de todo — alerta de lo que tiene acción clara. Estas tres son no-negociables:\n\n**1. Costo diario > threshold.** Alerta si el costo del día supera 1.5× el promedio semanal. Captura runaway agents (loop infinito) y bugs que llaman LLM en cascada.\n\n**2. Latencia P95 > SLO.** Alerta si la latencia P95 de tus endpoints agénticos sube >25% del baseline. Detecta degradación de modelo o tools lentas.\n\n**3. Error rate > 1%.** Alerta si más del 1% de las llamadas terminan en error (excluyendo errores del cliente). Detecta bugs de prompt, cambios de modelo, problemas de tool.\n\nCada alerta necesita: **threshold**, **owner** (quién responde), **runbook** (qué hacer). Sin runbook, la alerta es ruido."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "Sin trace correlation entre agentes",
+            "desc": "Cada agente loguea independiente. Cuando hay bug, no puedes reconstruir el flujo.",
+            "fix": "OpenTelemetry context propagation. Todos los agentes participan del mismo trace. Trace ID en cada log entry."
+          },
+          {
+            "title": "Métricas sin baseline",
+            "desc": "Alertas como '>5s' sin saber qué es normal. False positives constantes.",
+            "fix": "Mide baseline 2-4 semanas. Threshold = baseline + 25%. Recalibra cada release."
+          },
+          {
+            "title": "Alertas sin owner",
+            "desc": "Pager dispara, nadie responde. Eventualmente ignoran el pager.",
+            "fix": "Cada alerta tiene un owner asignado (humano o equipo). Runbook con primer paso de troubleshooting. Auditoría mensual: ¿qué alertas se silencian?"
+          },
+          {
+            "title": "Logear prompts completos sin redacción",
+            "desc": "PII del cliente termina en tus logs. GDPR/SOC 2 violation.",
+            "fix": "Política de redacción: emails, IDs, contenido sensible se redactan antes de logear. Logs de prompts solo en debug mode con permisos."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Cuáles son los 3 pilares de observabilidad?",
+            "options": [
+              "Logs, metrics, dashboards",
+              "Traces, metrics, logs",
+              "Alertas, runbooks, dashboards",
+              "Errores, warnings, info"
+            ],
+            "correct": 1,
+            "explain": "Traces (flujo de request), metrics (agregados temporales), logs (eventos discretos). Cada uno responde preguntas distintas."
+          },
+          {
+            "q": "¿Qué atributo OpenTelemetry indica el modelo usado?",
+            "options": [
+              "gen_ai.model.name",
+              "gen_ai.request.model",
+              "ai.model",
+              "anthropic.model"
+            ],
+            "correct": 1,
+            "explain": "GenAI Semantic Conventions usa `gen_ai.request.model` para el modelo solicitado. Estándar de la industria — funciona en cualquier observability backend."
+          },
+          {
+            "q": "¿Cuál es el primer alerta no-negociable para un sistema agéntico?",
+            "options": [
+              "UI lenta",
+              "Costo diario > threshold (captura runaway loops)",
+              "Color del logo",
+              "Tamaño de imagen"
+            ],
+            "correct": 1,
+            "explain": "Costo runaway es la categoría de bug más cara. Un agente en loop infinito puede gastar cientos de dólares en horas. Alert es no-negociable."
+          },
+          {
+            "q": "¿Qué pasa si propagas trace IDs entre orchestrator y workers?",
+            "options": [
+              "Nada importante",
+              "Puedes ver la cascada completa en dashboard, debuggear más fácil",
+              "Aumenta el costo",
+              "Slow down"
+            ],
+            "correct": 1,
+            "explain": "Sin propagación, cada agente es un trace separado. Con propagación, ves el flujo completo: orchestrator → workers → síntesis. Indispensable para optimizar y debug."
+          },
+          {
+            "q": "Una alerta dispara sin owner ni runbook. ¿Qué pasa eventualmente?",
+            "options": [
+              "Se resuelve sola",
+              "El equipo la silencia y empieza a ignorar todas las alertas",
+              "Es buena práctica",
+              "No afecta nada"
+            ],
+            "correct": 1,
+            "explain": "Alertas sin acción clara generan alert fatigue. El equipo aprende a ignorar el pager. Cuando llega una alerta crítica, nadie responde."
+          }
+        ],
+        "references": [
+          {
+            "title": "OpenTelemetry for LLMs (Guide 2026)",
+            "url": "https://openobserve.ai/blog/opentelemetry-for-llms/",
+            "kind": "blog",
+            "relevance": "primary"
+          },
+          {
+            "title": "GenAI Semantic Conventions",
+            "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+            "kind": "docs",
+            "relevance": "primary"
+          },
+          {
+            "title": "AI Agent Monitoring in Production",
+            "url": "https://openobserve.ai/blog/ai-agent-monitoring/",
+            "kind": "blog",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 11,
+      "mod": 3,
+      "id": 11,
+      "module": 3,
+      "title": "Setup técnico del entorno",
+      "sub": "Del Mac Mini M4 al primer 'docker compose up'",
+      "duration": "45 min",
+      "hours": 1.0,
+      "objs": [
+        "Configurar stack: Postgres + pgvector + FastAPI + Claude Agent SDK",
+        "Diseñar primera migration con Alembic",
+        "Configurar observabilidad end-to-end",
+        "Levantar smoke test funcional"
+      ],
+      "reading": "Claude Agent SDK Quickstart (platform.claude.com) + best practices",
+      "exercise": "Levanta el stack local y ejecuta un smoke test del primer agente con tool real.",
+      "deep": {
+        "intro": "Para construir PulseCore vas a necesitar un stack local que sea **representativo de producción** pero corra en tu Mac. El objetivo: 1 comando (`docker compose up`) y todo funciona.\n\nStack mínimo:\n\n- **PostgreSQL 16 con pgvector.** Almacenamiento principal y memoria semántica.\n- **FastAPI (Python 3.12).** API + workers.\n- **Anthropic Python SDK / Claude Agent SDK.** Para invocar Claude con tools.\n- **OpenTelemetry SDK + Grafana Tempo + Loki + Prometheus.** Observabilidad local.\n- **Alembic.** Migrations.\n- **Docker Compose.** Orquestación local.\n\nVamos a construirlo en este orden. El smoke test al final: un endpoint `/healthcheck` que invoca un agente Haiku que llama una tool, retorna OK.",
+        "sections": [
+          {
+            "title": "docker-compose.yml: el stack completo",
+            "body": "Un solo archivo orquesta toda la infraestructura local. Cada servicio expone su puerto, comparte volúmenes para persistencia, y depende del orden correcto.",
+            "code": [
+              {
+                "lang": "yaml",
+                "label": "docker-compose.yml mínimo",
+                "src": "version: '3.9'\nservices:\n  postgres:\n    image: pgvector/pgvector:pg16\n    environment:\n      POSTGRES_USER: pulsecore\n      POSTGRES_PASSWORD: dev\n      POSTGRES_DB: pulsecore\n    ports: ['5432:5432']\n    volumes: ['pgdata:/var/lib/postgresql/data']\n    healthcheck:\n      test: ['CMD', 'pg_isready', '-U', 'pulsecore']\n      interval: 5s\n      timeout: 5s\n      retries: 5\n\n  api:\n    build: .\n    environment:\n      DATABASE_URL: postgresql://pulsecore:dev@postgres:5432/pulsecore\n      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}\n      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317\n    ports: ['8000:8000']\n    depends_on:\n      postgres: { condition: service_healthy }\n\n  tempo:\n    image: grafana/tempo:latest\n    ports: ['3200:3200', '4317:4317']\n    command: ['-config.file=/etc/tempo.yaml']\n\n  grafana:\n    image: grafana/grafana:latest\n    ports: ['3000:3000']\n    environment:\n      GF_AUTH_ANONYMOUS_ENABLED: 'true'\n      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin\n\nvolumes:\n  pgdata:"
+              }
+            ]
+          },
+          {
+            "title": "Alembic migration #1: schema base",
+            "body": "Cada cambio de schema vive en un archivo de migration. Versionado, reproducible, rollbackeable. La primera migration crea las tablas con RLS habilitado.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "alembic/versions/001_initial.py",
+                "src": "\"\"\"Initial schema with RLS\"\"\"\nfrom alembic import op\nimport sqlalchemy as sa\n\nrevision = '001'\ndown_revision = None\n\ndef upgrade():\n    op.execute('CREATE EXTENSION IF NOT EXISTS vector')\n    op.execute('CREATE EXTENSION IF NOT EXISTS pgcrypto')\n\n    op.create_table('tenants',\n        sa.Column('id', sa.dialects.postgresql.UUID, primary_key=True,\n                  server_default=sa.text('gen_random_uuid()')),\n        sa.Column('name', sa.String, nullable=False),\n        sa.Column('created_at', sa.DateTime(timezone=True),\n                  server_default=sa.text('NOW()'))\n    )\n\n    op.create_table('incidents',\n        sa.Column('id', sa.BigInteger, primary_key=True, autoincrement=True),\n        sa.Column('tenant_id', sa.dialects.postgresql.UUID,\n                  sa.ForeignKey('tenants.id'), nullable=False, index=True),\n        sa.Column('title', sa.String, nullable=False),\n        sa.Column('severity', sa.String, nullable=False),\n        sa.Column('status', sa.String, nullable=False, server_default='open'),\n        sa.Column('created_at', sa.DateTime(timezone=True),\n                  server_default=sa.text('NOW()'))\n    )\n\n    # Habilita RLS\n    op.execute('ALTER TABLE incidents ENABLE ROW LEVEL SECURITY')\n    op.execute('''\n        CREATE POLICY tenant_isolation ON incidents\n        USING (tenant_id = current_setting('app.tenant_id', true)::uuid)\n    ''')\n\ndef downgrade():\n    op.drop_table('incidents')\n    op.drop_table('tenants')"
+              }
+            ]
+          },
+          {
+            "title": "Smoke test: el primer agente funcional",
+            "body": "El smoke test es el primer endpoint que invoca el ciclo completo: API recibe request → invoca Claude con una tool → Claude responde con tool_use → ejecutas la tool → devuelves resultado a Claude → Claude responde final. Si esto funciona, el stack está vivo.",
+            "code": [
+              {
+                "lang": "python",
+                "label": "app/main.py — endpoint smoke test",
+                "src": "from fastapi import FastAPI\nfrom anthropic import Anthropic\nimport datetime\n\napp = FastAPI()\nclient = Anthropic()\n\nTOOLS = [{\n    \"name\": \"get_current_time\",\n    \"description\": \"Devuelve la hora actual UTC en ISO 8601.\",\n    \"input_schema\": {\"type\": \"object\", \"properties\": {}}\n}]\n\ndef execute_tool(name: str, args: dict) -> str:\n    if name == \"get_current_time\":\n        return datetime.datetime.utcnow().isoformat() + \"Z\"\n    raise ValueError(f\"unknown tool {name}\")\n\n@app.get(\"/smoke\")\ndef smoke_test():\n    messages = [{\"role\": \"user\", \"content\": \"¿Qué hora es?\"}]\n    while True:\n        resp = client.messages.create(\n            model=\"claude-haiku-4-5\", max_tokens=512,\n            tools=TOOLS, messages=messages\n        )\n        if resp.stop_reason == \"tool_use\":\n            # Claude pidió usar una tool — ejecutamos\n            tool_block = next(b for b in resp.content if b.type == \"tool_use\")\n            result = execute_tool(tool_block.name, tool_block.input)\n            messages += [\n                {\"role\": \"assistant\", \"content\": resp.content},\n                {\"role\": \"user\", \"content\": [{\n                    \"type\": \"tool_result\",\n                    \"tool_use_id\": tool_block.id,\n                    \"content\": result\n                }]}\n            ]\n            continue\n        # Claude respondió final\n        return {\"answer\": resp.content[0].text}"
+              }
+            ]
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "No usar Docker, instalar todo nativo",
+            "desc": "Postgres + pgvector + observability stack instalado nativo es pesadilla de reproducción.",
+            "fix": "Docker Compose desde el día 1. Tu repo + .env + docker-compose.yml = stack reproducible."
+          },
+          {
+            "title": "ANTHROPIC_API_KEY en el código",
+            "desc": "Commit accidental → key expuesta → cobros inesperados.",
+            "fix": "Variables de entorno. `.env` en .gitignore. Para producción: secrets de cloud provider (AWS Secrets Manager, etc.)"
+          },
+          {
+            "title": "Sin healthcheck en docker-compose",
+            "desc": "Servicios arrancan en orden pero no esperan a que el anterior esté listo. Tests random fallan.",
+            "fix": "Cada servicio crítico (Postgres) con healthcheck. Otros servicios con `depends_on: { condition: service_healthy }`."
+          },
+          {
+            "title": "Migrations escritas a mano sin Alembic",
+            "desc": "Schema drift entre dev/prod. Imposible rollback.",
+            "fix": "Alembic. Cada cambio = una migration. CI valida que migrations apliquen en clean DB."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Qué imagen Docker incluye pgvector?",
+            "options": [
+              "postgres:16",
+              "pgvector/pgvector:pg16",
+              "mysql:latest",
+              "redis:alpine"
+            ],
+            "correct": 1,
+            "explain": "La imagen oficial `pgvector/pgvector:pg16` incluye Postgres 16 con la extensión pgvector preinstalada. Ahorra setup."
+          },
+          {
+            "q": "¿Dónde NO debe vivir tu ANTHROPIC_API_KEY?",
+            "options": [
+              "En .env (gitignored)",
+              "En código fuente",
+              "En secrets manager de cloud",
+              "En variables de entorno"
+            ],
+            "correct": 1,
+            "explain": "Nunca en código. Commit accidental = key expuesta = cobros inesperados. Usa .env (gitignored) localmente y secrets manager en cloud."
+          },
+          {
+            "q": "¿Para qué sirve `healthcheck` en docker-compose?",
+            "options": [
+              "Acelera el arranque",
+              "Permite a otros servicios esperar a que este esté listo (depends_on: service_healthy)",
+              "Es decorativo",
+              "Reduce el tamaño de imagen"
+            ],
+            "correct": 1,
+            "explain": "Sin healthcheck, `depends_on` solo espera a que el container arranque, no a que esté listo. Con healthcheck + service_healthy, espera a que la app responda."
+          },
+          {
+            "q": "¿Cuál es el rol de Alembic?",
+            "options": [
+              "Migrations de schema versionadas y reversibles",
+              "Backup de DB",
+              "Cache de queries",
+              "Observabilidad"
+            ],
+            "correct": 0,
+            "explain": "Alembic versiona los cambios de schema en archivos Python. Cada cambio = upgrade + downgrade. CI valida que las migrations apliquen limpiamente."
+          },
+          {
+            "q": "En el smoke test, ¿qué hace `stop_reason == 'tool_use'`?",
+            "options": [
+              "Termina",
+              "Indica que Claude pidió ejecutar una tool — tu código la ejecuta y reanuda el loop",
+              "Es un error",
+              "Es opcional"
+            ],
+            "correct": 1,
+            "explain": "Cuando Claude decide usar una tool, retorna `stop_reason='tool_use'`. Tu código ejecuta la tool, añade el resultado al mensaje, y llama Claude de nuevo. Loop hasta `stop_reason='end_turn'`."
+          }
+        ],
+        "references": [
+          {
+            "title": "Claude Agent SDK Quickstart",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/quickstart",
+            "kind": "anthropic-docs",
+            "relevance": "primary"
+          },
+          {
+            "title": "pgvector GitHub",
+            "url": "https://github.com/pgvector/pgvector",
+            "kind": "repo",
+            "relevance": "primary"
+          },
+          {
+            "title": "Alembic docs",
+            "url": "https://alembic.sqlalchemy.org/",
+            "kind": "docs",
+            "relevance": "supporting"
+          },
+          {
+            "title": "FastAPI docs",
+            "url": "https://fastapi.tiangolo.com/",
+            "kind": "docs",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "n": 12,
+      "mod": 3,
+      "id": 12,
+      "module": 3,
+      "title": "Primer commit con Claude Code",
+      "sub": "El Bloque 1 — HealthGuard básico end-to-end",
+      "duration": "60 min",
+      "hours": 1.3,
+      "objs": [
+        "Aplicar best practices de Claude Code: CLAUDE.md, planning, TDD",
+        "Delegar investigación a subagents",
+        "Escribir el prompt completo para Claude Code del primer bloque",
+        "Definir criterios de aceptación del siguiente bloque"
+      ],
+      "reading": "Best practices for Claude Code (Anthropic Engineering) + Claude Code Advanced Patterns PDF",
+      "exercise": "Diseña tu plan personal de 12 semanas para llegar a beta privada. Bloque por bloque.",
+      "deep": {
+        "intro": "Claude Code es la herramienta más poderosa que tienes para construir PulseCore. Pero usado mal, te da código que parece correcto y no lo es. Usado bien, te da código de producción con tests, observabilidad y documentación.\n\n**Tres prácticas no-negociables de Anthropic Engineering:**\n\n1. **CLAUDE.md** — documento corto que Claude lee cada sesión. Convenciones del codebase, comandos típicos, lo que importa. Si tu CLAUDE.md tiene más de 200 líneas, Claude ignora la mitad.\n\n2. **Subagents para investigar.** Cuando Claude necesita leer mucho contexto del codebase, delega a subagents. Ellos investigan en su propio contexto y reportan resumen. Tu conversación principal queda limpia.\n\n3. **Plan antes de implementar.** Pide explícitamente: \"Antes de escribir código, dame un plan paso a paso. Espera mi aprobación.\" Es la diferencia entre 10 minutos de código y 2 horas de debug.",
+        "sections": [
+          {
+            "title": "CLAUDE.md: el contrato del codebase",
+            "body": "CLAUDE.md vive en la raíz de tu repo. Cada sesión de Claude Code lo lee. Lo importante: que sea **corto y útil**.\n\nSecciones canónicas:\n\n- **Setup.** Cómo arrancar local (1-2 comandos).\n- **Convenciones.** Estilo de código, naming, estructura de carpetas.\n- **Comandos típicos.** `make test`, `make lint`, `make migrate`.\n- **No-go zones.** Qué NO debe tocar Claude sin pedirte primero.\n\nEvita: documentar el código en sí (eso va en docstrings), historia del proyecto, valores corporativos. CLAUDE.md es para que Claude tome buenas decisiones operativas, no para inspirar.",
+            "code": [
+              {
+                "lang": "markdown",
+                "label": "CLAUDE.md ejemplar para PulseCore",
+                "src": "# CLAUDE.md\n\n## Setup local\n```\ndocker compose up -d\nmake migrate\nmake test\n```\n\n## Convenciones\n- Python 3.12, FastAPI, async-first.\n- Snake_case para funciones y variables. PascalCase para clases.\n- Tipos explícitos en TODA función pública.\n- Tests en `tests/` mirroring estructura de `app/`.\n\n## Comandos\n- `make test` — pytest con cobertura\n- `make lint` — ruff + mypy strict\n- `make migrate` — alembic upgrade head\n- `make new-migration name=...` — genera migration template\n\n## Estructura\n```\napp/\n  agents/      ← 5 Guards de PulseCore\n  tools/       ← tools que invocan agentes\n  db/          ← SQLAlchemy models + RLS\n  obs/         ← OpenTelemetry instrumentation\n  main.py      ← FastAPI entrypoint\n```\n\n## NO toques sin preguntar\n- `app/db/migrations/` (excepto si te pido nueva migration)\n- `secrets.env` (gitignored)\n- `app/agents/remediator.py` (tiene guardrails que requieren review)\n\n## Test antes de commit\nSi cambias agentes, corre `make test-agents` (incluye eval set de regresión)."
+              }
+            ]
+          },
+          {
+            "title": "Subagents para investigar",
+            "body": "Cuando Claude necesita entender una parte del codebase para hacer un cambio, naturalmente lee muchos archivos. Cada archivo consume tu contexto. Conversación se llena de archivos en lugar de plan.\n\nLa solución: **delegar a un subagent**. Le pides: *\"Antes de implementar X, usa un subagent para investigar cómo funciona Y en este codebase. Reporta resumen.\"* El subagent abre su propio contexto, lee todo lo que necesita, y vuelve con un resumen ejecutivo.\n\nResultado: tu conversación principal queda limpia. Claude opera con resumen, no con 50 archivos. Decisiones mejores, menos tokens consumidos, menos confusión.",
+            "code": [
+              {
+                "lang": "text",
+                "label": "Patrón de delegación a subagent",
+                "src": "Tu prompt:\n\n\"Quiero modificar Diagnostician para que use Tool Search Tool cuando hay >15 tools.\n\nAntes de implementar:\n1. Usa un subagent para investigar cómo está configurado Diagnostician actualmente.\n   El subagent debe leer app/agents/diagnostician.py y archivos relacionados\n   (tools/, system prompts). Reporta:\n   - Cuántas tools tiene hoy\n   - Cómo se cargan (estático vs dinámico)\n   - Tests existentes que cubren load de tools\n\n2. Una vez tengamos el resumen, propone un plan de cambio.\n   Espera mi aprobación antes de escribir código.\n\n3. Si tienes dudas en el medio, pregunta. No asumas.\"\n\nClaude responde:\n\"OK. Lanzo subagent para investigar Diagnostician...\"\n[subagent corre, vuelve con resumen]\n\"Aquí está el resumen: ... ¿procedo con plan?\""
+              }
+            ]
+          },
+          {
+            "title": "Plan antes de implementar — el patrón que ahorra horas",
+            "body": "El instinto malo: prompts como *\"implementa X\"* y Claude empieza a escribir código. 30 minutos después tienes 500 líneas que no funcionan y no sabes por qué.\n\nEl instinto bueno: *\"Antes de implementar X, dame un plan paso a paso. Para cada paso: archivos a modificar, función específica, lo que cambia. NO escribas código aún. Espera mi aprobación del plan.\"*\n\nClaude responde con plan. Tú lees, identificas el paso que está mal, lo corriges. Una vez aprobado, dices *\"procede con el plan, paso 1\"*. Implementa solo eso. Verifica. Pasa al 2.\n\n**Bloque por bloque, cada bloque deja el sistema funcional pero no completo.** Acumulas funcionalidad sin nunca romper lo previo. Es la diferencia entre un proyecto que termina y uno que se atasca."
+          }
+        ],
+        "gotchas": [
+          {
+            "title": "CLAUDE.md gigante",
+            "desc": "500 líneas con historia del proyecto, valores, todo. Claude ignora la mitad.",
+            "fix": "Máximo 200 líneas. Solo lo operativo: setup, convenciones, comandos, no-go zones. Lo demás vive en README.md (para humanos)."
+          },
+          {
+            "title": "No usar subagents",
+            "desc": "Cargas todo el contexto en tu conversación. Después de 10 mensajes, Claude se confunde.",
+            "fix": "Para tareas que requieren investigación previa, delega. Tu conversación se mantiene en plan + implementación, no en lectura de archivos."
+          },
+          {
+            "title": "Pegar diffs de Claude sin leerlos",
+            "desc": "Vibe coding: ejecutas todo lo que dice Claude. Eventualmente algo crítico se rompe.",
+            "fix": "Lee cada diff. Si no entiendes una línea, pregunta. Claude Code es asistente, no autoridad."
+          },
+          {
+            "title": "Sin tests antes de commitear",
+            "desc": "Avanzas bloque por bloque pero sin tests, cada bloque puede romper el anterior silenciosamente.",
+            "fix": "TDD modificado: primer paso de cada bloque es escribir el test que valida el comportamiento. Después implementación. Después: corres TODOS los tests."
+          }
+        ],
+        "quiz": [
+          {
+            "q": "¿Qué tan largo debe ser tu CLAUDE.md?",
+            "options": [
+              "Lo más largo posible",
+              "Máximo 200 líneas, solo operativo",
+              "1 línea",
+              "Sin importancia"
+            ],
+            "correct": 1,
+            "explain": "Claude ignora CLAUDE.md grandes. Máximo 200 líneas con setup, convenciones, comandos, no-go zones. Historia y valores van en README.md."
+          },
+          {
+            "q": "¿Qué hacen los subagents en Claude Code?",
+            "options": [
+              "Versión más cara de Claude",
+              "Investigan en su propio contexto y reportan resumen, manteniendo tu conversación limpia",
+              "Backup",
+              "Solo para coding"
+            ],
+            "correct": 1,
+            "explain": "Subagents corren en contexto separado. Investigan, leen archivos, sintetizan. Reportan resumen. Tu conversación principal queda enfocada en plan + implementación."
+          },
+          {
+            "q": "¿Cuál es el patrón correcto antes de implementar?",
+            "options": [
+              "Implementar primero y refactorizar",
+              "Pedir plan paso a paso, aprobar, implementar bloque por bloque",
+              "Generar todo de una vez",
+              "No planificar"
+            ],
+            "correct": 1,
+            "explain": "Plan primero, aprobación, bloque por bloque. Cada bloque deja el sistema funcional. Ahorra horas de debug."
+          },
+          {
+            "q": "Tu bloque 3 rompió funcionalidad del bloque 1. ¿Cómo lo evitaste?",
+            "options": [
+              "Con suerte",
+              "Tests automatizados que corren después de cada bloque",
+              "Code review de humano",
+              "Imposible evitarlo"
+            ],
+            "correct": 1,
+            "explain": "Test suite que corre después de cada bloque. Si bloque 3 rompió bloque 1, el test del bloque 1 falla. Captura regresión antes de commit."
+          },
+          {
+            "q": "¿Qué pasa si pegas diffs de Claude sin leerlos?",
+            "options": [
+              "Funciona siempre",
+              "Eventualmente algo crítico se rompe — Claude no es infalible",
+              "Es la mejor práctica",
+              "Más rápido"
+            ],
+            "correct": 1,
+            "explain": "Vibe coding (ejecutar todo lo que Claude propone sin revisar) eventualmente introduce bugs serios. Claude es asistente, no autoridad. Cada diff necesita lectura."
+          }
+        ],
+        "references": [
+          {
+            "title": "Best practices for Claude Code",
+            "url": "https://code.claude.com/docs/en/best-practices",
+            "kind": "anthropic-docs",
+            "relevance": "primary"
+          },
+          {
+            "title": "Claude Code Advanced Patterns (PDF)",
+            "url": "https://resources.anthropic.com/hubfs/Claude%20Code%20Advanced%20Patterns_%20Subagents,%20MCP,%20and%20Scaling%20to%20Real%20Codebases.pdf",
+            "kind": "anthropic-pdf",
+            "relevance": "primary"
+          },
+          {
+            "title": "Claude Code plugins README",
+            "url": "https://github.com/anthropics/claude-code/blob/main/plugins/README.md",
+            "kind": "repo",
+            "relevance": "supporting"
+          },
+          {
+            "title": "Building agents with the Claude Agent SDK",
+            "url": "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
+            "kind": "anthropic-engineering",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    }
+  ]
+}

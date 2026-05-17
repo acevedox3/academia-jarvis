@@ -1,0 +1,24 @@
+{
+  "name": "academia-jarvis",
+  "version": "1.0.0",
+  "description": "Academia Jarvis — plan personal para construir agentes IA con Anthropic en 8 semanas",
+  "private": true,
+  "scripts": {
+    "icons": "python3 scripts/gen_icons.py",
+    "add:ios": "npx cap add ios",
+    "sync": "npx cap sync ios",
+    "open:ios": "npx cap open ios",
+    "build": "echo 'No build step — www/ is the source' && npm run sync",
+    "serve": "npx serve www -p 8080"
+  },
+  "keywords": ["anthropic", "agentes", "ia", "claude", "capacitor", "pwa"],
+  "author": "Angel Trujillo",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}

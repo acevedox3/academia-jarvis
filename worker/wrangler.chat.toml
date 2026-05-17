@@ -1,0 +1,15 @@
+name = "academia-jarvis-chat"
+main = "chat.js"
+compatibility_date = "2024-12-01"
+
+# DEFAULT: Claude Sonnet 4.6 (mejor para código y agentes, alineado con tema academia)
+# El usuario puede override por request body: { provider: 'openai', model: 'gpt-5' }
+[vars]
+ALLOWED_ORIGIN = "*"
+DEFAULT_PROVIDER = "anthropic"
+DEFAULT_MODEL = "claude-sonnet-4-6"
+
+# Secrets a configurar (al menos uno; los 3 si quieres habilitar el switcher de modelos):
+#   wrangler secret put ANTHROPIC_API_KEY --config wrangler.chat.toml
+#   wrangler secret put OPENAI_API_KEY    --config wrangler.chat.toml
+#   wrangler secret put GOOGLE_API_KEY    --config wrangler.chat.toml

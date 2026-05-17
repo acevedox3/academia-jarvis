@@ -1,0 +1,2232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Academia Jarvis" />
+<meta name="theme-color" content="#0056D2" />
+<title>Academia Jarvis · Construye agentes IA reales</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon-180.png" />
+<link rel="apple-touch-icon" sizes="167x167" href="icons/apple-touch-icon-167.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="icons/apple-touch-icon-152.png" />
+<link rel="apple-touch-icon" sizes="120x120" href="icons/apple-touch-icon-120.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+/* =================================================================
+   TOKENS
+================================================================== */
+:root {
+  --blue: #0056D2;
+  --blue-700: #0046A8;
+  --blue-900: #0A2E6B;
+  --blue-50: #EAF1FC;
+  --blue-25: #F4F8FE;
+
+  --ink: #11192C;
+  --ink-soft: #3F4A5F;
+  --ink-mute: #6B7280;
+  --ink-faint: #9AA1AC;
+
+  --line: #E5E8EE;
+  --line-soft: #EFF2F6;
+  --line-strong: #D5DAE2;
+
+  --bg: #FFFFFF;
+  --bg-soft: #F5F7FA;
+  --bg-warm: #FAFAF7;
+
+  --green: #1FA463;
+  --green-50: #E7F6EE;
+  --gold: #F7B500;
+  --gold-50: #FEF6E0;
+  --rose: #B23A48;
+
+  --shadow-xs: 0 1px 2px rgba(17,24,39,.04);
+  --shadow-sm: 0 1px 3px rgba(17,24,39,.05), 0 1px 2px rgba(17,24,39,.03);
+  --shadow:    0 2px 8px rgba(17,24,39,.06);
+  --shadow-md: 0 8px 24px rgba(17,24,39,.08);
+  --shadow-lg: 0 18px 40px rgba(17,24,39,.10);
+
+  --r-xs: 6px;
+  --r-sm: 8px;
+  --r:    12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+
+  --t: 240ms cubic-bezier(.2,.7,.2,1);
+  --t-slow: 480ms cubic-bezier(.2,.7,.2,1);
+
+  --serif: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --shell: 1200px;
+}
+
+/* =================================================================
+   BASE
+================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv11";
+}
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; padding: 0; }
+a { color: var(--blue); text-decoration: none; transition: color var(--t); }
+a:hover { color: var(--blue-700); }
+h1,h2,h3,h4,h5 { color: var(--ink); margin: 0; line-height: 1.2; }
+p { margin: 0; }
+::selection { background: var(--blue); color: #fff; }
+
+.shell { max-width: var(--shell); margin: 0 auto; padding: 0 28px; }
+@media (max-width: 640px) { .shell { padding: 0 20px; } }
+
+/* =================================================================
+   SESSION MODAL (data-driven, tabs)
+================================================================== */
+.session-modal { position: fixed; inset: 0; z-index: 300; display: none; }
+.session-modal.open { display: block; }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(17,25,44,.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: flex-end; justify-content: center; }
+@media (min-width: 768px) { .modal-backdrop { align-items: center; } }
+.modal-panel { background: #fff; width: 100%; max-width: 820px; max-height: 92vh; border-radius: 24px 24px 0 0; overflow: hidden; display: flex; flex-direction: column; animation: modalUp .25s var(--t); }
+@keyframes modalUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@media (min-width: 768px) { .modal-panel { border-radius: 20px; max-height: 86vh; } }
+.modal-handle { width: 40px; height: 4px; background: var(--line-strong); border-radius: 2px; margin: 10px auto 0; }
+.modal-head { padding: 18px 28px 14px; display: flex; align-items: flex-start; gap: 14px; }
+.modal-tag { font-size: 11px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 6px; }
+.modal-panel h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; line-height: 1.15; }
+.modal-sub { color: var(--ink-mute); font-style: italic; font-family: var(--serif); margin-top: 4px; }
+.modal-close { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-soft); color: var(--ink-mute); font-size: 18px; flex-shrink: 0; margin-left: auto; }
+.modal-close:hover { background: var(--line); color: var(--ink); }
+.modal-tabs { display: flex; gap: 2px; padding: 0 28px; border-bottom: 1px solid var(--line); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.modal-tab { padding: 12px 14px; font-size: 13.5px; font-weight: 600; color: var(--ink-mute); border-bottom: 2px solid transparent; white-space: nowrap; transition: color var(--t), border-color var(--t); }
+.modal-tab:hover { color: var(--ink); }
+.modal-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.modal-body { padding: 22px 28px; overflow-y: auto; flex: 1; }
+.modal-pane h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--blue); margin: 18px 0 8px; }
+.modal-pane h4:first-child { margin-top: 0; }
+.modal-pane p { margin-bottom: 12px; line-height: 1.6; color: var(--ink-soft); }
+.modal-pane ul { padding-left: 22px; }
+.modal-pane ul li { margin: 6px 0; line-height: 1.5; color: var(--ink-soft); }
+.modal-pane li::marker { color: var(--blue); }
+.modal-pane pre { background: #11192C; color: #E5E8EE; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; margin: 12px 0; }
+.modal-pane code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 12.5px; background: var(--bg-soft); padding: 2px 6px; border-radius: 4px; color: var(--blue-700); }
+.modal-pane pre code { background: transparent; padding: 0; color: inherit; }
+.modal-pane strong { color: var(--ink); font-weight: 700; }
+.deep-section { margin: 22px 0; }
+.deep-section h4 { font-family: var(--serif); font-weight: 700; font-size: 18px; text-transform: none; letter-spacing: -.01em; color: var(--ink); margin: 22px 0 10px; }
+.deep-body { color: var(--ink-soft); line-height: 1.65; }
+.deep-code, .deep-code-full { margin: 14px 0; }
+.deep-code-label { font-size: 11px; font-weight: 700; color: var(--ink-mute); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+.deep-empty { font-style: italic; color: var(--ink-mute); padding: 20px 0; text-align: center; }
+.gotcha { background: #FEF7EC; border-left: 3px solid var(--gold); padding: 14px 18px; border-radius: 6px; margin-bottom: 12px; }
+.gotcha h5 { color: var(--ink); font-size: 14.5px; font-weight: 700; margin-bottom: 6px; }
+.gotcha p { font-size: 14px; margin: 6px 0; color: var(--ink-soft); }
+.gotcha-fix { background: var(--green-50); border-radius: 4px; padding: 6px 10px; }
+.improve-card { background: var(--blue-50); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 6px; margin-top: 18px; }
+.improve-label { font-size: 11px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 8px; }
+.improve-card p { color: var(--blue-900); margin: 6px 0; font-size: 14px; }
+.quiz-form { display: flex; flex-direction: column; gap: 16px; }
+.quiz-q { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.quiz-q legend { font-weight: 600; padding: 0 6px; }
+.quiz-q label { display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer; font-size: 14px; }
+.quiz-q.quiz-correct { background: var(--green-50); border-color: var(--green); }
+.quiz-q.quiz-wrong { background: #FEF2F2; border-color: var(--rose); }
+.quiz-explain { display: none; font-size: 13px; color: var(--ink-mute); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); font-style: italic; }
+.quiz-result { padding: 12px 16px; background: var(--bg-soft); border-radius: 8px; margin-top: 6px; }
+.deep-refs { list-style: none; padding: 0; }
+.deep-refs li { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.deep-refs a { color: var(--blue); font-weight: 500; font-size: 14px; }
+.ref-tag { background: var(--blue); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+.ref-kind { font-size: 11px; color: var(--ink-mute); font-family: 'SF Mono', monospace; }
+.modal-foot { padding: 14px 22px; border-top: 1px solid var(--line); display: flex; gap: 10px; justify-content: flex-end; background: #fff; }
+.btn { padding: 11px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; transition: all var(--t); cursor: pointer; border: 0; }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: var(--blue-700); }
+.btn-primary:disabled { background: var(--line); cursor: not-allowed; }
+.btn-ghost { background: var(--bg-soft); color: var(--ink); }
+.btn-ghost:hover { background: var(--line); }
+
+/* =================================================================
+   CHAT TUTOR
+================================================================== */
+.chat-fab {
+  position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); right: 20px; z-index: 250;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--blue-700));
+  color: #fff; box-shadow: 0 8px 24px -6px rgba(0,86,210,.5);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform var(--t), box-shadow var(--t);
+}
+.chat-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(0,86,210,.6); }
+.chat-fab.open { transform: rotate(45deg); }
+.chat-panel {
+  position: fixed; bottom: calc(90px + env(safe-area-inset-bottom)); right: 20px; z-index: 249;
+  width: 400px; max-width: calc(100vw - 32px);
+  height: 600px; max-height: calc(100vh - 140px);
+  background: #fff; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 24px 48px -12px rgba(17,25,44,.25), 0 0 0 1px var(--line);
+  display: none; flex-direction: column;
+  animation: chatSlide .22s var(--t);
+}
+.chat-panel.open { display: flex; }
+@media (max-width: 700px) { .chat-panel { right: 8px; left: 8px; width: auto; bottom: calc(84px + env(safe-area-inset-bottom)); } }
+@keyframes chatSlide { from { transform: translateY(20px) scale(.96); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+.chat-header { padding: 14px 18px; background: linear-gradient(135deg, var(--blue), var(--blue-700)); color: #fff; display: flex; align-items: center; gap: 12px; }
+.chat-header-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,.18); display: flex; align-items: center; justify-content: center; }
+.chat-header-title { font-weight: 600; font-size: 15px; }
+.chat-header-sub { font-size: 11px; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+.chat-close { margin-left: auto; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.15); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.chat-model-row { padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--bg-soft); display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--ink-mute); }
+.chat-model-select { flex: 1; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: #fff; font-size: 12px; color: var(--ink); font-family: inherit; cursor: pointer; outline: none; }
+.chat-model-select:focus { border-color: var(--blue); }
+.chat-cost-badge { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--green-50); color: var(--green); font-weight: 600; font-family: 'SF Mono', monospace; }
+.msg-meta { font-size: 10px; color: var(--ink-faint); margin-top: 4px; padding: 0 4px; font-family: 'SF Mono', monospace; }
+.msg.user .msg-meta { text-align: right; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 18px; background: var(--bg-soft); }
+.chat-empty { text-align: center; padding: 20px 14px; color: var(--ink-mute); }
+.chat-empty h4 { font-family: var(--serif); font-size: 17px; color: var(--ink); margin-bottom: 6px; }
+.chat-empty p { font-size: 13px; line-height: 1.5; }
+.chat-suggestions { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.chat-suggest { text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font-size: 13px; color: var(--ink-soft); transition: all var(--t); cursor: pointer; }
+.chat-suggest:hover { border-color: var(--blue); color: var(--blue-700); }
+.msg { margin-bottom: 12px; max-width: 88%; word-wrap: break-word; }
+.msg.user { margin-left: auto; }
+.msg-bubble { padding: 10px 13px; border-radius: 14px; font-size: 14px; line-height: 1.5; }
+.msg.user .msg-bubble { background: var(--blue); color: #fff; border-bottom-right-radius: 4px; }
+.msg.assistant .msg-bubble { background: #fff; color: var(--ink); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg-bubble code { font-family: 'SF Mono', Menlo, monospace; font-size: 12.5px; background: rgba(0,0,0,.06); padding: 1px 5px; border-radius: 4px; }
+.msg.user .msg-bubble code { background: rgba(255,255,255,.2); color: #fff; }
+.msg-bubble pre { background: #11192C; color: #E5E8EE; padding: 10px 12px; border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.4; margin: 8px 0; }
+.msg-bubble pre code { background: transparent; padding: 0; color: inherit; }
+.msg.thinking .msg-bubble { color: var(--ink-mute); font-style: italic; }
+.chat-input-row { padding: 12px 14px calc(12px + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid var(--line); display: flex; gap: 8px; align-items: flex-end; }
+.chat-input { flex: 1; resize: none; border: 1px solid var(--line); border-radius: 12px; padding: 9px 14px; font-family: inherit; font-size: 14px; max-height: 120px; outline: none; background: var(--bg-soft); line-height: 1.4; }
+.chat-input:focus { border-color: var(--blue); background: #fff; }
+.chat-send { width: 40px; height: 40px; border-radius: 50%; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all var(--t); }
+.chat-send:hover { background: var(--blue-700); transform: scale(1.05); }
+.chat-send:disabled { background: var(--line-strong); cursor: not-allowed; }
+.chat-clear { background: transparent; border: 0; color: var(--ink-mute); font-size: 12px; padding: 8px; cursor: pointer; text-decoration: underline; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--blue);
+}
+.eyebrow::before {
+  content: ""; width: 24px; height: 1px; background: currentColor;
+}
+.serif { font-family: var(--serif); font-weight: 500; letter-spacing: -.005em; }
+.italic { font-style: italic; }
+
+/* =================================================================
+   ICONS
+================================================================== */
+.i { width: 18px; height: 18px; stroke-width: 1.7; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.i-sm { width: 14px; height: 14px; }
+.i-md { width: 20px; height: 20px; }
+.i-lg { width: 24px; height: 24px; }
+.i-xl { width: 32px; height: 32px; }
+
+/* =================================================================
+   SCROLL PROGRESS
+================================================================== */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--line-soft); z-index: 200;
+}
+.scroll-progress > div {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--blue-700) 100%);
+  transition: width 80ms linear;
+}
+
+/* =================================================================
+   NAV
+================================================================== */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+.nav.scrolled { border-bottom-color: var(--line); box-shadow: var(--shadow-xs); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-mark {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--blue);
+  display: grid; place-items: center; color: #fff;
+  box-shadow: 0 2px 6px rgba(0,86,210,.25);
+  position: relative;
+}
+.brand-mark::after {
+  content: ""; position: absolute; inset: 4px;
+  border: 1px solid rgba(255,255,255,.25); border-radius: 7px;
+}
+.brand-text { font-weight: 700; letter-spacing: -.015em; font-size: 15px; line-height: 1.1; }
+.brand-text small { display: block; font-weight: 500; color: var(--ink-mute); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; margin-top: 3px; }
+.nav-links { display: flex; gap: 4px; align-items: center; }
+.nav-link {
+  padding: 9px 14px; border-radius: 8px;
+  color: var(--ink-soft); font-weight: 500; font-size: 14px;
+  transition: color var(--t), background var(--t);
+}
+.nav-link:hover { background: var(--bg-soft); color: var(--ink); }
+.nav-cta {
+  background: var(--blue); color:#fff; padding: 10px 18px;
+  border-radius: 999px; font-weight: 600; font-size: 14px;
+  transition: background var(--t), transform var(--t), box-shadow var(--t);
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-left: 6px;
+}
+.nav-cta:hover { background: var(--blue-700); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,86,210,.25); color: #fff; }
+@media (max-width: 880px) { .nav-links .nav-link { display: none; } }
+
+/* =================================================================
+   HERO
+================================================================== */
+.hero {
+  position: relative;
+  padding: 72px 0 60px;
+  background: linear-gradient(180deg, #FFFFFF 0%, var(--blue-25) 100%);
+  overflow: hidden;
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(17,25,44,.06) 1px, transparent 0);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 30%, transparent 80%);
+  pointer-events: none;
+}
+.hero-grid {
+  display: grid; grid-template-columns: 1.15fr .85fr;
+  gap: 64px; align-items: center; position: relative;
+}
+@media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } }
+
+.hero-crumb {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--ink-mute); margin-bottom: 24px;
+}
+.hero-crumb strong { color: var(--ink); font-weight: 600; }
+.hero-crumb svg { color: var(--ink-faint); }
+
+.hero-title {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(40px, 5.6vw, 64px);
+  letter-spacing: -.025em; line-height: 1.04;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.hero-title em {
+  font-style: italic; font-weight: 400;
+  color: var(--blue);
+  background: linear-gradient(180deg, transparent 62%, var(--blue-50) 62%, var(--blue-50) 92%, transparent 92%);
+  padding: 0 .08em;
+}
+.hero-sub {
+  color: var(--ink-soft); font-size: 18px; line-height: 1.55;
+  margin-top: 22px; max-width: 54ch;
+}
+.hero-cta-row { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; align-items: center; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 24px; border-radius: 999px;
+  font-weight: 600; font-size: 15px;
+  transition: transform var(--t), box-shadow var(--t), background var(--t), border-color var(--t), color var(--t);
+  white-space: nowrap; cursor: pointer; border: 1px solid transparent;
+}
+.btn-primary { background: var(--blue); color: #fff; box-shadow: 0 4px 14px rgba(0,86,210,.22); }
+.btn-primary:hover { background: var(--blue-700); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,86,210,.28); color: #fff; }
+.btn-ghost { color: var(--ink); border-color: var(--line-strong); background: #fff; }
+.btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); color: var(--ink); }
+
+.hero-meta {
+  display: flex; gap: 28px; margin-top: 32px;
+  color: var(--ink-mute); font-size: 13.5px; flex-wrap: wrap;
+  padding-top: 24px; border-top: 1px solid var(--line-soft);
+}
+.hero-meta > div { display: inline-flex; align-items: center; gap: 8px; }
+.hero-meta strong { color: var(--ink); font-weight: 600; }
+
+/* Hero preview card (right side) */
+.preview-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-md);
+  padding: 28px;
+  position: relative;
+  transition: transform var(--t-slow), box-shadow var(--t-slow);
+}
+.preview-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.preview-card::before {
+  content: ""; position: absolute; top: -1px; left: 24px; right: 24px; height: 3px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--blue) 25%, var(--green) 25%, var(--green) 50%, var(--gold) 50%, var(--gold) 75%, var(--blue-700) 75%);
+  border-radius: 999px;
+}
+.pc-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.pc-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--blue); background: var(--blue-50);
+  padding: 5px 10px; border-radius: 999px;
+}
+.pc-up-next { font-size: 12px; color: var(--ink-mute); font-weight: 500; }
+.pc-up-next strong { color: var(--ink); font-weight: 600; }
+
+.pc-title { font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: -.015em; line-height: 1.25; }
+.pc-sub { color: var(--ink-mute); font-size: 14px; margin-top: 6px; }
+
+.pc-bar { margin: 22px 0 8px; }
+.pc-bar-track { height: 6px; background: var(--line-soft); border-radius: 999px; overflow: hidden; }
+.pc-bar-fill { height: 100%; background: var(--blue); border-radius: 999px; transition: width 800ms cubic-bezier(.2,.7,.2,1); }
+.pc-bar-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12.5px; color: var(--ink-mute); font-weight: 500; }
+.pc-bar-meta strong { color: var(--ink); font-weight: 600; }
+
+.pc-list { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-direction: column; gap: 12px; }
+.pc-list li { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--ink-soft); }
+.pc-list li .pc-dot {
+  width: 22px; height: 22px; border-radius: 999px;
+  display: grid; place-items: center; flex-shrink: 0;
+  background: var(--bg-soft); color: var(--ink-faint);
+  border: 1.5px solid var(--line);
+  font-size: 11px; font-weight: 700;
+}
+.pc-list li.done .pc-dot { background: var(--green); color: #fff; border-color: var(--green); }
+.pc-list li.done span { color: var(--ink-mute); }
+.pc-list li.next .pc-dot { background: #fff; color: var(--blue); border-color: var(--blue); border-width: 2px; }
+.pc-list li.next span { color: var(--ink); font-weight: 600; }
+
+.pc-foot { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pc-foot-meta { font-size: 12px; color: var(--ink-mute); }
+
+/* =================================================================
+   COURSE FACTS STRIP
+================================================================== */
+.facts {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.facts-inner {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+}
+@media (max-width: 760px) { .facts-inner { grid-template-columns: repeat(2, 1fr); } }
+.fact {
+  padding: 28px 24px;
+  border-right: 1px solid var(--line-soft);
+  display: flex; align-items: center; gap: 16px;
+}
+.fact:last-child { border-right: 0; }
+@media (max-width: 760px) {
+  .fact:nth-child(2n) { border-right: 0; }
+  .fact:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
+}
+.fact-ico {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--blue-50); color: var(--blue);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.fact-num { font-family: var(--serif); font-weight: 600; font-size: 28px; letter-spacing: -.02em; color: var(--ink); line-height: 1; }
+.fact-num .of { color: var(--ink-faint); font-weight: 500; font-size: 18px; margin-left: 2px; }
+.fact-label { color: var(--ink-mute); font-size: 12.5px; margin-top: 6px; font-weight: 500; letter-spacing: .02em; }
+
+/* =================================================================
+   SECTION COMMONS
+================================================================== */
+section { padding: 88px 0; }
+section.alt { background: var(--bg-soft); }
+section.alt + section { border-top: 1px solid var(--line); }
+.section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: 40px; flex-wrap: wrap; }
+.section-title {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(30px, 3.6vw, 42px);
+  letter-spacing: -.02em; margin-top: 12px;
+  text-wrap: balance;
+}
+.section-sub { color: var(--ink-soft); margin-top: 10px; max-width: 62ch; font-size: 16px; }
+.section-action { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: var(--blue); }
+.section-action:hover { gap: 10px; }
+
+/* =================================================================
+   PROGRESS SECTION
+================================================================== */
+.progress-card {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 44px 48px;
+  box-shadow: var(--shadow-sm);
+  display: grid; grid-template-columns: 240px 1fr auto; gap: 48px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.progress-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--blue) 0%, var(--green) 100%);
+}
+@media (max-width: 980px) { .progress-card { grid-template-columns: 200px 1fr; gap: 32px; padding: 36px; } }
+@media (max-width: 720px) { .progress-card { grid-template-columns: 1fr; gap: 28px; text-align: center; } }
+
+.ring-wrap { position: relative; width: 220px; height: 220px; margin: 0 auto; }
+.ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg { stroke: var(--line-soft); }
+.ring-fg {
+  stroke: var(--blue);
+  transition: stroke-dashoffset 1000ms cubic-bezier(.2,.7,.2,1), stroke 400ms ease;
+  filter: drop-shadow(0 2px 4px rgba(0,86,210,.18));
+}
+.ring-center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+.ring-pct {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 52px; letter-spacing: -.03em; line-height: 1;
+  color: var(--ink);
+  font-feature-settings: "tnum";
+}
+.ring-pct sup { font-size: 24px; vertical-align: top; line-height: 1; margin-left: 2px; color: var(--ink-mute); font-weight: 400; }
+.ring-label {
+  font-size: 11px; color: var(--ink-mute); text-transform: uppercase;
+  letter-spacing: .14em; margin-top: 8px; font-weight: 600;
+}
+
+.progress-body h3 { font-family: var(--serif); font-size: 26px; font-weight: 600; letter-spacing: -.01em; }
+.progress-encourage { color: var(--ink-soft); margin-top: 8px; font-size: 15.5px; line-height: 1.55; max-width: 50ch; }
+.progress-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line-soft);
+}
+@media (max-width: 520px) { .progress-stats { grid-template-columns: 1fr 1fr; } }
+.pstat { padding-right: 24px; }
+.pstat + .pstat { border-left: 1px solid var(--line-soft); padding-left: 24px; padding-right: 0; }
+.pstat:last-child { padding-right: 0; }
+.pstat-num { font-family: var(--serif); font-weight: 600; font-size: 26px; color: var(--ink); letter-spacing: -.01em; }
+.pstat-num .of { color: var(--ink-faint); font-weight: 500; font-size: 16px; }
+.pstat-label { font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: .12em; margin-top: 6px; font-weight: 600; }
+
+.progress-aside {
+  background: var(--blue-25); border: 1px solid var(--blue-50);
+  border-radius: var(--r-lg); padding: 22px;
+  width: 240px; align-self: stretch;
+  display: flex; flex-direction: column; justify-content: center; gap: 12px;
+}
+@media (max-width: 980px) { .progress-aside { display: none; } }
+.aside-label { font-size: 11px; color: var(--blue); text-transform: uppercase; letter-spacing: .14em; font-weight: 700; }
+.aside-title { font-family: var(--serif); font-size: 18px; font-weight: 600; line-height: 1.3; }
+.aside-sub { color: var(--ink-soft); font-size: 13px; }
+.aside-cta { color: var(--blue); font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.aside-cta:hover { gap: 10px; color: var(--blue-700); }
+
+/* =================================================================
+   WEEK CARDS
+================================================================== */
+.weeks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+@media (max-width: 980px) { .weeks-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 640px) { .weeks-grid { grid-template-columns: 1fr; } }
+
+.week {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 26px;
+  display: flex; flex-direction: column; gap: 18px;
+  position: relative; isolation: isolate;
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+}
+.week:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--line-strong); }
+.week.current { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-50), var(--shadow); }
+.week.current::after {
+  content: ""; position: absolute; top: 0; right: 26px;
+  border-style: solid; border-width: 0 10px 10px 10px;
+  border-color: transparent transparent var(--blue) transparent;
+  transform: translateY(-100%);
+}
+.week.complete { background: linear-gradient(180deg, #fff 0%, var(--green-50) 200%); }
+
+.week-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.week-num {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 32px; letter-spacing: -.02em;
+  color: var(--blue); line-height: 1;
+  font-feature-settings: "tnum";
+}
+.week.complete .week-num { color: var(--green); }
+.week-num-prefix { font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: .14em; font-weight: 700; display: block; margin-bottom: 4px; }
+.week-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.week.complete .week-status { color: var(--green); }
+.week.current .week-status { color: var(--blue); }
+.week-status.pending { color: var(--ink-faint); }
+
+.week h4 {
+  font-family: var(--serif); font-weight: 600;
+  font-size: 20px; letter-spacing: -.01em;
+  line-height: 1.3;
+}
+.week-meta { font-size: 12.5px; color: var(--ink-mute); display: inline-flex; gap: 6px; align-items: center; margin-top: 4px; }
+
+.week-pbar {
+  height: 5px; background: var(--line-soft);
+  border-radius: 999px; overflow: hidden;
+}
+.week-pbar > span {
+  display: block; height: 100%;
+  background: var(--blue); border-radius: 999px;
+  transition: width 700ms cubic-bezier(.2,.7,.2,1);
+}
+.week.complete .week-pbar > span { background: var(--green); }
+.week-bar-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--ink-mute); font-weight: 500; }
+
+.week-sessions {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 9px;
+  font-size: 13.5px; color: var(--ink-soft);
+}
+.week-sessions li { display: flex; gap: 10px; align-items: flex-start; line-height: 1.4; }
+.week-sessions li .dot {
+  width: 6px; height: 6px; border-radius: 999px;
+  background: var(--line-strong); margin-top: 7px; flex-shrink: 0;
+}
+.week-sessions li.done .dot { background: var(--green); }
+.week-sessions li.extra .dot { background: var(--gold); }
+.week-sessions li.done > span { text-decoration: line-through; text-decoration-color: var(--ink-faint); text-decoration-thickness: 1px; color: var(--ink-mute); }
+.week-sessions li.extra > span { color: var(--ink); font-weight: 500; }
+.week-sessions li.extra > span em { color: #8a5a00; font-style: normal; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; margin-right: 6px; }
+
+.week-cta {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--blue); font-weight: 600; font-size: 14px;
+  padding: 4px 0;
+  transition: gap var(--t);
+}
+.week-cta:hover { gap: 12px; color: var(--blue-700); }
+
+/* =================================================================
+   MODULES / SESSIONS
+================================================================== */
+.modules { display: flex; flex-direction: column; gap: 18px; }
+.module {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: box-shadow var(--t), border-color var(--t);
+}
+.module:hover { border-color: var(--line-strong); }
+.module[open] { box-shadow: var(--shadow-sm); }
+
+.module-head {
+  display: flex; align-items: center; gap: 22px;
+  padding: 24px 30px; cursor: pointer; user-select: none;
+  list-style: none;
+  transition: background var(--t);
+}
+.module-head::-webkit-details-marker { display: none; }
+.module-head:hover { background: var(--bg-soft); }
+
+.module-num {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: var(--blue-50); color: var(--blue);
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  font-family: var(--serif); font-weight: 600; font-size: 22px;
+  letter-spacing: -.02em;
+  transition: background var(--t), color var(--t);
+}
+.module[open] .module-num { background: var(--blue); color: #fff; }
+.module-titles { flex: 1; min-width: 0; }
+.module-titles .label { font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: .14em; font-weight: 700; margin-bottom: 4px; }
+.module-titles h3 { font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: -.015em; }
+.module-titles p { color: var(--ink-mute); font-size: 14.5px; margin-top: 4px; }
+
+.module-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 110px; }
+.module-stat-text { font-size: 13px; color: var(--ink-mute); font-weight: 500; }
+.module-stat-text strong { color: var(--ink); font-weight: 700; }
+.module-mini-bar { width: 90px; height: 4px; background: var(--line-soft); border-radius: 999px; overflow: hidden; }
+.module-mini-bar > span { display: block; height: 100%; background: var(--blue); border-radius: 999px; transition: width 600ms cubic-bezier(.2,.7,.2,1); }
+.module-chev {
+  transition: transform var(--t); color: var(--ink-mute);
+  margin-left: 8px;
+}
+.module[open] .module-chev { transform: rotate(180deg); color: var(--blue); }
+
+.module-body { padding: 6px 22px 18px; }
+.session-row {
+  display: flex; align-items: center; gap: 18px;
+  padding: 16px 14px; border-radius: var(--r);
+  transition: background var(--t);
+  position: relative;
+}
+.session-row + .session-row::before {
+  content: ""; position: absolute; top: 0; left: 14px; right: 14px; height: 1px;
+  background: var(--line-soft);
+}
+.session-row:hover { background: var(--bg-soft); }
+.session-row:hover + .session-row::before, .session-row:hover::before { opacity: 0; }
+.session-info { flex: 1; min-width: 0; }
+.session-title { font-weight: 600; font-size: 15px; color: var(--ink); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.session-title .num { color: var(--ink-faint); font-family: var(--serif); font-weight: 500; font-size: 14px; letter-spacing: 0; }
+.session-sub { font-size: 13.5px; color: var(--ink-mute); margin-top: 4px; line-height: 1.4; }
+.session-meta {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  background: var(--bg-soft); color: var(--ink-soft);
+  font-size: 12px; font-weight: 600;
+}
+
+/* circular checkbox */
+.check {
+  width: 26px; height: 26px; border-radius: 999px;
+  border: 1.8px solid var(--line-strong); background: #fff;
+  display: grid; place-items: center; flex-shrink: 0;
+  transition: border-color var(--t), background var(--t), transform var(--t), box-shadow var(--t);
+  cursor: pointer;
+}
+.check:hover { border-color: var(--blue); transform: scale(1.06); }
+.check:focus-visible { outline: 0; box-shadow: 0 0 0 4px var(--blue-50); }
+.check svg { opacity: 0; transform: scale(.4); transition: opacity var(--t), transform var(--t); stroke: #fff; stroke-width: 3; }
+.check[aria-checked="true"] {
+  background: var(--green); border-color: var(--green);
+  animation: pop 420ms cubic-bezier(.2,.7,.2,1);
+}
+.check[aria-checked="true"] svg { opacity: 1; transform: scale(1); }
+.check[aria-checked="true"]:hover { background: #178a52; border-color: #178a52; }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+/* =================================================================
+   PROJECTS
+================================================================== */
+.projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+@media (max-width: 980px) { .projects-grid { grid-template-columns: 1fr; } }
+
+.project {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  display: flex; flex-direction: column; gap: 18px;
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+  position: relative; overflow: hidden;
+}
+.project:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--line-strong); }
+.project::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.project.b1::before { background: var(--blue); }
+.project.b2::before { background: var(--gold); }
+.project.b3::before { background: var(--green); }
+
+.project-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+}
+.project-num {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 56px; letter-spacing: -.04em;
+  color: var(--blue); line-height: .8;
+  font-feature-settings: "tnum";
+}
+.project.b2 .project-num { color: #B07900; }
+.project.b3 .project-num { color: var(--green); }
+.project-num-label { font-size: 10.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: .16em; font-weight: 700; }
+
+.project-illu {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: grid; place-items: center;
+}
+.project.b1 .project-illu { background: var(--blue-50); color: var(--blue); }
+.project.b2 .project-illu { background: var(--gold-50); color: #B07900; }
+.project.b3 .project-illu { background: var(--green-50); color: var(--green); }
+
+.project h4 {
+  font-family: var(--serif); font-size: 22px; font-weight: 600;
+  letter-spacing: -.015em; line-height: 1.25;
+}
+.project-after { color: var(--ink-mute); font-size: 13px; font-weight: 500; margin-top: -10px; }
+.project-after strong { color: var(--ink); font-weight: 600; }
+.project-desc { color: var(--ink-soft); font-size: 14.5px; line-height: 1.6; }
+
+.project-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .04em;
+  padding: 6px 11px; border-radius: 999px;
+}
+.badge-hands { background: var(--ink); color: #fff; }
+.badge-soft { background: var(--bg-soft); color: var(--ink-soft); border: 1px solid var(--line); }
+
+.project-foot {
+  margin-top: auto; padding-top: 18px;
+  border-top: 1px solid var(--line-soft);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.project-link {
+  color: var(--blue); font-weight: 600; font-size: 14px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.project-link:hover { gap: 10px; color: var(--blue-700); }
+.project-difficulty { font-size: 12px; color: var(--ink-mute); font-weight: 500; }
+
+/* =================================================================
+   RESOURCES
+================================================================== */
+.tabs {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+  position: relative;
+}
+.tab {
+  padding: 14px 20px;
+  font-weight: 600; font-size: 14.5px; color: var(--ink-mute);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color var(--t), border-color var(--t);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-count {
+  font-size: 11px; font-weight: 700;
+  background: var(--bg-soft); color: var(--ink-soft);
+  padding: 2px 7px; border-radius: 999px;
+}
+.tab[aria-selected="true"] .tab-count { background: var(--blue-50); color: var(--blue); }
+
+.tab-panel { display: none; }
+.tab-panel[data-active="true"] { display: block; animation: fadeUp 320ms cubic-bezier(.2,.7,.2,1); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.resources-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+@media (max-width: 760px) { .resources-grid { grid-template-columns: 1fr; } }
+.resource {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px; border: 1px solid var(--line);
+  border-radius: var(--r); background: #fff;
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+}
+.resource:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--line-strong); }
+.resource-ico {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--bg-soft); color: var(--ink-soft);
+  display: grid; place-items: center; flex-shrink: 0;
+  border: 1px solid var(--line-soft);
+}
+.resource-body { flex: 1; min-width: 0; }
+.resource-row1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.resource-title { font-weight: 600; color: var(--ink); font-size: 15px; line-height: 1.35; }
+.resource-author { font-size: 13px; color: var(--ink-mute); margin-top: 3px; }
+.resource-ext { color: var(--ink-faint); margin-left: auto; flex-shrink: 0; transition: color var(--t), transform var(--t); }
+.resource:hover .resource-ext { color: var(--blue); transform: translate(2px,-2px); }
+.badge-official {
+  background: var(--blue-50); color: var(--blue);
+  font-size: 10px; padding: 3px 7px; border-radius: 4px;
+  letter-spacing: .1em; font-weight: 700;
+}
+
+/* =================================================================
+   PRINCIPLES
+================================================================== */
+.principles { display: grid; grid-template-columns: repeat(2,1fr); gap: 4px; border-top: 1px solid var(--line-soft); }
+@media (max-width: 760px) { .principles { grid-template-columns: 1fr; } }
+.principle {
+  padding: 32px 32px 32px 100px;
+  position: relative;
+  border-bottom: 1px solid var(--line-soft);
+  transition: background var(--t);
+}
+.principle:hover { background: var(--bg-soft); }
+.principle:nth-child(2n) { border-left: 1px solid var(--line-soft); }
+@media (max-width: 760px) { .principle:nth-child(2n) { border-left: 0; } }
+
+.principle-num {
+  position: absolute; left: 28px; top: 30px;
+  font-family: var(--serif); font-weight: 500;
+  font-size: 44px; letter-spacing: -.03em;
+  color: var(--blue); line-height: 1;
+  font-feature-settings: "tnum";
+}
+.principle h4 {
+  font-family: var(--serif); font-size: 19px; font-weight: 600;
+  margin-bottom: 8px; letter-spacing: -.01em; line-height: 1.3;
+}
+.principle p { color: var(--ink-soft); font-size: 14.5px; line-height: 1.6; }
+
+/* =================================================================
+   FOOTER
+================================================================== */
+footer { background: var(--ink); color: #C8CFDB; padding: 56px 0 32px; }
+footer a { color: #C8CFDB; }
+footer a:hover { color: #fff; }
+.foot-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 40px; margin-bottom: 40px;
+}
+@media (max-width: 880px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+.foot-col h5 { font-size: 12px; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; margin-bottom: 14px; }
+.foot-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.foot-col ul a { display: inline-flex; align-items: center; gap: 6px; }
+.foot-about { max-width: 32ch; font-size: 14px; line-height: 1.6; }
+.foot-about .brand-mark { width: 38px; height: 38px; margin-bottom: 16px; box-shadow: none; }
+.foot-bottom {
+  display: flex; justify-content: space-between; gap: 20px;
+  padding-top: 24px; border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 12.5px; color: #8C95A6; flex-wrap: wrap;
+}
+
+/* =================================================================
+   TOAST
+================================================================== */
+.toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: #fff;
+  padding: 12px 20px 12px 16px; border-radius: 999px;
+  font-size: 14px; font-weight: 500;
+  box-shadow: 0 12px 32px rgba(17,24,39,.30);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--t), transform var(--t);
+  display: inline-flex; align-items: center; gap: 10px; z-index: 100;
+}
+.toast .toast-ico {
+  width: 22px; height: 22px; border-radius: 999px;
+  background: var(--green); display: grid; place-items: center;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* =================================================================
+   ENTER ANIMATIONS
+================================================================== */
+.fade-in { animation: fadeUp 520ms cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SVG ICON SYMBOLS ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ic-book"          viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+    <symbol id="ic-target"        viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="ic-check"         viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="ic-check-circle"  viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+    <symbol id="ic-play"          viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></symbol>
+    <symbol id="ic-ext"           viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+    <symbol id="ic-sparkles"      viewBox="0 0 24 24"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14z"/><path d="M5 14l.6 1.6L7 16l-1.4.4L5 18l-.6-1.6L3 16l1.4-.4L5 14z"/></symbol>
+    <symbol id="ic-clock"         viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="ic-layers"        viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+    <symbol id="ic-rocket"        viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+    <symbol id="ic-arrow-right"   viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+    <symbol id="ic-chevron-down"  viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+    <symbol id="ic-chevron-right" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></symbol>
+    <symbol id="ic-zap"           viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="ic-shield"        viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="ic-puzzle"        viewBox="0 0 24 24"><path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.98.98 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02z"/></symbol>
+    <symbol id="ic-file"          viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol>
+    <symbol id="ic-code"          viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+    <symbol id="ic-network"       viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11l-5.5 6M12 11l5.5 6"/></symbol>
+    <symbol id="ic-flame"         viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+    <symbol id="ic-bookmark"      viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="ic-award"         viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></symbol>
+    <symbol id="ic-trending"      viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+  </defs>
+</svg>
+
+<div class="scroll-progress"><div id="sp"></div></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="shell nav-inner">
+    <div class="brand">
+      <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <div class="brand-text">Academia Jarvis<small>Anthropic · Programa de agentes</small></div>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="#plan">Mi plan</a>
+      <a class="nav-link" href="#sesiones">Syllabus</a>
+      <a class="nav-link" href="#proyectos">Proyectos</a>
+      <a class="nav-link" href="#recursos">Recursos</a>
+      <a class="nav-cta" href="#progreso"><svg class="i i-sm" style="stroke-width:2.2"><use href="#ic-play"/></svg> Continuar</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="shell hero-grid">
+    <div>
+      <div class="hero-crumb">
+        <svg class="i i-sm"><use href="#ic-bookmark"/></svg>
+        <strong>Programa personal</strong>
+        <svg class="i i-sm"><use href="#ic-chevron-right"/></svg>
+        <span>Anthropic · Agentes de IA</span>
+        <svg class="i i-sm"><use href="#ic-chevron-right"/></svg>
+        <span>Cohorte 2026</span>
+      </div>
+      <h1 class="hero-title">Construye agentes IA reales en <em>ocho semanas</em>.</h1>
+      <p class="hero-sub">Tres módulos, doce sesiones y tres proyectos integradores: de los fundamentos teóricos de Anthropic a un sistema agéntico funcionando en producción — <strong>PulseCore</strong>.</p>
+      <div class="hero-cta-row">
+        <a class="btn btn-primary" href="#progreso"><svg class="i"><use href="#ic-play"/></svg> Continuar aprendiendo</a>
+        <a class="btn btn-ghost" href="#sesiones"><svg class="i"><use href="#ic-book"/></svg> Ver syllabus completo</a>
+      </div>
+      <div class="hero-meta">
+        <div><svg class="i i-sm"><use href="#ic-clock"/></svg> <span><strong>~24 h</strong> de contenido</span></div>
+        <div><svg class="i i-sm"><use href="#ic-trending"/></svg> <span>Self-paced</span></div>
+        <div><svg class="i i-sm"><use href="#ic-award"/></svg> <span>Final: 3 clientes piloto</span></div>
+        <div><svg class="i i-sm"><use href="#ic-target"/></svg> <span>Basado en <strong>Schluntz &amp; Zhang</strong></span></div>
+      </div>
+    </div>
+
+    <!-- preview card -->
+    <aside class="preview-card" id="preview-card">
+      <div class="pc-head">
+        <span class="pc-tag" id="pc-tag">En curso</span>
+        <div class="pc-up-next">Próximo · <strong id="pc-next-id">Sesión 01</strong></div>
+      </div>
+      <div class="pc-title" id="pc-title">Qué es un agente de IA</div>
+      <div class="pc-sub" id="pc-sub">La distinción fundamental entre un modelo de lenguaje, un workflow y un agente verdadero.</div>
+      <div class="pc-bar">
+        <div class="pc-bar-track"><div class="pc-bar-fill" id="pc-fill" style="width:0%"></div></div>
+        <div class="pc-bar-meta"><span><strong id="pc-done">0</strong> / 12 sesiones</span><span id="pc-pct">0% completo</span></div>
+      </div>
+      <ul class="pc-list" id="pc-list"></ul>
+      <div class="pc-foot">
+        <span class="pc-foot-meta" id="pc-foot-meta">Semana 1 de 8</span>
+        <a class="btn btn-primary" href="#progreso" style="padding:9px 16px;font-size:13.5px"><svg class="i i-sm"><use href="#ic-play"/></svg> Reanudar</a>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<!-- ============ FACTS STRIP ============ -->
+<div class="facts">
+  <div class="shell">
+    <div class="facts-inner">
+      <div class="fact">
+        <div class="fact-ico"><svg class="i i-md"><use href="#ic-clock"/></svg></div>
+        <div><div class="fact-num">8 <span class="of">semanas</span></div><div class="fact-label">Calendario sugerido</div></div>
+      </div>
+      <div class="fact">
+        <div class="fact-ico"><svg class="i i-md"><use href="#ic-book"/></svg></div>
+        <div><div class="fact-num">12 <span class="of">sesiones</span></div><div class="fact-label">Lecturas + ejercicios + quiz</div></div>
+      </div>
+      <div class="fact">
+        <div class="fact-ico"><svg class="i i-md"><use href="#ic-rocket"/></svg></div>
+        <div><div class="fact-num">3 <span class="of">proyectos</span></div><div class="fact-label">Integradores hands-on</div></div>
+      </div>
+      <div class="fact">
+        <div class="fact-ico"><svg class="i i-md"><use href="#ic-target"/></svg></div>
+        <div><div class="fact-num">~24<span class="of"> horas</span></div><div class="fact-label">Tiempo estimado total</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROGRESS ============ -->
+<section id="progreso">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Tu progreso</div>
+        <h2 class="section-title">Course progress</h2>
+        <p class="section-sub" id="progress-msg">Comienza tu primera sesión para activar el seguimiento.</p>
+      </div>
+    </div>
+
+    <div class="progress-card">
+      <div class="ring-wrap" aria-label="Progreso global">
+        <svg viewBox="0 0 220 220" role="img" aria-hidden="true">
+          <circle class="ring-bg" cx="110" cy="110" r="92" stroke-width="14" fill="none"/>
+          <circle class="ring-fg" id="ring-fg" cx="110" cy="110" r="92" stroke-width="14" fill="none"
+                  stroke-linecap="round" stroke-dasharray="578" stroke-dashoffset="578"/>
+        </svg>
+        <div class="ring-center">
+          <div>
+            <div class="ring-pct"><span id="ring-pct">0</span><sup>%</sup></div>
+            <div class="ring-label">Completado</div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-body">
+        <h3 id="progress-title">Bienvenido a Academia Jarvis</h3>
+        <p class="progress-encourage" id="progress-encourage">Empieza por la Sesión 01 — la distinción fundamental entre un LLM, un workflow y un agente verdadero.</p>
+        <div class="progress-stats">
+          <div class="pstat"><div class="pstat-num"><span id="w-done">0</span><span class="of"> / 8</span></div><div class="pstat-label">Semanas</div></div>
+          <div class="pstat"><div class="pstat-num"><span id="s-done">0</span><span class="of"> / 12</span></div><div class="pstat-label">Sesiones</div></div>
+          <div class="pstat"><div class="pstat-num"><span id="h-done">0</span><span class="of"> h</span></div><div class="pstat-label">Horas invertidas</div></div>
+        </div>
+      </div>
+      <div class="progress-aside">
+        <div class="aside-label">Próximo hito</div>
+        <div class="aside-title" id="aside-title">Módulo I · Fundamentos</div>
+        <div class="aside-sub" id="aside-sub">Completar las 4 sesiones de fundamentos antes de avanzar al Proyecto 1.</div>
+        <a class="aside-cta" href="#sesiones" id="aside-cta">Ir al módulo <svg class="i i-sm"><use href="#ic-arrow-right"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WEEKS ============ -->
+<section id="plan" class="alt">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Tu plan de aprendizaje</div>
+        <h2 class="section-title">Ocho semanas, una trayectoria</h2>
+        <p class="section-sub">Cada semana combina lecturas, ejercicios y bloques de práctica. La semana en curso aparece destacada — tu progreso se guarda automáticamente.</p>
+      </div>
+      <a class="section-action" href="#sesiones">Ver syllabus completo <svg class="i i-sm"><use href="#ic-arrow-right"/></svg></a>
+    </div>
+    <div class="weeks-grid" id="weeks-grid"></div>
+  </div>
+</section>
+
+<!-- ============ MODULES / SESSIONS ============ -->
+<section id="sesiones">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Syllabus</div>
+        <h2 class="section-title">Módulos y sesiones</h2>
+        <p class="section-sub">Tres módulos · doce sesiones. Cada sesión es una unidad atómica: contexto, lectura, transcript, ejercicios y quiz.</p>
+      </div>
+    </div>
+    <div class="modules" id="modules"></div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section id="proyectos" class="alt">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Proyectos integradores</div>
+        <h2 class="section-title">Tres proyectos, tres niveles</h2>
+        <p class="section-sub">Aprender no es leer: es decidir. Cada proyecto integrador toma lo que viste y te obliga a aplicarlo en un escenario real.</p>
+      </div>
+    </div>
+    <div class="projects-grid" id="projects-grid"></div>
+  </div>
+</section>
+
+<!-- ============ RESOURCES ============ -->
+<section id="recursos">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Biblioteca del curso</div>
+        <h2 class="section-title">Recursos del curso</h2>
+        <p class="section-sub">Las fuentes que sostienen cada sesión. Material oficial de Anthropic, papers fundacionales y lecturas adicionales.</p>
+      </div>
+    </div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div id="tab-panels"></div>
+  </div>
+</section>
+
+<!-- ============ PRINCIPLES ============ -->
+<section id="principios" class="alt">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Key concepts</div>
+        <h2 class="section-title">Diez principios clave</h2>
+        <p class="section-sub">Los principios que vuelven una y otra vez a lo largo del curso. Si tuvieras que recordar solo diez ideas, son estas.</p>
+      </div>
+    </div>
+    <div class="principles" id="principles"></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="shell">
+    <div class="foot-grid">
+      <div class="foot-col foot-about">
+        <div class="brand-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        Programa personal de agentes de IA. Basado en la guía de Anthropic, adaptado para construir PulseCore.
+      </div>
+      <div class="foot-col">
+        <h5>Curso</h5>
+        <ul>
+          <li><a href="#progreso">Mi progreso</a></li>
+          <li><a href="#plan">Plan semanal</a></li>
+          <li><a href="#sesiones">Syllabus</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Fuentes</h5>
+        <ul>
+          <li><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents <svg class="i i-sm" style="display:inline;vertical-align:-2px"><use href="#ic-ext"/></svg></a></li>
+          <li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">ReAct paper <svg class="i i-sm" style="display:inline;vertical-align:-2px"><use href="#ic-ext"/></svg></a></li>
+          <li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview" target="_blank" rel="noopener">Anthropic Docs <svg class="i i-sm" style="display:inline;vertical-align:-2px"><use href="#ic-ext"/></svg></a></li>
+          <li><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">MCP <svg class="i i-sm" style="display:inline;vertical-align:-2px"><use href="#ic-ext"/></svg></a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Acerca</h5>
+        <ul>
+          <li><a href="#principios">Principios clave</a></li>
+          <li><a href="#recursos">Biblioteca</a></li>
+          <li><span style="color:#8C95A6">Versión 2.0</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 · Academia Jarvis. Cohorte personal.</span>
+      <span>Basado en <em>Schluntz &amp; Zhang, Anthropic (2024)</em>.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ SESSION MODAL ============ -->
+<div id="session-modal" class="session-modal" aria-hidden="true"></div>
+
+<!-- ============ CHAT TUTOR ============ -->
+<button class="chat-fab" id="chat-fab" onclick="toggleChat()" aria-label="Abrir tutor IA">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+</button>
+<div id="chat-panel" class="chat-panel" role="dialog" aria-label="Tutor IA">
+  <div class="chat-header">
+    <div class="chat-header-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8L12 2z"/></svg>
+    </div>
+    <div>
+      <div class="chat-header-title">Tutor de Agentes IA</div>
+      <div class="chat-header-sub">Powered by Claude Sonnet</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()" aria-label="Cerrar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="chat-model-row">
+    <span>Modelo:</span>
+    <select class="chat-model-select" id="chat-model-select" onchange="onModelChange()">
+      <option value="auto">Auto (default del servidor)</option>
+      <optgroup label="Anthropic Claude (mejor en código)">
+        <option value="anthropic:claude-sonnet-4-6">Claude Sonnet 4.6 · ~$0.05/pregunta</option>
+        <option value="anthropic:claude-haiku-4-5">Claude Haiku 4.5 · ~$0.01</option>
+        <option value="anthropic:claude-opus-4-7">Claude Opus 4.7 · ~$0.20</option>
+      </optgroup>
+      <optgroup label="OpenAI GPT (razonamiento)">
+        <option value="openai:gpt-5">GPT-5 · ~$0.04/pregunta</option>
+        <option value="openai:gpt-5-mini">GPT-5 mini · ~$0.005</option>
+        <option value="openai:gpt-5-nano">GPT-5 nano · ~$0.002</option>
+      </optgroup>
+      <optgroup label="Google Gemini (más barato)">
+        <option value="google:gemini-2.5-pro">Gemini 2.5 Pro · ~$0.015/pregunta</option>
+        <option value="google:gemini-2.5-flash">Gemini 2.5 Flash · ~$0.002</option>
+      </optgroup>
+    </select>
+    <span class="chat-cost-badge" id="chat-last-cost" style="display:none;">$0</span>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-row">
+    <textarea class="chat-input" id="chat-input" rows="1" placeholder="Pregúntale algo a tu tutor..." onkeydown="handleChatKey(event)" oninput="chatAutoGrow(this)"></textarea>
+    <button class="chat-send" id="chat-send" onclick="sendChat()" aria-label="Enviar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — endpoints externos (edita estos valores tras desplegar)
+============================================================ */
+const CONFIG = {
+  CONTENT_URL: 'https://raw.githubusercontent.com/USERNAME/academia-jarvis/main/www/content.json',
+  IMPROVE_URL: 'https://academia-jarvis-improve.WORKER_SUBDOMAIN.workers.dev/improve',
+  CHAT_URL:    'https://academia-jarvis-chat.WORKER_SUBDOMAIN.workers.dev/chat',
+  CHAT_KEY:    'academia-jarvis-chat-v1',
+  CONTENT_CACHE_KEY: 'academia-jarvis-content-cache-v1',
+  CONTENT_CACHE_TTL_MS: 6 * 60 * 60 * 1000  // 6h
+};
+
+let currentSessionId = null;
+let CONTENT_DATA = null;
+
+/* ============================================================
+   DATA — fallback embebido (se sobreescribe con content.json en runtime)
+============================================================ */
+let SESSIONS = [
+  { id: 1,  module: 1, title: "Qué es un agente de IA",          sub: "LLM vs workflow vs agente verdadero",                hours: 1.0, duration: "45 min" },
+  { id: 2,  module: 1, title: "Tools — el mecanismo interior",   sub: "Las 6 características de una tool de producción",    hours: 1.2, duration: "55 min" },
+  { id: 3,  module: 1, title: "Workflows vs Agentes",            sub: "Los 5 patrones de Anthropic",                        hours: 1.1, duration: "50 min" },
+  { id: 4,  module: 1, title: "Prompt Engineering para Agentes", sub: "El system prompt como contrato",                     hours: 1.1, duration: "50 min" },
+  { id: 5,  module: 2, title: "Memoria de Agentes",              sub: "Los 4 tipos de memoria de un agente",                hours: 1.3, duration: "60 min" },
+  { id: 6,  module: 2, title: "Router de Modelos",               sub: "Haiku, Sonnet, Opus — y la regla 70/20/10",          hours: 1.0, duration: "45 min" },
+  { id: 7,  module: 2, title: "Orchestrator-Workers",            sub: "Cuándo realmente necesitas multi-agente",            hours: 1.1, duration: "50 min" },
+  { id: 8,  module: 3, title: "Los 5 Guards de PulseCore",       sub: "La implementación completa del corazón del sistema",hours: 1.2, duration: "55 min" },
+  { id: 9,  module: 3, title: "Multi-tenant y Seguridad",        sub: "Aislamiento RLS sin un solo bug que rompa todo",     hours: 1.1, duration: "50 min" },
+  { id: 10, module: 3, title: "Auditoría y Observabilidad",      sub: "Traces, metrics y logs de cada agente",              hours: 1.0, duration: "45 min" },
+  { id: 11, module: 3, title: "Setup técnico del entorno",       sub: "Del Mac Mini M4 al primer 'docker compose up'",      hours: 1.0, duration: "45 min" },
+  { id: 12, module: 3, title: "Primer commit con Claude Code",   sub: "El Bloque 1 — HealthGuard básico end-to-end",        hours: 1.3, duration: "60 min" }
+];
+
+let MODULES = [
+  { id: 1, num: "I",   title: "Fundamentos",  sub: "De qué hablamos cuando hablamos de agentes" },
+  { id: 2, num: "II",  title: "Arquitectura", sub: "Memoria, modelos y orquestación" },
+  { id: 3, num: "III", title: "PulseCore",    sub: "Construyendo el producto real" }
+];
+
+let WEEKS = [
+  { n: 1, title: "Fundamentos del agente",          duration: "~2.2 h",  sessions: [1, 2] },
+  { n: 2, title: "Patrones y prompts",              duration: "~2.2 h",  sessions: [3, 4] },
+  { n: 3, title: "Memoria + Proyecto 1",            duration: "~5 h",    sessions: [5],     extra: "Proyecto 1 — Diseña tu primer agente" },
+  { n: 4, title: "Modelos y orquestación",          duration: "~2.1 h",  sessions: [6, 7] },
+  { n: 5, title: "Los 5 Guards + Proyecto 2",       duration: "~7 h",    sessions: [8],     extra: "Proyecto 2 — Arquitectura multi-agente" },
+  { n: 6, title: "Multi-tenant y observabilidad",   duration: "~2.1 h",  sessions: [9, 10] },
+  { n: 7, title: "Setup del entorno",               duration: "~1 h",    sessions: [11] },
+  { n: 8, title: "Primer commit + Proyecto 3",      duration: "~1.3 h",  sessions: [12],    extra: "Proyecto 3 — PulseCore en producción" }
+];
+
+let PROJECTS = [
+  { n: 1, after: "Después del Módulo I",  duration: "3–5 h",   difficulty: "Práctico",          tone: "b1", icon: "ic-puzzle",
+    title: "Diseña tu primer agente",
+    desc: "Aplica todo lo del Módulo I en papel: documento de propósito, system prompt de 200–280 palabras, catálogo de 5 tools con JSON schemas, plan de evaluación y ADR de decisiones." },
+  { n: 2, after: "Después del Módulo II", duration: "5–8 h",   difficulty: "Diseño técnico",    tone: "b2", icon: "ic-network",
+    title: "Arquitectura multi-agente",
+    desc: "Diseña la V2 de tu sistema: diagrama completo, framework agéntico, vector DB, routing de modelos, multi-tenant con RLS y plan de observabilidad — todo documentado en ADRs." },
+  { n: 3, after: "Final del curso",       duration: "12 semanas", difficulty: "Implementación real", tone: "b3", icon: "ic-rocket",
+    title: "PulseCore en producción",
+    desc: "Bloque por bloque, con tests, observabilidad y disciplina: 11 bloques de implementación, beta privada con 3 clientes piloto y plan de go-to-market inicial." }
+];
+
+let RESOURCES = {
+  anthropic: [
+    { title: "Tool use with Claude — guía oficial",                       author: "Anthropic Platform Docs",    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview", official: true, icon: "ic-file" },
+    { title: "Introducing advanced tool use (Tool Search, PTC, Examples)",author: "Anthropic Engineering Blog", url: "https://www.anthropic.com/engineering/advanced-tool-use",                official: true, icon: "ic-code" },
+    { title: "Building Effective AI Agents — Architecture Patterns (PDF)",author: "Anthropic Resources",        url: "https://resources.anthropic.com/building-effective-ai-agents",           official: true, icon: "ic-layers" },
+    { title: "Prompting best practices for tool use",                     author: "Anthropic Docs",             url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices", official: true, icon: "ic-book" }
+  ],
+  sdk: [
+    { title: "Architecture Patterns and Implementation Frameworks",       author: "Anthropic Resources (PDF)",  url: "https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf", official: true, icon: "ic-layers" },
+    { title: "Claude Code · Plataforma de developer agents",              author: "Anthropic Platform",         url: "https://platform.claude.com/docs/en/agents-and-tools/agent-sdk/overview", official: true, icon: "ic-code" },
+    { title: "Tool Search Tool & Programmatic Tool Calling",              author: "Anthropic Engineering",      url: "https://www.anthropic.com/engineering/advanced-tool-use",                 official: true, icon: "ic-zap" }
+  ],
+  mcp: [
+    { title: "Model Context Protocol — overview",                         author: "Anthropic",                  url: "https://www.anthropic.com/news/model-context-protocol",                   official: true,  icon: "ic-network" },
+    { title: "MCP Specification & SDKs",                                  author: "modelcontextprotocol.io",    url: "https://modelcontextprotocol.io/",                                        official: true,  icon: "ic-code" },
+    { title: "Anthropic ACI — Agent Computer Interface",                  author: "Cobus Greyling · Medium",    url: "https://cobusgreyling.medium.com/anthropic-aci-ai-agent-computer-interface-d972da8f560b", official: false, icon: "ic-puzzle" }
+  ],
+  papers: [
+    { title: "Building Effective Agents",                                 author: "Schluntz & Zhang · Anthropic (2024)", url: "https://www.anthropic.com/research/building-effective-agents", official: true,  icon: "ic-file" },
+    { title: "ReAct: Synergizing Reasoning and Acting in Language Models",author: "Yao et al. · ICLR 2023 (arXiv:2210.03629)", url: "https://arxiv.org/abs/2210.03629",                       official: false, icon: "ic-file" }
+  ],
+  otros: [
+    { title: "Building AI Agents with Anthropic's 6 Composable Patterns", author: "AIMultiple (2026)",          url: "https://aimultiple.com/building-ai-agents",                                official: false, icon: "ic-book" },
+    { title: "Naitive: Building Effective Agents — case studies",         author: "Naitive Cloud Blog",         url: "https://blog.naitive.cloud/building-effective-agents/",                    official: false, icon: "ic-book" },
+    { title: "Demystifying ReAct — Why Reasoning + Acting is Standard",   author: "DEV Community",              url: "https://dev.to/4484ho/demystifying-react-why-reasoning-and-acting-is-the-standard-for-llm-agents-1ii6", official: false, icon: "ic-book" },
+    { title: "What is a ReAct Agent?",                                    author: "IBM Think",                  url: "https://www.ibm.com/think/topics/react-agent",                             official: false, icon: "ic-book" }
+  ]
+};
+
+let PRINCIPLES = [
+  { t: "Simplicidad progresiva",         d: "Empieza con la solución más simple. Sube en complejidad solo cuando los datos lo justifiquen — no antes." },
+  { t: "Agent-Computer Interface",       d: "Dedica tanto esfuerzo a diseñar buenas tools, schemas y errores estructurados como dedicas a la UI para humanos." },
+  { t: "El control siempre es tuyo",     d: "El LLM nunca toca tu DB ni tus APIs. Solo solicita acciones. Tu código ejecuta o rechaza. Esa separación es la seguridad." },
+  { t: "Sweet spot 150–300 palabras",    d: "El system prompt como contrato. Ni demasiado corto ni un ensayo: 150–300 palabras es donde Claude rinde mejor." },
+  { t: "XML > Markdown para Claude",     d: "Claude fue entrenado con énfasis especial en XML tags. Para Claude, estructurar el prompt con XML supera a Markdown." },
+  { t: "Permiso explícito para «no sé»", d: "Si nunca le das esa opción, el modelo inventa. Una línea autorizando INSUFFICIENT_DATA reduce alucinaciones drásticamente." },
+  { t: "Regla 70/20/10",                 d: "Haiku para el 70% del tráfico, Sonnet para el 20%, Opus reservado para el 10% crítico. Así no quemas dinero." },
+  { t: "Errores estructurados",          d: "Cada tool retorna success / error_code / suggestion. No excepciones. El agente debe poder corregirse con la información que recibe." },
+  { t: "Bloques funcionales",            d: "Cada bloque deja el sistema funcional pero no completo. Acumulas funcionalidad sin nunca romper lo previo." },
+  { t: "Multi-tenant no-negociable",     d: "RLS, defense in depth, audit log append-only. Un solo bug de aislamiento puede destruir tu empresa. Sin atajos." }
+];
+
+
+/* ============================================================
+   STATE
+============================================================ */
+const STORAGE = "academia-coursera-v2";
+let state = load();
+
+function defaults() { return { version: 2, sessions: {} }; }
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE);
+    if (!raw) {
+      const legacy = localStorage.getItem("academia-coursera-v1");
+      if (legacy) { try { const p = JSON.parse(legacy); if (p && p.sessions) return { version: 2, sessions: p.sessions }; } catch {} }
+      return defaults();
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.version) return defaults();
+    return parsed;
+  } catch { return defaults(); }
+}
+function save()       { try { localStorage.setItem(STORAGE, JSON.stringify(state)); } catch {} }
+function isDone(id)   { return !!state.sessions[id]; }
+function toggle(id)   { if (isDone(id)) delete state.sessions[id]; else state.sessions[id] = Date.now(); save(); }
+
+/* ============================================================
+   HELPERS
+============================================================ */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const ic = (name, cls="i") => `<svg class="${cls}"><use href="#${name}"/></svg>`;
+const pad = (n) => String(n).padStart(2, "0");
+
+function weekProgress(w) {
+  const done = w.sessions.filter(isDone).length;
+  return { done, total: w.sessions.length, pct: w.sessions.length ? Math.round(done / w.sessions.length * 100) : 0 };
+}
+function currentWeekIndex() {
+  for (let i = 0; i < WEEKS.length; i++) {
+    const p = weekProgress(WEEKS[i]);
+    if (p.done < p.total) return i;
+  }
+  return WEEKS.length - 1;
+}
+function nextSessionId() {
+  for (const s of SESSIONS) if (!isDone(s.id)) return s.id;
+  return null;
+}
+function weekOfSession(id) {
+  for (const w of WEEKS) if (w.sessions.includes(id)) return w.n;
+  return 1;
+}
+function toast(msg) {
+  const t = $("#toast");
+  t.innerHTML = `<span class="toast-ico">${ic("ic-check","i i-sm")}</span><span>${msg}</span>`;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=> t.classList.remove("show"), 2000);
+}
+
+/* ============================================================
+   RENDER — Hero preview card
+============================================================ */
+function renderPreview() {
+  const doneCount = SESSIONS.filter(s => isDone(s.id)).length;
+  const pct = Math.round(doneCount / SESSIONS.length * 100);
+  const allDone = doneCount === SESSIONS.length;
+  const nextId = allDone ? SESSIONS[SESSIONS.length-1].id : nextSessionId();
+  const next = SESSIONS.find(s => s.id === nextId);
+
+  $("#pc-tag").textContent = doneCount === 0 ? "Sin comenzar" : (allDone ? "Completado" : "En curso");
+  $("#pc-next-id").textContent = `Sesión ${pad(next.id)}`;
+  $("#pc-title").textContent = next.title;
+  $("#pc-sub").textContent = next.sub;
+  $("#pc-fill").style.width = pct + "%";
+  $("#pc-done").textContent = doneCount;
+  $("#pc-pct").textContent = pct + "% completo";
+  $("#pc-foot-meta").textContent = `Semana ${weekOfSession(next.id)} de 8`;
+
+  // contextual session window: 2 done before next, next, then 1 after
+  const idx = SESSIONS.findIndex(s => s.id === next.id);
+  const start = Math.max(0, idx - 2);
+  const window = SESSIONS.slice(start, start + 4);
+  $("#pc-list").innerHTML = window.map((s) => {
+    const done = isDone(s.id);
+    const isNext = s.id === next.id && !allDone;
+    const cls = done ? "done" : (isNext ? "next" : "");
+    return `<li class="${cls}">
+      <span class="pc-dot">${done ? ic("ic-check","i i-sm") : pad(s.id)}</span>
+      <span>${s.title}</span>
+    </li>`;
+  }).join("");
+}
+
+/* ============================================================
+   RENDER — Progress ring + stats
+============================================================ */
+function renderProgress() {
+  const total = SESSIONS.length;
+  const done  = SESSIONS.filter(s => isDone(s.id)).length;
+  const pct   = Math.round(done / total * 100);
+
+  const circumference = 2 * Math.PI * 92;
+  const fg = $("#ring-fg");
+  fg.setAttribute("stroke-dasharray", circumference);
+  fg.setAttribute("stroke-dashoffset", circumference * (1 - pct/100));
+  fg.style.stroke = pct === 100 ? "var(--green)" : "var(--blue)";
+  $("#ring-pct").textContent = pct;
+
+  const weeksDone = WEEKS.filter(w => weekProgress(w).pct === 100).length;
+  const hoursDone = SESSIONS.filter(s => isDone(s.id)).reduce((a,s)=>a+s.hours, 0);
+  $("#w-done").textContent = weeksDone;
+  $("#s-done").textContent = done;
+  $("#h-done").textContent = hoursDone.toFixed(1);
+
+  // microcopy
+  const ttl = $("#progress-title");
+  const enc = $("#progress-encourage");
+  const msg = $("#progress-msg");
+  const ast = $("#aside-title");
+  const asb = $("#aside-sub");
+
+  if (pct === 0) {
+    ttl.textContent = "Bienvenido a Academia Jarvis";
+    enc.textContent = "Empieza por la Sesión 01 — la distinción fundamental entre un LLM, un workflow y un agente verdadero.";
+    msg.textContent = "Comienza tu primera sesión para activar el seguimiento.";
+    ast.textContent = "Módulo I · Fundamentos";
+    asb.textContent = "Completar las 4 sesiones de fundamentos antes de avanzar al Proyecto 1.";
+  } else if (pct === 100) {
+    ttl.textContent = "Completaste el programa.";
+    enc.textContent = "Ahora cierra el laptop, abre la terminal y empieza el Bloque 1. La teoría solo importa si la ejecutas.";
+    msg.textContent = "100% del syllabus completado — ahora a construir.";
+    ast.textContent = "Proyecto 3 · PulseCore";
+    asb.textContent = "Llevas el conocimiento. Lo que falta es disciplina y ejecución bloque por bloque.";
+  } else if (pct < 25) {
+    ttl.textContent = "Buen ritmo, sigue así.";
+    enc.textContent = "Una sesión por día y terminas el Módulo I en una semana. Mantén la cadena.";
+    msg.textContent = "Llevas un buen comienzo. Reserva 30–45 min diarios.";
+    ast.textContent = "Próximo hito · Módulo I";
+    asb.textContent = `Faltan ${4 - SESSIONS.slice(0,4).filter(s=>isDone(s.id)).length} sesiones para desbloquear el Proyecto 1.`;
+  } else if (pct < 50) {
+    ttl.textContent = "Estás en buen camino.";
+    enc.textContent = "El Proyecto 1 es una pausa estratégica — diseñas en papel antes de tocar código.";
+    msg.textContent = "Llevas casi la mitad. Sigue el plan semanal.";
+    ast.textContent = done < 4 ? "Proyecto 1 · Diseño" : "Módulo II · Arquitectura";
+    asb.textContent = done < 4 ? "Termina las 4 sesiones de fundamentos antes del proyecto." : "Tres sesiones densas: memoria, routing y orquestación.";
+  } else if (pct < 80) {
+    ttl.textContent = "Más de la mitad recorrida.";
+    enc.textContent = "El Módulo III es el más denso — reserva tiempo para el setup técnico y los Guards.";
+    msg.textContent = "Vas firme. Lo más importante ahora es no romper la cadena.";
+    ast.textContent = "Módulo III · PulseCore";
+    asb.textContent = "Implementación, multi-tenant, observabilidad y primer commit.";
+  } else {
+    ttl.textContent = "A un paso del final.";
+    enc.textContent = "Próximo hito: primer commit con Claude Code (Sesión 12) y arranque del Bloque 1.";
+    msg.textContent = "Estás cerca. Termina fuerte.";
+    ast.textContent = "Sesión 12 · Primer commit";
+    asb.textContent = "Levanta docker compose, corre el smoke test y arranca el Bloque 1 esta semana.";
+  }
+}
+
+/* ============================================================
+   RENDER — Weeks
+============================================================ */
+function renderWeeks() {
+  const cur = currentWeekIndex();
+  const grid = $("#weeks-grid");
+  grid.innerHTML = WEEKS.map((w, i) => {
+    const p = weekProgress(w);
+    const complete = p.pct === 100;
+    const isCurrent = i === cur && !complete;
+    const ctaLabel = p.done === 0 ? "Comenzar" : (complete ? "Repasar" : "Continuar");
+    const statusEl = complete
+      ? `<span class="week-status"><svg class="i i-sm"><use href="#ic-check-circle"/></svg> Completada</span>`
+      : isCurrent
+        ? `<span class="week-status">● En curso</span>`
+        : `<span class="week-status pending">Por comenzar</span>`;
+
+    const sessHtml = w.sessions.map(id => {
+      const s = SESSIONS.find(x => x.id === id);
+      const done = isDone(id);
+      return `<li class="${done?'done':''}"><span class="dot"></span><span>Sesión ${pad(id)} · ${s.title}</span></li>`;
+    }).join("");
+    const extraHtml = w.extra
+      ? `<li class="extra"><span class="dot"></span><span><em>Proyecto</em>${w.extra.replace(/^Proyecto \d+ — /,'')}</span></li>` : "";
+
+    return `
+      <article class="week ${isCurrent?'current':''} ${complete?'complete':''}" id="week-${w.n}">
+        <div class="week-head">
+          <div>
+            <div class="week-num-prefix">Semana</div>
+            <div class="week-num">${pad(w.n)}</div>
+          </div>
+          ${statusEl}
+        </div>
+        <div>
+          <h4>${w.title}</h4>
+          <div class="week-meta">${ic("ic-clock","i i-sm")} ${w.duration}</div>
+        </div>
+        <div>
+          <div class="week-pbar"><span style="width:${p.pct}%"></span></div>
+          <div class="week-bar-meta"><span>${p.done}/${p.total} sesiones</span><span>${p.pct}%</span></div>
+        </div>
+        <ul class="week-sessions">${sessHtml}${extraHtml}</ul>
+        <a class="week-cta" href="#mod-${SESSIONS.find(s=>s.id===w.sessions[0]).module}">${ctaLabel} ${ic("ic-arrow-right","i i-sm")}</a>
+      </article>`;
+  }).join("");
+}
+
+/* ============================================================
+   RENDER — Modules / sessions
+============================================================ */
+function renderModules() {
+  const container = $("#modules");
+  container.innerHTML = MODULES.map((m, idx) => {
+    const sessions = SESSIONS.filter(s => s.module === m.id);
+    const done = sessions.filter(s => isDone(s.id)).length;
+    const pct = Math.round(done / sessions.length * 100);
+    const open = idx === 0 ? "open" : "";
+    return `
+      <details class="module" id="mod-${m.id}" ${open}>
+        <summary class="module-head">
+          <div class="module-num">${m.num}</div>
+          <div class="module-titles">
+            <div class="label">Módulo ${m.num}</div>
+            <h3>${m.title}</h3>
+            <p>${m.sub}</p>
+          </div>
+          <div class="module-stats">
+            <div class="module-stat-text"><strong>${done}</strong>/${sessions.length} completas</div>
+            <div class="module-mini-bar"><span style="width:${pct}%"></span></div>
+          </div>
+          <span class="module-chev">${ic("ic-chevron-down")}</span>
+        </summary>
+        <div class="module-body">
+          ${sessions.map(s => {
+            const d = isDone(s.id);
+            return `
+            <div class="session-row" data-session="${s.id}">
+              <button class="check" role="checkbox" aria-checked="${d}" aria-label="Marcar Sesión ${s.id} como completada" data-toggle="${s.id}">
+                ${ic("ic-check")}
+              </button>
+              <div class="session-info">
+                <div class="session-title"><span class="num">${pad(s.id)}.</span> ${s.title}</div>
+                <div class="session-sub">${s.sub}</div>
+              </div>
+              <span class="session-meta">${ic("ic-clock","i i-sm")} ${s.duration}</span>
+            </div>`;
+          }).join("")}
+        </div>
+      </details>`;
+  }).join("");
+
+  $$('[data-toggle]', container).forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = +btn.dataset.toggle;
+      const wasDone = isDone(id);
+      toggle(id);
+      btn.setAttribute("aria-checked", String(!wasDone));
+      // refresh dependents
+      renderProgress();
+      renderWeeks();
+      renderPreview();
+      // update module stat
+      const m = SESSIONS.find(s => s.id === id).module;
+      const sess = SESSIONS.filter(s => s.module === m);
+      const dn = sess.filter(s=>isDone(s.id)).length;
+      $(`#mod-${m} .module-stat-text`).innerHTML = `<strong>${dn}</strong>/${sess.length} completas`;
+      $(`#mod-${m} .module-mini-bar > span`).style.width = Math.round(dn/sess.length*100) + "%";
+      toast(wasDone ? "Marcada como pendiente" : "¡Sesión completada!");
+    });
+  });
+}
+
+/* ============================================================
+   RENDER — Projects
+============================================================ */
+function renderProjects() {
+  $("#projects-grid").innerHTML = PROJECTS.map(p => `
+    <article class="project ${p.tone}">
+      <div class="project-head">
+        <div>
+          <div class="project-num-label">Proyecto</div>
+          <div class="project-num">${pad(p.n)}</div>
+        </div>
+        <div class="project-illu">${ic("ic-"+p.icon.replace("ic-",""), "i i-md")}</div>
+      </div>
+      <h4>${p.title}</h4>
+      <div class="project-after"><strong>${p.after}</strong> · ${p.duration}</div>
+      <p class="project-desc">${p.desc}</p>
+      <div class="project-badges">
+        <span class="badge badge-hands">${ic("ic-zap","i i-sm")} Hands-on Project</span>
+        <span class="badge badge-soft">${p.difficulty}</span>
+      </div>
+      <div class="project-foot">
+        <a class="project-link" href="#sesiones">Ver brief ${ic("ic-arrow-right","i i-sm")}</a>
+        <span class="project-difficulty">${p.duration}</span>
+      </div>
+    </article>
+  `).join("");
+}
+
+/* ============================================================
+   RENDER — Resources (tabs)
+============================================================ */
+const TABS = [
+  { key: "anthropic", label: "Anthropic" },
+  { key: "sdk",       label: "Agent SDK" },
+  { key: "mcp",       label: "MCP" },
+  { key: "papers",    label: "Papers" },
+  { key: "otros",     label: "Otros" }
+];
+
+function renderTabs() {
+  $("#tabs").innerHTML = TABS.map((t, i) => {
+    const count = (RESOURCES[t.key]||[]).length;
+    return `<button class="tab" role="tab" data-tab="${t.key}" aria-selected="${i===0}">${t.label} <span class="tab-count">${count}</span></button>`;
+  }).join("");
+  $("#tab-panels").innerHTML = TABS.map((t, i) => {
+    const items = RESOURCES[t.key] || [];
+    return `<div class="tab-panel" data-panel="${t.key}" data-active="${i===0}">
+      <div class="resources-grid">
+        ${items.map(r => `
+          <a class="resource" href="${r.url}" target="_blank" rel="noopener">
+            <div class="resource-ico">${ic("ic-"+r.icon.replace("ic-",""), "i i-md")}</div>
+            <div class="resource-body">
+              <div class="resource-row1">
+                <span class="resource-title">${r.title}</span>
+                ${r.official ? '<span class="badge-official">OFICIAL</span>' : ''}
+              </div>
+              <div class="resource-author">${r.author}</div>
+            </div>
+            <span class="resource-ext">${ic("ic-ext","i i-sm")}</span>
+          </a>`).join("")}
+      </div>
+    </div>`;
+  }).join("");
+
+  $$('#tabs .tab').forEach(t => {
+    t.addEventListener("click", () => {
+      const key = t.dataset.tab;
+      $$('#tabs .tab').forEach(x => x.setAttribute("aria-selected", x === t ? "true" : "false"));
+      $$('#tab-panels .tab-panel').forEach(p => p.dataset.active = (p.dataset.panel === key) ? "true" : "false");
+    });
+  });
+}
+
+/* ============================================================
+   RENDER — Principles
+============================================================ */
+function renderPrinciples() {
+  $("#principles").innerHTML = PRINCIPLES.map((p, i) => `
+    <article class="principle">
+      <div class="principle-num">${pad(i+1)}</div>
+      <h4>${p.t}</h4>
+      <p>${p.d}</p>
+    </article>
+  `).join("");
+}
+
+/* ============================================================
+   SCROLL EFFECTS
+============================================================ */
+function setupScroll() {
+  const nav = $("#nav");
+  const sp = $("#sp");
+  const onScroll = () => {
+    const y = window.scrollY;
+    nav.classList.toggle("scrolled", y > 12);
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    sp.style.width = Math.min(100, (y / Math.max(1, max)) * 100) + "%";
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+}
+
+/* ============================================================
+   CONTENT LOADER — descarga JSON externo, sobreescribe fallback
+============================================================ */
+async function loadContent() {
+  // Cache local
+  try {
+    const cached = JSON.parse(localStorage.getItem(CONFIG.CONTENT_CACHE_KEY) || "null");
+    if (cached && Date.now() - cached.ts < CONFIG.CONTENT_CACHE_TTL_MS) {
+      applyContent(cached.data);
+    }
+  } catch (e) {}
+
+  // Background refresh
+  try {
+    // Primero intenta content.json local (mismo origen). Si falla, prueba CONTENT_URL.
+    let res = await fetch("content.json", { cache: "no-cache" });
+    if (!res.ok && !CONFIG.CONTENT_URL.includes("USERNAME/")) {
+      res = await fetch(CONFIG.CONTENT_URL, { cache: "no-cache" });
+    }
+    if (res.ok) {
+      const data = await res.json();
+      applyContent(data);
+      try {
+        localStorage.setItem(CONFIG.CONTENT_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+      } catch (e) {}
+    }
+  } catch (e) {
+    console.warn("Using fallback content (no network):", e.message);
+  }
+}
+
+function applyContent(data) {
+  CONTENT_DATA = data;
+  if (Array.isArray(data.sessions))  SESSIONS   = data.sessions.map(s => ({...s, id: s.n ?? s.id, module: s.mod ?? s.module}));
+  if (Array.isArray(data.modules))   MODULES    = data.modules;
+  if (Array.isArray(data.weeks))     WEEKS      = data.weeks.map(w => ({...w, n: w.n}));
+  if (Array.isArray(data.projects))  PROJECTS   = data.projects.map(p => ({...p, n: p.n ?? p.id}));
+  if (data.resources)                RESOURCES  = data.resources;
+  if (Array.isArray(data.rules)) {
+    PRINCIPLES = data.rules.map(r => ({ t: r.title, d: r.desc }));
+  } else if (Array.isArray(data.principles)) {
+    PRINCIPLES = data.principles;
+  }
+}
+
+/* ============================================================
+   IMPROVE — al completar sesión, llama Worker para personalizar
+============================================================ */
+async function callImprove(sessionId) {
+  const s = SESSIONS.find(x => x.id === sessionId);
+  if (!s || CONFIG.IMPROVE_URL.includes("WORKER_SUBDOMAIN")) return null;
+  try {
+    const res = await fetch(CONFIG.IMPROVE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId,
+        sessionTitle: s.title,
+        sessionObjectives: s.objs || [],
+        sessionExercise: s.exercise || "",
+        completedSessions: SESSIONS.filter(x => isDone(x.id)).map(x => x.id),
+        completedWeeks: WEEKS.filter(w => weekProgress(w).pct === 100).map(w => w.n),
+        glossarySoFar: (state.glossary || []).slice(-20).map(g => g.term)
+      })
+    });
+    if (!res.ok) throw new Error(`improve ${res.status}`);
+    const imp = await res.json();
+    state.sessionImprovements = state.sessionImprovements || {};
+    state.sessionImprovements[sessionId] = { ...imp, ts: Date.now() };
+    if (imp.glossary && imp.glossary.length) {
+      state.glossary = state.glossary || [];
+      const existing = new Set(state.glossary.map(g => g.term.toLowerCase()));
+      imp.glossary.forEach(g => {
+        if (!existing.has(g.term.toLowerCase())) state.glossary.push(g);
+      });
+    }
+    save();
+    return imp;
+  } catch (e) {
+    console.warn("improve failed:", e.message);
+    return null;
+  }
+}
+
+/* ============================================================
+   SESSION DETAIL MODAL — abre con tabs Resumen/Profundo/Código/Quiz/Refs
+============================================================ */
+function openSessionModal(id) {
+  const s = SESSIONS.find(x => x.id === id);
+  if (!s) return;
+  currentSessionId = id;
+  const m = document.getElementById("session-modal");
+  const deep = s.deep || {};
+  const objsHTML = (s.objs || []).map(o => `<li>${o}</li>`).join("");
+  const sectionsHTML = (deep.sections || []).map((sec, i) => `
+    <article class="deep-section">
+      <h4>${sec.title}</h4>
+      <div class="deep-body">${renderMd(sec.body || "")}</div>
+      ${(sec.code || []).map(c => `
+        <div class="deep-code">
+          <div class="deep-code-label">${c.label || c.lang}</div>
+          <pre><code>${escapeHtml(c.src)}</code></pre>
+        </div>
+      `).join("")}
+    </article>
+  `).join("") || "<p class='deep-empty'>El contenido profundo de esta sesión no está disponible aún.</p>";
+
+  const allCode = (deep.sections || []).flatMap(sec => (sec.code || []).map(c => ({...c, sectionTitle: sec.title})));
+  const codeHTML = allCode.length
+    ? allCode.map(c => `
+        <article class="deep-code-full">
+          <div class="deep-code-label">${c.sectionTitle} · ${c.label || c.lang}</div>
+          <pre><code>${escapeHtml(c.src)}</code></pre>
+        </article>`).join("")
+    : "<p class='deep-empty'>Esta sesión no tiene bloques de código.</p>";
+
+  const gotchasHTML = (deep.gotchas || []).map(g => `
+    <article class="gotcha">
+      <h5>⚠ ${g.title}</h5>
+      <p>${g.desc}</p>
+      <p class="gotcha-fix"><strong>Fix:</strong> ${g.fix}</p>
+    </article>
+  `).join("");
+
+  const quizHTML = (deep.quiz || []).length
+    ? `<form class="quiz-form" onsubmit="event.preventDefault(); submitQuiz(${id});">
+        ${deep.quiz.map((q, i) => `
+          <fieldset class="quiz-q" data-correct="${q.correct}">
+            <legend>${i+1}. ${q.q}</legend>
+            ${q.options.map((opt, j) => `
+              <label><input type="radio" name="q${id}_${i}" value="${j}"> ${opt}</label>
+            `).join("")}
+            <div class="quiz-explain" data-explain="${escapeHtml(q.explain || '')}"></div>
+          </fieldset>
+        `).join("")}
+        <button class="btn btn-primary" type="submit">Verificar respuestas</button>
+        <div class="quiz-result" id="quiz-result-${id}"></div>
+      </form>`
+    : "<p class='deep-empty'>Esta sesión no tiene quiz.</p>";
+
+  const refsHTML = (deep.references || []).length
+    ? `<ul class="deep-refs">
+        ${deep.references.map(r => `
+          <li><a href="${r.url}" target="_blank" rel="noopener">
+            ${r.title}
+            ${r.relevance === "primary" ? '<span class="ref-tag">primaria</span>' : ''}
+          </a><span class="ref-kind">${r.kind || ''}</span></li>
+        `).join("")}
+      </ul>`
+    : "<p class='deep-empty'>Sin referencias adicionales.</p>";
+
+  // Improvement card (si la sesión ya fue completada)
+  const imp = (state.sessionImprovements || {})[id];
+  const impHTML = imp ? `
+    <div class="improve-card">
+      <div class="improve-label">Tu recap personalizado</div>
+      <p><strong>Insight:</strong> ${imp.recap || '—'}</p>
+      ${imp.glossary && imp.glossary.length ? `<p><strong>Glosario:</strong> ${imp.glossary.map(g => g.term).join(", ")}</p>` : ""}
+      <p><strong>Próxima acción:</strong> ${imp.nextAction || '—'}</p>
+    </div>` : "";
+
+  m.innerHTML = `
+    <div class="modal-backdrop" onclick="closeSessionModal(event)">
+      <div class="modal-panel" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-head">
+          <div>
+            <div class="modal-tag">Sesión ${pad(s.id)} · Módulo ${s.module}</div>
+            <h2>${s.title}</h2>
+            <p class="modal-sub">${s.sub}</p>
+          </div>
+          <button class="modal-close" onclick="closeSessionModal()" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="modal-tabs" role="tablist">
+          <button class="modal-tab active" data-tab="resumen">Resumen</button>
+          <button class="modal-tab" data-tab="profundo">Profundo</button>
+          <button class="modal-tab" data-tab="codigo">Código</button>
+          <button class="modal-tab" data-tab="gotchas">Errores</button>
+          <button class="modal-tab" data-tab="quiz">Quiz</button>
+          <button class="modal-tab" data-tab="refs">Refs</button>
+        </div>
+        <div class="modal-body">
+          <section class="modal-pane" data-pane="resumen">
+            <h4>Objetivos</h4>
+            <ul>${objsHTML}</ul>
+            <h4>Lectura primaria</h4>
+            <p>${s.reading || ""}</p>
+            <h4>Ejercicio práctico</h4>
+            <p>${s.exercise || ""}</p>
+            ${impHTML}
+          </section>
+          <section class="modal-pane" data-pane="profundo" hidden>
+            ${renderMd(deep.intro || "Sin contenido profundo aún.")}
+            ${sectionsHTML}
+          </section>
+          <section class="modal-pane" data-pane="codigo" hidden>
+            ${codeHTML}
+          </section>
+          <section class="modal-pane" data-pane="gotchas" hidden>
+            ${gotchasHTML || "<p class='deep-empty'>Sin errores documentados.</p>"}
+          </section>
+          <section class="modal-pane" data-pane="quiz" hidden>
+            ${quizHTML}
+          </section>
+          <section class="modal-pane" data-pane="refs" hidden>
+            ${refsHTML}
+          </section>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost" onclick="closeSessionModal()">Cerrar</button>
+          <button class="btn btn-primary" id="modal-complete-btn" onclick="toggleFromModal(${id})">
+            ${isDone(id) ? "✓ Marcada (deshacer)" : "Marcar como completada"}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  m.classList.add("open");
+  // Tab navigation
+  m.querySelectorAll(".modal-tab").forEach(t => {
+    t.addEventListener("click", () => {
+      m.querySelectorAll(".modal-tab").forEach(x => x.classList.toggle("active", x === t));
+      m.querySelectorAll(".modal-pane").forEach(p => p.hidden = p.dataset.pane !== t.dataset.tab);
+    });
+  });
+  // Tell chat about active session
+  document.body.classList.add("modal-open");
+}
+
+function closeSessionModal(e) {
+  if (e && !e.target.classList.contains("modal-backdrop")) return;
+  document.getElementById("session-modal").classList.remove("open");
+  document.body.classList.remove("modal-open");
+  currentSessionId = null;
+}
+
+async function toggleFromModal(id) {
+  const wasDone = isDone(id);
+  toggle(id);
+  if (!wasDone) {
+    // Recién completada — pide improve
+    const btn = document.getElementById("modal-complete-btn");
+    if (btn) { btn.disabled = true; btn.textContent = "Generando recap…"; }
+    await callImprove(id);
+    openSessionModal(id);
+  } else {
+    openSessionModal(id);
+  }
+  renderProgress(); renderWeeks(); renderPreview(); renderModules();
+  toast(wasDone ? "Marcada como pendiente" : "¡Sesión completada!");
+}
+
+function submitQuiz(sessionId) {
+  const form = document.querySelector(`form[onsubmit*="submitQuiz(${sessionId})"]`);
+  if (!form) return;
+  let correct = 0, total = 0;
+  form.querySelectorAll(".quiz-q").forEach(fs => {
+    total++;
+    const correctIdx = +fs.dataset.correct;
+    const selected = fs.querySelector("input:checked");
+    const explainEl = fs.querySelector(".quiz-explain");
+    if (selected && +selected.value === correctIdx) {
+      correct++;
+      fs.classList.add("quiz-correct");
+    } else if (selected) {
+      fs.classList.add("quiz-wrong");
+    }
+    explainEl.textContent = explainEl.dataset.explain;
+    explainEl.style.display = "block";
+  });
+  const result = document.getElementById(`quiz-result-${sessionId}`);
+  result.innerHTML = `<strong>${correct}/${total} correctas</strong> · ${
+    correct === total ? "¡Perfecto!" : correct >= total*0.7 ? "Buen trabajo, revisa lo que faltó." : "Revisa la sesión y vuelve a intentar."
+  }`;
+}
+
+// Helpers
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c]);
+}
+function renderMd(text) {
+  const esc = escapeHtml(text);
+  let html = esc
+    .replace(/```([\s\S]*?)```/g, (_, c) => `<pre><code>${c.trim()}</code></pre>`)
+    .replace(/`([^`\n]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/(^|\n)((?:- .+(?:\n|$))+)/g, (_, p, block) => {
+    const items = block.split("\n").filter(l => /^- /.test(l)).map(l => `<li>${l.replace(/^- /,'')}</li>`).join("");
+    return p + `<ul>${items}</ul>`;
+  });
+  html = html.split(/\n\n+/).map(p => p.match(/^<(ul|ol|pre|h\d)/) ? p : `<p>${p}</p>`).join("");
+  return html;
+}
+
+/* ============================================================
+   CHAT TUTOR — "Ask Claude" en vivo
+============================================================ */
+let chatHistory = (function() {
+  try { return JSON.parse(localStorage.getItem(CONFIG.CHAT_KEY) || "[]"); } catch { return []; }
+})();
+let chatOpen = false;
+let chatBusy = false;
+const CHAT_MODEL_KEY = "academia-jarvis-chat-model-v1";
+let chatModel = (function() {
+  try { return localStorage.getItem(CHAT_MODEL_KEY) || "auto"; } catch { return "auto"; }
+})();
+let chatTotalCostUsd = 0;
+
+function onModelChange() {
+  const sel = document.getElementById("chat-model-select");
+  chatModel = sel.value;
+  try { localStorage.setItem(CHAT_MODEL_KEY, chatModel); } catch {}
+}
+
+function saveChatHistory() {
+  try { localStorage.setItem(CONFIG.CHAT_KEY, JSON.stringify(chatHistory.slice(-50))); } catch {}
+}
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById("chat-panel").classList.toggle("open", chatOpen);
+  document.getElementById("chat-fab").classList.toggle("open", chatOpen);
+  if (chatOpen) {
+    // Apply persisted model preference
+    const sel = document.getElementById("chat-model-select");
+    if (sel && chatModel) sel.value = chatModel;
+    renderChat();
+    setTimeout(() => document.getElementById("chat-input").focus(), 150);
+  }
+}
+function chatAutoGrow(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 120) + "px";
+}
+function handleChatKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+function sendSuggestion(text) {
+  document.getElementById("chat-input").value = text;
+  sendChat();
+}
+function renderChat() {
+  const wrap = document.getElementById("chat-messages");
+  if (chatHistory.length === 0) {
+    wrap.innerHTML = `
+      <div class="chat-empty">
+        <h4>Pregúntame lo que sea</h4>
+        <p>Conozco todo el programa, tu progreso y la documentación oficial de Anthropic. Puedo explicarte conceptos, comparar frameworks, debuggear ideas.</p>
+        <div class="chat-suggestions">
+          <button class="chat-suggest" onclick="sendSuggestion('Explícame ReAct en profundidad con ejemplo de código')">Explícame ReAct con código</button>
+          <button class="chat-suggest" onclick="sendSuggestion('Compara LangGraph vs Pydantic AI vs Claude Agent SDK')">Compara frameworks agénticos</button>
+          <button class="chat-suggest" onclick="sendSuggestion('Dame 5 ejemplos de tools mal diseñadas y cómo arreglarlas')">5 tools mal diseñadas</button>
+          <button class="chat-suggest" onclick="sendSuggestion('¿Qué patrón uso si necesito un agente que investigue y escriba un reporte?')">Patrón para agente investigador</button>
+        </div>
+      </div>`;
+    return;
+  }
+  wrap.innerHTML = "";
+  chatHistory.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "msg " + m.role + (m.thinking ? " thinking" : "");
+    const metaParts = [];
+    if (m.role === "assistant" && !m.thinking && m.model) metaParts.push(`${m.provider}/${m.model}`);
+    if (m.role === "assistant" && !m.thinking && m.costUsd != null) metaParts.push(`$${m.costUsd.toFixed(4)}`);
+    const meta = metaParts.length ? `<div class="msg-meta">${metaParts.join(" · ")}</div>` : "";
+    div.innerHTML = `<div class="msg-bubble">${m.thinking ? m.content : renderMd(m.content)}</div>${meta}`;
+    wrap.appendChild(div);
+  });
+  if (chatHistory.length > 0) {
+    const clear = document.createElement("button");
+    clear.className = "chat-clear";
+    clear.textContent = "Borrar conversación";
+    clear.onclick = () => { if (confirm("¿Borrar toda la conversación?")) { chatHistory = []; saveChatHistory(); renderChat(); } };
+    wrap.appendChild(clear);
+  }
+  wrap.scrollTop = wrap.scrollHeight;
+}
+async function sendChat() {
+  const input = document.getElementById("chat-input");
+  const text = input.value.trim();
+  if (!text || chatBusy) return;
+  chatBusy = true;
+  document.getElementById("chat-send").disabled = true;
+
+  chatHistory.push({ role: "user", content: text, ts: Date.now() });
+  input.value = ""; input.style.height = "auto";
+  chatHistory.push({ role: "assistant", content: "Pensando…", thinking: true });
+  renderChat();
+
+  try {
+    if (CONFIG.CHAT_URL.includes("WORKER_SUBDOMAIN")) {
+      throw new Error("CHAT_URL no configurada. Edita CONFIG.CHAT_URL en index.html con tu URL real del Worker.");
+    }
+    const userContext = {
+      currentSession: currentSessionId,
+      completedSessions: SESSIONS.filter(x => isDone(x.id)).map(x => x.id),
+      completedWeeks: WEEKS.filter(w => weekProgress(w).pct === 100).map(w => w.n),
+      glossaryTerms: (state.glossary || []).slice(-30).map(g => g.term),
+      contentVersion: CONTENT_DATA?.version,
+      sessions: SESSIONS.map(s => ({ n: s.id, title: s.title, sub: s.sub }))
+    };
+    const messages = chatHistory.filter(m => !m.thinking).map(m => ({ role: m.role, content: m.content }));
+
+    // Provider/model override (parse "provider:model" o "auto")
+    const body = { messages, userContext };
+    if (chatModel && chatModel !== "auto") {
+      const [provider, ...modelParts] = chatModel.split(":");
+      body.provider = provider;
+      if (modelParts.length) body.model = modelParts.join(":");
+    }
+
+    const res = await fetch(CONFIG.CHAT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    chatHistory.pop();
+    chatHistory.push({
+      role: "assistant",
+      content: data.reply || "(sin respuesta)",
+      ts: Date.now(),
+      provider: data.provider,
+      model: data.model,
+      costUsd: data.costUsd
+    });
+    // Update cost badge
+    if (data.costUsd != null) {
+      chatTotalCostUsd += data.costUsd;
+      const badge = document.getElementById("chat-last-cost");
+      if (badge) {
+        badge.style.display = "inline-block";
+        badge.textContent = `$${data.costUsd.toFixed(4)}`;
+        badge.title = `Última: $${data.costUsd.toFixed(4)} · Total sesión: $${chatTotalCostUsd.toFixed(4)} · ${data.provider}/${data.model}`;
+      }
+    }
+    saveChatHistory();
+    renderChat();
+  } catch (e) {
+    chatHistory.pop();
+    chatHistory.push({
+      role: "assistant",
+      content: `**Error.** ${e.message}\n\nVerifica que el Worker \`academia-jarvis-chat\` esté desplegado y CHAT_URL apunte ahí.`,
+      ts: Date.now()
+    });
+    saveChatHistory();
+    renderChat();
+  } finally {
+    chatBusy = false;
+    document.getElementById("chat-send").disabled = false;
+  }
+}
+
+/* ============================================================
+   SESSION ROW CLICK — abre modal en vez de solo toggle
+============================================================ */
+function wireSessionClicks() {
+  document.querySelectorAll(".session-row").forEach(row => {
+    if (row.dataset.wired === "1") return;
+    row.dataset.wired = "1";
+    const id = +row.dataset.session;
+    // Click en cualquier parte de la fila (excepto el checkbox)
+    row.addEventListener("click", (e) => {
+      if (e.target.closest("button.check")) return;  // checkbox tiene su propio handler
+      openSessionModal(id);
+    });
+  });
+}
+
+/* ============================================================
+   SERVICE WORKER
+============================================================ */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+
+/* ============================================================
+   BOOT (async)
+============================================================ */
+async function boot() {
+  await loadContent();
+  renderPreview();
+  renderProgress();
+  renderWeeks();
+  renderModules();
+  renderProjects();
+  renderTabs();
+  renderPrinciples();
+  setupScroll();
+  wireSessionClicks();
+}
+document.addEventListener("DOMContentLoaded", boot);
+</script>
+
+</body>
+</html>

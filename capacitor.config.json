@@ -1,0 +1,14 @@
+{
+  "appId": "com.angel.academiajarvis",
+  "appName": "Academia Jarvis",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "iosScheme": "academiajarvis"
+  },
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#FFFFFFFF",
+    "scheme": "Academia Jarvis"
+  }
+}

@@ -1,0 +1,92 @@
+name: Weekly content update
+
+# Corre cada lunes a las 7:00 UTC (~2am Mexico City)
+# También puede dispararse manualmente desde Actions
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Modo: hybrid (auto-merge menores, PR para mayores) | dry-run | all-pr'
+        required: false
+        default: 'hybrid'
+        type: choice
+        options: [hybrid, dry-run, all-pr]
+      provider:
+        description: 'Proveedor LLM: google (Gemini Flash, default barato) | anthropic | openai'
+        required: false
+        default: 'google'
+        type: choice
+        options: [google, anthropic, openai]
+      model:
+        description: 'Modelo (vacío = cheap default del provider)'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 lxml
+
+      - name: Run content updater
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_API_KEY:    ${{ secrets.GOOGLE_API_KEY }}
+          PROVIDER: ${{ github.event.inputs.provider || 'google' }}
+          MODEL:    ${{ github.event.inputs.model || '' }}
+          UPDATE_MODE: ${{ github.event.inputs.mode || 'hybrid' }}
+        run: |
+          python scripts/update_content.py
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if git diff --quiet www/content.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit minor changes (auto-merge)
+        if: steps.changes.outputs.changed == 'true' && env.UPDATE_MODE == 'hybrid'
+        run: |
+          if [ -f .update_classification ]; then
+            CLASS=$(cat .update_classification)
+            if [ "$CLASS" = "minor" ]; then
+              git config user.name "academia-bot"
+              git config user.email "bot@academia-jarvis"
+              git add www/content.json
+              git commit -m "chore(content): weekly auto-update (minor)" || exit 0
+              git push
+            fi
+          fi
+        env:
+          UPDATE_MODE: ${{ github.event.inputs.mode || 'hybrid' }}
+
+      - name: Open PR for major changes
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore(content): proposed major content update'
+          title: '🤖 Weekly content update — please review'
+          body-path: .update_summary.md
+          branch: bot/weekly-update
+          delete-branch: true

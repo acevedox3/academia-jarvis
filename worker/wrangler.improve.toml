@@ -1,0 +1,14 @@
+name = "academia-jarvis-improve"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+# DEFAULT: Gemini 2.5 Flash (~10× más barato que Claude Haiku)
+[vars]
+ALLOWED_ORIGIN = "*"
+DEFAULT_PROVIDER = "google"
+DEFAULT_MODEL = "gemini-2.5-flash"
+
+# Secrets a configurar (al menos uno):
+#   wrangler secret put GOOGLE_API_KEY    --config wrangler.improve.toml
+#   wrangler secret put ANTHROPIC_API_KEY --config wrangler.improve.toml
+#   wrangler secret put OPENAI_API_KEY    --config wrangler.improve.toml

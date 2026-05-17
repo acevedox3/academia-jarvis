@@ -1,0 +1,28 @@
+# Hay DOS workers en este proyecto. Despliega cada uno con su archivo de config.
+#
+# Worker 1 — /improve (recap personalizado por sesión, Claude Haiku)
+#   wrangler deploy --config wrangler.improve.toml
+#
+# Worker 2 — /chat (tutor en vivo "Ask Claude", Claude Sonnet)
+#   wrangler deploy --config wrangler.chat.toml
+#
+# Setup inicial (una sola vez):
+#   1. npm install -g wrangler
+#   2. wrangler login
+#   3. Configura los secrets:
+#      wrangler secret put ANTHROPIC_API_KEY --config wrangler.improve.toml
+#      wrangler secret put ANTHROPIC_API_KEY --config wrangler.chat.toml
+#   4. Despliega ambos:
+#      wrangler deploy --config wrangler.improve.toml
+#      wrangler deploy --config wrangler.chat.toml
+#
+# Endpoints finales:
+#   https://academia-jarvis-improve.<TU_SUBDOMINIO>.workers.dev/improve
+#   https://academia-jarvis-chat.<TU_SUBDOMINIO>.workers.dev/chat
+
+name = "academia-jarvis-improve"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+ALLOWED_ORIGIN = "*"

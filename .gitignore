@@ -1,0 +1,10 @@
+node_modules/
+ios/
+android/
+.DS_Store
+.update_classification
+.update_summary.md
+*.log
+.env
+.env.*
+package-lock.json
