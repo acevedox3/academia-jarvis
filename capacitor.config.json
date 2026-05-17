@@ -1,7 +1,7 @@
 {
   "appId": "com.angel.academiajarvis",
   "appName": "Academia Jarvis",
-  "webDir": "www",
+  "webDir": "docs",
   "bundledWebRuntime": false,
   "server": {
     "iosScheme": "academiajarvis"
