@@ -1814,82 +1814,135 @@ async function callImprove(sessionId) {
 }
 
 /* ============================================================
-   SESSION DETAIL MODAL — abre con tabs Resumen/Profundo/Código/Quiz/Refs
+   SESSION DETAIL MODAL — lazy tab rendering (v2, performance fix)
+   - Solo renderiza el tab activo (no los 6 simultáneamente)
+   - Cachea tabs renderizados (re-clicar tab = instantáneo)
+   - Limpia DOM al cerrar (libera memoria)
+   - requestAnimationFrame para no bloquear UI thread
 ============================================================ */
+const _tabCache = new Map();   // key: `${sessionId}:${tabName}` → HTML string
+let _modalCurrentSession = null;
+
+function _buildTabHTML(s, tabName, deep) {
+  const cacheKey = `${s.id}:${tabName}`;
+  if (_tabCache.has(cacheKey)) return _tabCache.get(cacheKey);
+  let html = "";
+  switch (tabName) {
+    case "resumen": {
+      const objsHTML = (s.objs || []).map(o => `<li>${o}</li>`).join("");
+      const imp = (state.sessionImprovements || {})[s.id];
+      const impHTML = imp ? `
+        <div class="improve-card">
+          <div class="improve-label">Tu recap personalizado</div>
+          <p><strong>Insight:</strong> ${imp.recap || '—'}</p>
+          ${imp.glossary && imp.glossary.length ? `<p><strong>Glosario:</strong> ${imp.glossary.map(g => g.term).join(", ")}</p>` : ""}
+          <p><strong>Próxima acción:</strong> ${imp.nextAction || '—'}</p>
+        </div>` : "";
+      html = `
+        <h4>Objetivos</h4>
+        <ul>${objsHTML}</ul>
+        <h4>Lectura primaria</h4>
+        <p>${s.reading || ""}</p>
+        <h4>Ejercicio práctico</h4>
+        <p>${s.exercise || ""}</p>
+        ${impHTML}
+      `;
+      break;
+    }
+    case "profundo": {
+      const sectionsHTML = (deep.sections || []).map(sec => `
+        <article class="deep-section">
+          <h4>${sec.title}</h4>
+          <div class="deep-body">${renderMd(sec.body || "")}</div>
+          ${(sec.code || []).map(c => `
+            <div class="deep-code">
+              <div class="deep-code-label">${c.label || c.lang}</div>
+              <pre><code>${escapeHtml(c.src)}</code></pre>
+            </div>
+          `).join("")}
+        </article>
+      `).join("") || "<p class='deep-empty'>El contenido profundo de esta sesión no está disponible aún.</p>";
+      html = renderMd(deep.intro || "Sin contenido profundo aún.") + sectionsHTML;
+      break;
+    }
+    case "codigo": {
+      const allCode = (deep.sections || []).flatMap(sec => (sec.code || []).map(c => ({...c, sectionTitle: sec.title})));
+      html = allCode.length
+        ? allCode.map(c => `
+            <article class="deep-code-full">
+              <div class="deep-code-label">${c.sectionTitle} · ${c.label || c.lang}</div>
+              <pre><code>${escapeHtml(c.src)}</code></pre>
+            </article>`).join("")
+        : "<p class='deep-empty'>Esta sesión no tiene bloques de código.</p>";
+      break;
+    }
+    case "gotchas": {
+      const gotchasHTML = (deep.gotchas || []).map(g => `
+        <article class="gotcha">
+          <h5>⚠ ${g.title}</h5>
+          <p>${g.desc}</p>
+          <p class="gotcha-fix"><strong>Fix:</strong> ${g.fix}</p>
+        </article>
+      `).join("");
+      html = gotchasHTML || "<p class='deep-empty'>Sin errores documentados.</p>";
+      break;
+    }
+    case "quiz": {
+      html = (deep.quiz || []).length
+        ? `<form class="quiz-form" onsubmit="event.preventDefault(); submitQuiz(${s.id});">
+            ${deep.quiz.map((q, i) => `
+              <fieldset class="quiz-q" data-correct="${q.correct}">
+                <legend>${i+1}. ${q.q}</legend>
+                ${q.options.map((opt, j) => `
+                  <label><input type="radio" name="q${s.id}_${i}" value="${j}"> ${opt}</label>
+                `).join("")}
+                <div class="quiz-explain" data-explain="${escapeHtml(q.explain || '')}"></div>
+              </fieldset>
+            `).join("")}
+            <button class="btn btn-primary" type="submit">Verificar respuestas</button>
+            <div class="quiz-result" id="quiz-result-${s.id}"></div>
+          </form>`
+        : "<p class='deep-empty'>Esta sesión no tiene quiz.</p>";
+      break;
+    }
+    case "refs": {
+      html = (deep.references || []).length
+        ? `<ul class="deep-refs">
+            ${deep.references.map(r => `
+              <li><a href="${r.url}" target="_blank" rel="noopener">
+                ${r.title}
+                ${r.relevance === "primary" ? '<span class="ref-tag">primaria</span>' : ''}
+              </a><span class="ref-kind">${r.kind || ''}</span></li>
+            `).join("")}
+          </ul>`
+        : "<p class='deep-empty'>Sin referencias adicionales.</p>";
+      break;
+    }
+  }
+  // Solo cachear "resumen" depende del state.sessionImprovements (cambia), los demás son estáticos
+  if (tabName !== "resumen") _tabCache.set(cacheKey, html);
+  return html;
+}
+
+function _renderActiveTab(s, deep, tabName) {
+  const body = document.getElementById("modal-body-content");
+  if (!body) return;
+  body.innerHTML = '<p style="text-align:center;padding:40px;color:#888;font-style:italic;">Cargando…</p>';
+  // Defer el render pesado al siguiente frame para no bloquear el UI
+  requestAnimationFrame(() => {
+    body.innerHTML = _buildTabHTML(s, tabName, deep);
+  });
+}
+
 function openSessionModal(id) {
   const s = SESSIONS.find(x => x.id === id);
   if (!s) return;
   currentSessionId = id;
+  _modalCurrentSession = s;
   const m = document.getElementById("session-modal");
   const deep = s.deep || {};
-  const objsHTML = (s.objs || []).map(o => `<li>${o}</li>`).join("");
-  const sectionsHTML = (deep.sections || []).map((sec, i) => `
-    <article class="deep-section">
-      <h4>${sec.title}</h4>
-      <div class="deep-body">${renderMd(sec.body || "")}</div>
-      ${(sec.code || []).map(c => `
-        <div class="deep-code">
-          <div class="deep-code-label">${c.label || c.lang}</div>
-          <pre><code>${escapeHtml(c.src)}</code></pre>
-        </div>
-      `).join("")}
-    </article>
-  `).join("") || "<p class='deep-empty'>El contenido profundo de esta sesión no está disponible aún.</p>";
 
-  const allCode = (deep.sections || []).flatMap(sec => (sec.code || []).map(c => ({...c, sectionTitle: sec.title})));
-  const codeHTML = allCode.length
-    ? allCode.map(c => `
-        <article class="deep-code-full">
-          <div class="deep-code-label">${c.sectionTitle} · ${c.label || c.lang}</div>
-          <pre><code>${escapeHtml(c.src)}</code></pre>
-        </article>`).join("")
-    : "<p class='deep-empty'>Esta sesión no tiene bloques de código.</p>";
-
-  const gotchasHTML = (deep.gotchas || []).map(g => `
-    <article class="gotcha">
-      <h5>⚠ ${g.title}</h5>
-      <p>${g.desc}</p>
-      <p class="gotcha-fix"><strong>Fix:</strong> ${g.fix}</p>
-    </article>
-  `).join("");
-
-  const quizHTML = (deep.quiz || []).length
-    ? `<form class="quiz-form" onsubmit="event.preventDefault(); submitQuiz(${id});">
-        ${deep.quiz.map((q, i) => `
-          <fieldset class="quiz-q" data-correct="${q.correct}">
-            <legend>${i+1}. ${q.q}</legend>
-            ${q.options.map((opt, j) => `
-              <label><input type="radio" name="q${id}_${i}" value="${j}"> ${opt}</label>
-            `).join("")}
-            <div class="quiz-explain" data-explain="${escapeHtml(q.explain || '')}"></div>
-          </fieldset>
-        `).join("")}
-        <button class="btn btn-primary" type="submit">Verificar respuestas</button>
-        <div class="quiz-result" id="quiz-result-${id}"></div>
-      </form>`
-    : "<p class='deep-empty'>Esta sesión no tiene quiz.</p>";
-
-  const refsHTML = (deep.references || []).length
-    ? `<ul class="deep-refs">
-        ${deep.references.map(r => `
-          <li><a href="${r.url}" target="_blank" rel="noopener">
-            ${r.title}
-            ${r.relevance === "primary" ? '<span class="ref-tag">primaria</span>' : ''}
-          </a><span class="ref-kind">${r.kind || ''}</span></li>
-        `).join("")}
-      </ul>`
-    : "<p class='deep-empty'>Sin referencias adicionales.</p>";
-
-  // Improvement card (si la sesión ya fue completada)
-  const imp = (state.sessionImprovements || {})[id];
-  const impHTML = imp ? `
-    <div class="improve-card">
-      <div class="improve-label">Tu recap personalizado</div>
-      <p><strong>Insight:</strong> ${imp.recap || '—'}</p>
-      ${imp.glossary && imp.glossary.length ? `<p><strong>Glosario:</strong> ${imp.glossary.map(g => g.term).join(", ")}</p>` : ""}
-      <p><strong>Próxima acción:</strong> ${imp.nextAction || '—'}</p>
-    </div>` : "";
-
+  // Construye solo el shell + el tab activo (resumen)
   m.innerHTML = `
     <div class="modal-backdrop" onclick="closeSessionModal(event)">
       <div class="modal-panel" onclick="event.stopPropagation()">
@@ -1910,33 +1963,7 @@ function openSessionModal(id) {
           <button class="modal-tab" data-tab="quiz">Quiz</button>
           <button class="modal-tab" data-tab="refs">Refs</button>
         </div>
-        <div class="modal-body">
-          <section class="modal-pane" data-pane="resumen">
-            <h4>Objetivos</h4>
-            <ul>${objsHTML}</ul>
-            <h4>Lectura primaria</h4>
-            <p>${s.reading || ""}</p>
-            <h4>Ejercicio práctico</h4>
-            <p>${s.exercise || ""}</p>
-            ${impHTML}
-          </section>
-          <section class="modal-pane" data-pane="profundo" hidden>
-            ${renderMd(deep.intro || "Sin contenido profundo aún.")}
-            ${sectionsHTML}
-          </section>
-          <section class="modal-pane" data-pane="codigo" hidden>
-            ${codeHTML}
-          </section>
-          <section class="modal-pane" data-pane="gotchas" hidden>
-            ${gotchasHTML || "<p class='deep-empty'>Sin errores documentados.</p>"}
-          </section>
-          <section class="modal-pane" data-pane="quiz" hidden>
-            ${quizHTML}
-          </section>
-          <section class="modal-pane" data-pane="refs" hidden>
-            ${refsHTML}
-          </section>
-        </div>
+        <div class="modal-body" id="modal-body-content">${_buildTabHTML(s, "resumen", deep)}</div>
         <div class="modal-foot">
           <button class="btn btn-ghost" onclick="closeSessionModal()">Cerrar</button>
           <button class="btn btn-primary" id="modal-complete-btn" onclick="toggleFromModal(${id})">
@@ -1947,22 +1974,29 @@ function openSessionModal(id) {
     </div>
   `;
   m.classList.add("open");
-  // Tab navigation
+  document.body.classList.add("modal-open");
+
+  // Lazy tab loading — solo renderiza el tab clicado
   m.querySelectorAll(".modal-tab").forEach(t => {
     t.addEventListener("click", () => {
+      const tabName = t.dataset.tab;
       m.querySelectorAll(".modal-tab").forEach(x => x.classList.toggle("active", x === t));
-      m.querySelectorAll(".modal-pane").forEach(p => p.hidden = p.dataset.pane !== t.dataset.tab);
+      _renderActiveTab(s, deep, tabName);
     });
   });
-  // Tell chat about active session
-  document.body.classList.add("modal-open");
 }
 
 function closeSessionModal(e) {
   if (e && !e.target.classList.contains("modal-backdrop")) return;
-  document.getElementById("session-modal").classList.remove("open");
+  const m = document.getElementById("session-modal");
+  m.classList.remove("open");
   document.body.classList.remove("modal-open");
   currentSessionId = null;
+  _modalCurrentSession = null;
+  // Limpia el DOM del modal después de la animación de cierre (libera memoria)
+  setTimeout(() => {
+    if (!m.classList.contains("open")) m.innerHTML = "";
+  }, 350);
 }
 
 async function toggleFromModal(id) {
