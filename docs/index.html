@@ -2442,9 +2442,58 @@ function ttsSavePrefs() {
   } catch {}
 }
 
+function ttsCleanMarkdown(text) {
+  // Limpia sintaxis markdown para que TTS no lea "asterisco", backticks, hashes, etc.
+  if (!text) return "";
+  let t = text;
+
+  // 1) Code blocks fenced (```python ... ```) → reemplazar con placeholder hablable
+  //    (leer código fuente en voz alta es horrible; mejor avisar que hay código)
+  t = t.replace(/```[\w-]*\n[\s\S]*?```/g, " (Bloque de código en pantalla). ");
+
+  // 2) Inline code (`code`) → solo el contenido, sin backticks
+  t = t.replace(/`([^`\n]+)`/g, "$1");
+
+  // 3) Headers (## ### ####) → quitar los # y agregar punto para pausa natural
+  t = t.replace(/^####\s+(.+)$/gm, "$1.")
+       .replace(/^###\s+(.+)$/gm, "$1.")
+       .replace(/^##\s+(.+)$/gm, "$1.");
+
+  // 4) Bold (**text**) → solo el texto (antes que italic para que ** no se confunda)
+  t = t.replace(/\*\*([^*\n]+)\*\*/g, "$1");
+
+  // 5) Italic (*text* o _text_) → solo el texto
+  t = t.replace(/(^|[\s(])\*([^*\n]+?)\*(?=[\s.,;:)!?]|$)/g, "$1$2")
+       .replace(/(^|[\s(])_([^_\n]+?)_(?=[\s.,;:)!?]|$)/g, "$1$2");
+
+  // 6) Links [text](url) → solo el texto, omitir URL
+  t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, "$1");
+
+  // 7) URLs sueltas → "enlace" para que no las deletree
+  t = t.replace(/https?:\/\/\S+/g, "enlace");
+
+  // 8) Blockquotes (> texto) → quitar el >
+  t = t.replace(/^>\s+/gm, "");
+
+  // 9) Bullet lists (- item) → quitar el guion (TTS lo lee como "menos")
+  t = t.replace(/^\s*-\s+/gm, "");
+
+  // 10) Numbered lists (1. item) → mantener el número pero quitar el punto extra
+  //     (TTS ya hace la pausa natural)
+  //     dejamos como está, suena natural ("1. Identificar..." se lee bien)
+
+  // 11) Caracteres especiales sueltos que suenan raro
+  t = t.replace(/[—–]/g, ","); // em/en dash → coma (pausa natural)
+  t = t.replace(/\.{3,}/g, ".");  // ... → solo punto
+  t = t.replace(/\s+/g, " ");    // colapsar espacios múltiples
+
+  return t.trim();
+}
+
 function ttsChunkText(text, maxChars = 1500) {
-  // Divide texto en chunks por oración para que se lean naturalmente
-  const sentences = text.replace(/\s+/g, " ").split(/(?<=[.!?])\s+/);
+  // Limpia markdown primero, luego divide por oraciones para lectura natural
+  const cleaned = ttsCleanMarkdown(text);
+  const sentences = cleaned.split(/(?<=[.!?])\s+/);
   const chunks = [];
   let current = "";
   for (const s of sentences) {
@@ -2476,12 +2525,13 @@ function ttsBuildQueueFromSession(session) {
   // Sections
   (deep.sections || []).forEach((sec, sectionIdx) => {
     if (sec.title) {
-      queue.push({ text: sec.title + ".", sectionTitle: sec.title, sectionIdx, chunkIdx: -1, isHeading: true });
+      const cleanTitle = ttsCleanMarkdown(sec.title);
+      queue.push({ text: cleanTitle + ".", sectionTitle: cleanTitle, sectionIdx, chunkIdx: -1, isHeading: true });
     }
     if (sec.body) {
       const chunks = ttsChunkText(sec.body);
       chunks.forEach((text, chunkIdx) => {
-        queue.push({ text, sectionTitle: sec.title, sectionIdx, chunkIdx });
+        queue.push({ text, sectionTitle: ttsCleanMarkdown(sec.title || ""), sectionIdx, chunkIdx });
       });
     }
   });
