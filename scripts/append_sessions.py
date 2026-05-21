@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Append sessions 5-12 (deep content) to www/content.json."""
+"""Append sessions 5-12 (deep content) to docs/content.json."""
 
 import json
 from pathlib import Path
 
-CONTENT_PATH = Path(__file__).resolve().parent.parent / "www" / "content.json"
+CONTENT_PATH = Path(__file__).resolve().parent.parent / "docs" / "content.json"
 
 NEW_SESSIONS = [
     {

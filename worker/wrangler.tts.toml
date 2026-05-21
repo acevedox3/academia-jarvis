@@ -1,0 +1,31 @@
+name = "academia-jarvis-tts"
+main = "tts.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+ALLOWED_ORIGIN = "*"
+
+# R2 bucket (cache de audio) — DESACTIVADO porque la cuenta no tiene R2 habilitado.
+# El worker sigue funcionando sin cache (cada request va directo a Google TTS).
+# Para reactivar más adelante:
+#   1. Activar R2 en https://dash.cloudflare.com/<account_id>/r2/plans
+#   2. Crear el bucket:  wrangler r2 bucket create academia-jarvis-audio
+#   3. Descomentar las 3 líneas de abajo
+#   4. Re-deploy:  wrangler deploy --config wrangler.tts.toml
+#
+# [[r2_buckets]]
+# binding = "AUDIO_CACHE"
+# bucket_name = "academia-jarvis-audio"
+
+# Setup (una sola vez):
+#   1. Configurar el secret de Google API:
+#      printf "%s" "TU_GOOGLE_TTS_API_KEY" | wrangler secret put GOOGLE_TTS_API_KEY --config wrangler.tts.toml
+#      (usa printf, NO echo — echo añade \n y Google rechaza la key)
+#      Genera el key en https://console.cloud.google.com/apis/credentials
+#      Restringe a "Cloud Text-to-Speech API" para reducir riesgo si se filtra.
+#   2. Desplegar:
+#      wrangler deploy --config wrangler.tts.toml
+#
+# Endpoint resultante:
+#   https://academia-jarvis-tts.<TU_SUBDOMINIO>.workers.dev/tts
+#   https://academia-jarvis-tts.<TU_SUBDOMINIO>.workers.dev/tts/voices

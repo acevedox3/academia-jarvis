@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from pathlib import Path
 import os
 
-OUT_WWW = Path(__file__).resolve().parent.parent / "www" / "icons"
+OUT_WWW = Path(__file__).resolve().parent.parent / "docs" / "icons"
 OUT_IOS = Path(__file__).resolve().parent.parent / "icons"
 OUT_WWW.mkdir(parents=True, exist_ok=True)
 OUT_IOS.mkdir(parents=True, exist_ok=True)
@@ -145,7 +145,7 @@ def render_icon(size, path):
 def main():
     print("Rendering icons...")
     for name, sz in {**IOS_SIZES, **PWA_SIZES}.items():
-        # Save to www/icons (used by PWA + Capacitor)
+        # Save to docs/icons (used by PWA + Capacitor)
         p1 = OUT_WWW / name
         render_icon(sz, p1)
     # Also copy critical sizes to /icons/ for Xcode AppIcon.appiconset
@@ -154,7 +154,7 @@ def main():
         dst = OUT_IOS / name
         Image.open(src).save(dst, "PNG", optimize=True)
     print(f"OK · {len(IOS_SIZES)} iOS icons + {len(PWA_SIZES)} PWA icons rendered")
-    print(f"  www/icons/  : {OUT_WWW}")
+    print(f"  docs/icons/  : {OUT_WWW}")
     print(f"  icons/      : {OUT_IOS}")
 
 

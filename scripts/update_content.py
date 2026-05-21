@@ -9,7 +9,7 @@ Pipeline:
 1. Fetches Anthropic's official sources (docs, blog, engineering, MCP, pricing).
 2. Asks the configured LLM to diff our content vs the fresh state.
 3. Classifies update as 'minor' (auto-merge) or 'major' (PR for review).
-4. Updates www/content.json with the patch.
+4. Updates docs/content.json with the patch.
 5. Writes .update_classification and .update_summary.md for the workflow.
 """
 
@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from providers import chat, PROVIDERS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-CONTENT_PATH = ROOT / "www" / "content.json"
+CONTENT_PATH = ROOT / "docs" / "content.json"
 CLASSIFICATION_FILE = ROOT / ".update_classification"
 SUMMARY_FILE = ROOT / ".update_summary.md"
 

@@ -8,8 +8,8 @@
     "add:ios": "npx cap add ios",
     "sync": "npx cap sync ios",
     "open:ios": "npx cap open ios",
-    "build": "echo 'No build step — www/ is the source' && npm run sync",
-    "serve": "npx serve www -p 8080"
+    "build": "echo 'No build step — docs/ is the source (GitHub Pages convention)' && npm run sync",
+    "serve": "npx serve docs -p 8080"
   },
   "keywords": ["anthropic", "agentes", "ia", "claude", "capacitor", "pwa"],
   "author": "Angel Trujillo",

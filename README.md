@@ -1,6 +1,23 @@
-# Academia Jarvis · App iPad v4 (multi-provider)
+# Academia Jarvis · App iPad v5 (TTS + Módulo I expandido)
 
-Construido sobre tu HTML Coursera-style. Contenido profundo por sesión. Tutor en vivo **con soporte de 3 proveedores LLM** (Anthropic, OpenAI, Google). Auto-actualización semanal. App nativa iOS vía Capacitor.
+Construido sobre tu HTML Coursera-style. Contenido profundo por sesión. Tutor en vivo **con soporte de 3 proveedores LLM** (Anthropic, OpenAI, Google). **TTS con Google Cloud Neural2** para escuchar las sesiones en voz alta. Auto-actualización semanal. App nativa iOS vía Capacitor.
+
+## URLs en producción
+
+| Servicio | URL | Estado |
+|---|---|---|
+| TTS Worker | `https://academia-jarvis-tts.angeljarvis.workers.dev` | ✅ Live |
+| Chat Worker | `https://academia-jarvis-chat.<subdomain>.workers.dev` | Pendiente desplegar |
+| Improve Worker | `https://academia-jarvis-improve.<subdomain>.workers.dev` | Pendiente desplegar |
+| GitHub Pages | `https://<TU-USUARIO>.github.io/academia-jarvis/` | Configurar tras push |
+
+## Cómo desplegar la app (3 caminos)
+
+**1. GitHub + Pages (recomendado):** Doble-click `Deploy-To-GitHub.command` después de poner tu repo URL. La GitHub Action `deploy-pages.yml` publica `docs/` automáticamente.
+
+**2. Hosting estático manual:** Sube todo el contenido de `docs/` a Netlify, Vercel, Cloudflare Pages, o cualquier servidor estático. No requiere build step.
+
+**3. iPad nativo:** `npm install && npm run sync && npm run open:ios` → Xcode → signing → build a tu iPad. Detalles abajo.
 
 ## Multi-provider — qué proveedor usa qué endpoint
 
@@ -53,7 +70,7 @@ SESIÓN N
 
 ```
 academia-app-v3/
-├── www/                          ← GitHub Pages sirve esta carpeta
+├── docs/                         ← GitHub Pages sirve esta carpeta (convención GH Pages)
 │   ├── index.html                ← tu diseño Coursera + tabs modal + chat embebido
 │   ├── content.json              ← 12 sesiones con deep + 8 weeks + 3 projects + 10 rules + 30 resources
 │   ├── manifest.json             ← PWA manifest
@@ -88,7 +105,7 @@ git init
 git add .
 git commit -m "feat: Academia Jarvis v3"
 git branch -M main
-git remote add origin https://github.com/TU_USUARIO/academia-jarvis.git
+git remote add origin https://github.com/acevedox3/academia-jarvis.git
 git push -u origin main
 ```
 
@@ -96,7 +113,7 @@ git push -u origin main
 
 Settings → Pages → Source: Deploy from a branch → Branch: `main`, Folder: `/www` → Save.
 
-En ~1 minuto tu academia está online en `https://TU_USUARIO.github.io/academia-jarvis/`.
+En ~1 minuto tu academia está online en `https://acevedox3.github.io/academia-jarvis/`.
 
 ### Paso 3 · Configurar updates automáticos
 
@@ -142,11 +159,11 @@ Salida: dos URLs `https://academia-jarvis-{improve,chat}.TUSUBDOMINIO.workers.de
 
 ### Paso 5 · Editar las URLs en index.html
 
-Abre `www/index.html`, busca el bloque CONFIG (línea ~1080 aprox) y reemplaza:
+Abre `docs/index.html`, busca el bloque CONFIG (línea ~1080 aprox) y reemplaza:
 
 ```javascript
 const CONFIG = {
-  CONTENT_URL: 'https://raw.githubusercontent.com/TU_USUARIO/academia-jarvis/main/www/content.json',
+  CONTENT_URL: 'https://raw.githubusercontent.com/acevedox3/academia-jarvis/main/docs/content.json',
   IMPROVE_URL: 'https://academia-jarvis-improve.TUSUBDOMINIO.workers.dev/improve',
   CHAT_URL:    'https://academia-jarvis-chat.TUSUBDOMINIO.workers.dev/chat',
   // ...resto sin cambios
@@ -216,7 +233,7 @@ Cada `improve` añade términos nuevos al `state.glossary` (sin duplicar). Cuand
 
 ### Manual
 
-Edita `www/content.json`. Commit. Push. App se actualiza en próxima apertura.
+Edita `docs/content.json`. Commit. Push. App se actualiza en próxima apertura.
 
 ### Automática (semanal)
 

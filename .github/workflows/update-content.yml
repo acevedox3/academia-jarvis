@@ -59,7 +59,7 @@ jobs:
       - name: Detect changes
         id: changes
         run: |
-          if git diff --quiet www/content.json; then
+          if git diff --quiet docs/content.json; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -73,7 +73,7 @@ jobs:
             if [ "$CLASS" = "minor" ]; then
               git config user.name "academia-bot"
               git config user.email "bot@academia-jarvis"
-              git add www/content.json
+              git add docs/content.json
               git commit -m "chore(content): weekly auto-update (minor)" || exit 0
               git push
             fi
