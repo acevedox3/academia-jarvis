@@ -1,0 +1,30 @@
+name = "academia-jarvis-profesor"
+main = "profesor.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+ALLOWED_ORIGIN = "*"
+
+# Setup (una sola vez):
+#   1. wrangler secret put ANTHROPIC_API_KEY --config wrangler.profesor.toml
+#   2. wrangler deploy --config wrangler.profesor.toml
+#
+# Endpoint resultante:
+#   https://academia-jarvis-profesor.<TU_SUBDOMINIO>.workers.dev/profesor
+#
+# Modos:
+#   POST /profesor  body: { mode: 'enrich',   text, sectionTitle, sessionTitle }
+#       → { enriched: "texto reescrito con explicaciones" }
+#
+#   POST /profesor  body: { mode: 'comments', text, sectionTitle, sessionTitle }
+#       → { comments: [{ afterParagraph: int, text: "..." }] }
+#
+# Modelo por defecto: claude-haiku-4-5
+# Costo estimado por sección (~1500-3000 chars):
+#   - enrich:   ~$0.005 (1 llamada, 500-1500 tokens out)
+#   - comments: ~$0.002 (1 llamada, 200-500 tokens out)
+#
+# Costo estimado por sesión completa (12 sesiones × 10 secciones promedio):
+#   - solo enrich:   ~$0.60 una vez, luego cacheado en R2
+#   - solo comments: ~$0.24 una vez, luego cacheado en R2
+#   - ambos modos:   ~$0.84 una vez

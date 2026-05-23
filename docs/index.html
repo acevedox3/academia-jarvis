@@ -299,6 +299,27 @@ p { margin: 0; }
 .tts-section-label { font-size: 11px; color: var(--ink-mute); font-family: 'SF Mono', monospace; padding: 6px 0 0; }
 
 /* Highlight del párrafo actual mientras lee */
+.tts-profesor-row {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  gap: 8px;
+}
+.tts-profesor-label {
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-family: 'SF Mono', monospace;
+  white-space: nowrap;
+}
+.tts-profesor-cost {
+  font-size: 10px;
+  color: var(--ink-mute);
+  font-family: 'SF Mono', monospace;
+  margin-left: auto;
+}
+.tts-chunk-profesor {
+  font-style: italic;
+}
 .tts-active-paragraph {
   background: var(--green-50);
   border-left: 3px solid var(--green);
@@ -1324,17 +1345,37 @@ footer a:hover { color: #fff; }
       <option value="1.75">1.75×</option>
       <option value="2.0">2.0×</option>
     </select>
-    <select class="tts-select" id="tts-voice" onchange="ttsSetVoice(this.value)" aria-label="Voz">
-      <option value="es-US-Neural2-A">F · LatAm A</option>
-      <option value="es-US-Neural2-B">M · LatAm B</option>
-      <option value="es-US-Neural2-C">F · LatAm C</option>
-      <option value="es-ES-Neural2-A">F · España A</option>
-      <option value="es-ES-Neural2-B">M · España B</option>
-      <option value="es-ES-Neural2-C">F · España C</option>
-      <option value="es-ES-Neural2-D">F · España D</option>
-      <option value="es-ES-Neural2-E">M · España E</option>
-      <option value="es-ES-Neural2-F">M · España F</option>
+    <select class="tts-select" id="tts-voice" onchange="ttsSetVoice(this.value)" aria-label="Voz narrador">
+      <option value="es-US-Neural2-A">Narr · F LatAm A</option>
+      <option value="es-US-Neural2-B">Narr · M LatAm B</option>
+      <option value="es-US-Neural2-C">Narr · F LatAm C</option>
+      <option value="es-ES-Neural2-A">Narr · F España A</option>
+      <option value="es-ES-Neural2-B">Narr · M España B</option>
+      <option value="es-ES-Neural2-C">Narr · F España C</option>
+      <option value="es-ES-Neural2-D">Narr · F España D</option>
+      <option value="es-ES-Neural2-E">Narr · M España E</option>
+      <option value="es-ES-Neural2-F">Narr · M España F</option>
     </select>
+  </div>
+  <div class="tts-controls tts-profesor-row">
+    <span class="tts-profesor-label">👨‍🏫 Profesor:</span>
+    <select class="tts-select" id="tts-profesor-mode" onchange="ttsSetProfesorMode(this.value)" aria-label="Modo profesor">
+      <option value="off">Apagado</option>
+      <option value="enrich">Enriquecido</option>
+      <option value="live">En vivo</option>
+      <option value="both">Ambos</option>
+    </select>
+    <select class="tts-select" id="tts-profesor-voice" onchange="ttsSetProfesorVoice(this.value)" aria-label="Voz profesor">
+      <option value="es-US-Neural2-B">Prof · M LatAm B</option>
+      <option value="es-US-Neural2-A">Prof · F LatAm A</option>
+      <option value="es-US-Neural2-C">Prof · F LatAm C</option>
+      <option value="es-ES-Neural2-B">Prof · M España B</option>
+      <option value="es-ES-Neural2-E">Prof · M España E</option>
+      <option value="es-ES-Neural2-F">Prof · M España F</option>
+      <option value="es-ES-Neural2-A">Prof · F España A</option>
+      <option value="es-ES-Neural2-D">Prof · F España D</option>
+    </select>
+    <span class="tts-profesor-cost" id="tts-profesor-cost"></span>
   </div>
   <audio id="tts-audio" style="display:none;"></audio>
 </div>
@@ -1397,8 +1438,10 @@ const CONFIG = {
   IMPROVE_URL: 'https://academia-jarvis-improve.WORKER_SUBDOMAIN.workers.dev/improve',
   CHAT_URL:    'https://academia-jarvis-chat.WORKER_SUBDOMAIN.workers.dev/chat',
   TTS_URL:     'https://academia-jarvis-tts.angeljarvis.workers.dev/tts',
+  PROFESOR_URL: 'https://academia-jarvis-profesor.angeljarvis.workers.dev/profesor',
   CHAT_KEY:    'academia-jarvis-chat-v1',
   TTS_PREFS_KEY: 'academia-jarvis-tts-prefs-v1',
+  PROFESOR_CACHE_KEY: 'academia-jarvis-profesor-cache-v1',
   CONTENT_CACHE_KEY: 'academia-jarvis-content-cache-v1',
   CONTENT_CACHE_TTL_MS: 6 * 60 * 60 * 1000  // 6h
 };
@@ -2417,29 +2460,85 @@ function wireSessionClicks() {
    - Preferencias persistentes (velocidad, voz)
 ============================================================ */
 const TTS_STATE = {
-  queue: [],            // [{ text, sectionTitle, sectionIdx, chunkIdx, audioUrl? }]
+  queue: [],            // [{ text, voice?, sectionTitle, sectionIdx, chunkIdx, isProfesor?, audioUrl? }]
   currentIdx: 0,
   sessionId: null,
   sessionTitle: "",
   isPlaying: false,
   rate: 1.0,
-  voice: "es-US-Neural2-A",
-  audio: null,          // referencia a <audio>
+  voice: "es-US-Neural2-A",        // voz del narrador (compat con prefs anteriores)
+  profesorMode: "off",              // 'off' | 'enrich' | 'live' | 'both'
+  profesorVoice: "es-US-Neural2-B", // voz del profesor (contraste con narrador)
+  totalCostUsd: 0,                  // costo acumulado de llamadas al profesor en esta sesión
+  audio: null,                      // referencia a <audio>
 };
 
 function ttsLoadPrefs() {
   try {
     const p = JSON.parse(localStorage.getItem(CONFIG.TTS_PREFS_KEY) || "{}");
-    if (p.rate)  TTS_STATE.rate  = p.rate;
-    if (p.voice) TTS_STATE.voice = p.voice;
+    if (p.rate)          TTS_STATE.rate          = p.rate;
+    if (p.voice)         TTS_STATE.voice         = p.voice;
+    if (p.profesorMode)  TTS_STATE.profesorMode  = p.profesorMode;
+    if (p.profesorVoice) TTS_STATE.profesorVoice = p.profesorVoice;
   } catch {}
 }
 function ttsSavePrefs() {
   try {
     localStorage.setItem(CONFIG.TTS_PREFS_KEY, JSON.stringify({
-      rate: TTS_STATE.rate, voice: TTS_STATE.voice
+      rate: TTS_STATE.rate,
+      voice: TTS_STATE.voice,
+      profesorMode: TTS_STATE.profesorMode,
+      profesorVoice: TTS_STATE.profesorVoice,
     }));
   } catch {}
+}
+
+/* ============================================================
+   PROFESOR — cache local de enriquecimientos y comentarios
+============================================================ */
+function profesorCacheKey(sessionId, sectionIdx, mode) {
+  return `s${sessionId}:i${sectionIdx}:${mode}`;
+}
+function profesorCacheGet(sessionId, sectionIdx, mode) {
+  try {
+    const all = JSON.parse(localStorage.getItem(CONFIG.PROFESOR_CACHE_KEY) || "{}");
+    return all[profesorCacheKey(sessionId, sectionIdx, mode)] || null;
+  } catch { return null; }
+}
+function profesorCacheSet(sessionId, sectionIdx, mode, payload) {
+  try {
+    const all = JSON.parse(localStorage.getItem(CONFIG.PROFESOR_CACHE_KEY) || "{}");
+    all[profesorCacheKey(sessionId, sectionIdx, mode)] = payload;
+    localStorage.setItem(CONFIG.PROFESOR_CACHE_KEY, JSON.stringify(all));
+  } catch {}
+}
+
+async function profesorFetch(mode, text, sectionTitle, sessionTitle) {
+  if (!CONFIG.PROFESOR_URL || CONFIG.PROFESOR_URL.includes('WORKER_SUBDOMAIN')) {
+    throw new Error('PROFESOR_URL no configurada. Edita CONFIG.PROFESOR_URL en index.html.');
+  }
+  const res = await fetch(CONFIG.PROFESOR_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode, text, sectionTitle, sessionTitle, model: 'claude-haiku-4-5' }),
+  });
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`Profesor ${res.status}: ${errText.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+function profesorSplitParagraphs(text) {
+  if (!text) return [];
+  const byBlank = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+  if (byBlank.length >= 2) return byBlank;
+  const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const grouped = [];
+  for (let i = 0; i < sentences.length; i += 2) {
+    grouped.push(sentences.slice(i, i + 2).join(' '));
+  }
+  return grouped;
 }
 
 function ttsCleanMarkdown(text) {
@@ -2509,46 +2608,129 @@ function ttsChunkText(text, maxChars = 1500) {
   return chunks;
 }
 
-function ttsBuildQueueFromSession(session) {
-  // Genera la queue desde el contenido deep de la sesión
+async function ttsBuildQueueFromSession(session) {
+  // Genera la queue desde el contenido deep de la sesión.
+  // Si el modo profesor está activo, intercala enriquecimiento y/o comentarios.
   const deep = session.deep || {};
   const queue = [];
+  const mode = TTS_STATE.profesorMode || 'off';
+  const wantEnrich = (mode === 'enrich' || mode === 'both');
+  const wantLive   = (mode === 'live'   || mode === 'both');
+  const sessionTitle = session.title || '';
 
-  // Intro
+  TTS_STATE.totalCostUsd = 0;
+
+  // --- INTRO (siempre con voz del narrador) ---
   if (deep.intro) {
-    const chunks = ttsChunkText(deep.intro);
+    const introText = await maybeEnrich(session.id, -1, 'Introducción', sessionTitle, deep.intro, wantEnrich);
+    const chunks = ttsChunkText(introText);
     chunks.forEach((text, chunkIdx) => {
-      queue.push({ text, sectionTitle: "Introducción", sectionIdx: -1, chunkIdx });
+      queue.push({
+        text, voice: TTS_STATE.voice,
+        sectionTitle: "Introducción", sectionIdx: -1, chunkIdx,
+        isProfesor: false,
+      });
     });
+    // Comentarios del profesor sobre la intro
+    if (wantLive) {
+      await appendProfesorComments(queue, session.id, -1, 'Introducción', sessionTitle, deep.intro);
+    }
   }
 
-  // Sections
-  (deep.sections || []).forEach((sec, sectionIdx) => {
+  // --- SECTIONS ---
+  const sections = deep.sections || [];
+  for (let sectionIdx = 0; sectionIdx < sections.length; sectionIdx++) {
+    const sec = sections[sectionIdx];
     if (sec.title) {
       const cleanTitle = ttsCleanMarkdown(sec.title);
-      queue.push({ text: cleanTitle + ".", sectionTitle: cleanTitle, sectionIdx, chunkIdx: -1, isHeading: true });
-    }
-    if (sec.body) {
-      const chunks = ttsChunkText(sec.body);
-      chunks.forEach((text, chunkIdx) => {
-        queue.push({ text, sectionTitle: ttsCleanMarkdown(sec.title || ""), sectionIdx, chunkIdx });
+      queue.push({
+        text: cleanTitle + ".", voice: TTS_STATE.voice,
+        sectionTitle: cleanTitle, sectionIdx, chunkIdx: -1,
+        isHeading: true, isProfesor: false,
       });
     }
-  });
+    if (sec.body) {
+      const cleanTitleForCtx = ttsCleanMarkdown(sec.title || "");
+      const bodyText = await maybeEnrich(session.id, sectionIdx, cleanTitleForCtx, sessionTitle, sec.body, wantEnrich);
+      const chunks = ttsChunkText(bodyText);
+      chunks.forEach((text, chunkIdx) => {
+        queue.push({
+          text, voice: TTS_STATE.voice,
+          sectionTitle: cleanTitleForCtx, sectionIdx, chunkIdx,
+          isProfesor: false,
+        });
+      });
+      if (wantLive) {
+        await appendProfesorComments(queue, session.id, sectionIdx, cleanTitleForCtx, sessionTitle, sec.body);
+      }
+    }
+  }
 
+  ttsUpdateCostBadge();
   return queue;
 }
 
-async function ttsFetchAudio(text) {
+async function maybeEnrich(sessionId, sectionIdx, sectionTitle, sessionTitle, originalText, wantEnrich) {
+  if (!wantEnrich) return originalText;
+  // Cache hit
+  const cached = profesorCacheGet(sessionId, sectionIdx, 'enrich');
+  if (cached && cached.enriched) return cached.enriched;
+  try {
+    const data = await profesorFetch('enrich', originalText, sectionTitle, sessionTitle);
+    if (data.enriched) {
+      profesorCacheSet(sessionId, sectionIdx, 'enrich', data);
+      if (typeof data.costUsd === 'number') TTS_STATE.totalCostUsd += data.costUsd;
+      return data.enriched;
+    }
+  } catch (e) {
+    console.warn('Profesor enrich falló, uso texto original:', e.message);
+    toast('Profesor enriquecido falló; uso texto original');
+  }
+  return originalText;
+}
+
+async function appendProfesorComments(queue, sessionId, sectionIdx, sectionTitle, sessionTitle, originalText) {
+  // Cache hit
+  let data = profesorCacheGet(sessionId, sectionIdx, 'comments');
+  if (!data) {
+    try {
+      data = await profesorFetch('comments', originalText, sectionTitle, sessionTitle);
+      profesorCacheSet(sessionId, sectionIdx, 'comments', data);
+      if (typeof data.costUsd === 'number') TTS_STATE.totalCostUsd += data.costUsd;
+    } catch (e) {
+      console.warn('Profesor comments falló:', e.message);
+      return;
+    }
+  }
+  const comments = Array.isArray(data.comments) ? data.comments : [];
+  if (comments.length === 0) return;
+  // Para el modo 'live' los comentarios van TODOS al final de la sección, en orden,
+  // marcados como isProfesor para usar la voz del profesor. La intercalación fina
+  // párrafo-a-párrafo requeriría reescribir el queue por párrafos; este modelo
+  // es simple, predecible y suena bien al oído como "cierre del profesor".
+  comments.forEach((c, i) => {
+    const text = ttsCleanMarkdown(c.text || '');
+    if (!text) return;
+    queue.push({
+      text, voice: TTS_STATE.profesorVoice,
+      sectionTitle: sectionTitle + ' · 👨‍🏫 Profesor',
+      sectionIdx, chunkIdx: 1000 + i,
+      isProfesor: true,
+    });
+  });
+}
+
+async function ttsFetchAudio(text, voiceOverride) {
   if (CONFIG.TTS_URL.includes("WORKER_SUBDOMAIN")) {
     throw new Error("TTS_URL no configurada. Edita CONFIG.TTS_URL en index.html.");
   }
+  const voice = voiceOverride || TTS_STATE.voice;
   const res = await fetch(CONFIG.TTS_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       text,
-      voice: TTS_STATE.voice,
+      voice,
       speakingRate: TTS_STATE.rate,
     }),
   });
@@ -2560,6 +2742,17 @@ async function ttsFetchAudio(text) {
   return URL.createObjectURL(blob);
 }
 
+function ttsUpdateCostBadge() {
+  const el = document.getElementById('tts-profesor-cost');
+  if (!el) return;
+  if (TTS_STATE.profesorMode === 'off' || TTS_STATE.totalCostUsd <= 0) {
+    el.textContent = '';
+    return;
+  }
+  const cents = (TTS_STATE.totalCostUsd * 100).toFixed(1);
+  el.textContent = `~${cents}¢`;
+}
+
 async function ttsStartForSession(sessionId) {
   const session = SESSIONS.find(s => s.id === sessionId);
   if (!session) return;
@@ -2568,25 +2761,41 @@ async function ttsStartForSession(sessionId) {
 
   TTS_STATE.sessionId = sessionId;
   TTS_STATE.sessionTitle = session.title;
-  TTS_STATE.queue = ttsBuildQueueFromSession(session);
   TTS_STATE.currentIdx = 0;
 
-  if (TTS_STATE.queue.length === 0) {
-    toast("Esta sesión no tiene contenido para leer todavía");
-    return;
-  }
-
-  // Sync UI
+  // Sync UI ANTES de construir la cola, para que el usuario vea el modo activo
   document.getElementById("tts-rate").value = String(TTS_STATE.rate);
   document.getElementById("tts-voice").value = TTS_STATE.voice;
+  const modeSel = document.getElementById('tts-profesor-mode');
+  const pvoiceSel = document.getElementById('tts-profesor-voice');
+  if (modeSel)   modeSel.value   = TTS_STATE.profesorMode;
+  if (pvoiceSel) pvoiceSel.value = TTS_STATE.profesorVoice;
   document.getElementById("tts-title").textContent = `Sesión ${pad(session.id)} · ${session.title}`;
   document.getElementById("tts-player").classList.add("open");
 
   // Lock the toggle button (loading state)
   const btn = document.getElementById("modal-tts-btn");
-  if (btn) { btn.classList.add("loading"); btn.innerHTML = "⏳ Generando audio..."; btn.disabled = true; }
+  if (btn) {
+    btn.classList.add("loading");
+    btn.innerHTML = TTS_STATE.profesorMode === 'off'
+      ? "⏳ Generando audio..."
+      : "⏳ Profesor preparando clase...";
+    btn.disabled = true;
+  }
+  document.getElementById('tts-status').textContent = TTS_STATE.profesorMode === 'off'
+    ? 'Preparando...'
+    : 'Profesor pensando...';
 
   try {
+    // Build queue (puede tardar si el profesor está activo, llama al LLM)
+    TTS_STATE.queue = await ttsBuildQueueFromSession(session);
+
+    if (TTS_STATE.queue.length === 0) {
+      toast("Esta sesión no tiene contenido para leer todavía");
+      if (btn) { btn.classList.remove("loading"); btn.innerHTML = "🎧 Escuchar"; btn.disabled = false; }
+      return;
+    }
+
     await ttsPlayCurrent();
     if (btn) { btn.classList.remove("loading"); btn.innerHTML = "🎧 Escuchar"; btn.disabled = false; }
   } catch (e) {
@@ -2609,12 +2818,13 @@ async function ttsPlayCurrent() {
   TTS_STATE.audio = audio;
 
   // UI updates
-  document.getElementById("tts-section-label").textContent = `${TTS_STATE.currentIdx + 1} / ${TTS_STATE.queue.length} · ${chunk.sectionTitle}`;
-  document.getElementById("tts-status").textContent = "Generando...";
+  const labelPrefix = chunk.isProfesor ? '👨‍🏫 ' : '';
+  document.getElementById("tts-section-label").textContent = `${labelPrefix}${TTS_STATE.currentIdx + 1} / ${TTS_STATE.queue.length} · ${chunk.sectionTitle}`;
+  document.getElementById("tts-status").textContent = chunk.isProfesor ? "Profesor..." : "Generando...";
 
-  // Fetch audio
+  // Fetch audio (usa voz específica del chunk si está definida)
   if (!chunk.audioUrl) {
-    chunk.audioUrl = await ttsFetchAudio(chunk.text);
+    chunk.audioUrl = await ttsFetchAudio(chunk.text, chunk.voice);
   }
 
   audio.src = chunk.audioUrl;
@@ -2632,7 +2842,7 @@ async function ttsPlayCurrent() {
   audio.onplay = () => {
     TTS_STATE.isPlaying = true;
     document.getElementById("tts-play-icon").innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-    document.getElementById("tts-status").textContent = "▶";
+    document.getElementById("tts-status").textContent = chunk.isProfesor ? "👨‍🏫 ▶" : "▶";
   };
   audio.onpause = () => {
     TTS_STATE.isPlaying = false;
@@ -2640,10 +2850,10 @@ async function ttsPlayCurrent() {
     document.getElementById("tts-status").textContent = "⏸";
   };
 
-  // Pre-fetch next chunk en background (sin bloquear)
+  // Pre-fetch next chunk en background (sin bloquear) — respeta voz del chunk
   const next = TTS_STATE.queue[TTS_STATE.currentIdx + 1];
   if (next && !next.audioUrl) {
-    ttsFetchAudio(next.text).then(url => { next.audioUrl = url; }).catch(() => {});
+    ttsFetchAudio(next.text, next.voice).then(url => { next.audioUrl = url; }).catch(() => {});
   }
 
   await audio.play();
@@ -2691,10 +2901,70 @@ function ttsSetRate(val) {
 function ttsSetVoice(val) {
   TTS_STATE.voice = val;
   ttsSavePrefs();
-  // Reset cached audios — necesitan re-fetch con nueva voz
-  TTS_STATE.queue.forEach(c => { delete c.audioUrl; });
+  // Solo los chunks del narrador necesitan re-fetch; los del profesor mantienen su voz
+  TTS_STATE.queue.forEach(c => {
+    if (!c.isProfesor) {
+      c.voice = val;
+      delete c.audioUrl;
+    }
+  });
   if (TTS_STATE.audio && !TTS_STATE.audio.paused) {
     ttsPlayCurrent().catch(e => toast("Error: " + e.message));
+  }
+}
+
+function ttsSetProfesorVoice(val) {
+  TTS_STATE.profesorVoice = val;
+  ttsSavePrefs();
+  // Solo los chunks del profesor necesitan re-fetch
+  TTS_STATE.queue.forEach(c => {
+    if (c.isProfesor) {
+      c.voice = val;
+      delete c.audioUrl;
+    }
+  });
+  if (TTS_STATE.audio && !TTS_STATE.audio.paused && TTS_STATE.queue[TTS_STATE.currentIdx]?.isProfesor) {
+    ttsPlayCurrent().catch(e => toast("Error: " + e.message));
+  }
+}
+
+async function ttsSetProfesorMode(val) {
+  if (val === TTS_STATE.profesorMode) return;
+  const prev = TTS_STATE.profesorMode;
+  TTS_STATE.profesorMode = val;
+  ttsSavePrefs();
+  // Si hay sesión activa, reconstruye la cola con el nuevo modo
+  if (TTS_STATE.sessionId) {
+    const wasPlaying = TTS_STATE.audio && !TTS_STATE.audio.paused;
+    if (TTS_STATE.audio) { TTS_STATE.audio.pause(); }
+    // Libera blobs anteriores
+    TTS_STATE.queue.forEach(c => { if (c.audioUrl) URL.revokeObjectURL(c.audioUrl); });
+    const session = SESSIONS.find(s => s.id === TTS_STATE.sessionId);
+    if (!session) return;
+    document.getElementById('tts-status').textContent = val === 'off'
+      ? 'Reconstruyendo...'
+      : 'Profesor preparando clase...';
+    try {
+      TTS_STATE.queue = await ttsBuildQueueFromSession(session);
+      TTS_STATE.currentIdx = 0;
+      if (TTS_STATE.queue.length === 0) {
+        toast('No hay contenido para leer');
+        return;
+      }
+      if (wasPlaying || val !== 'off') {
+        await ttsPlayCurrent();
+      }
+      const niceName = val === 'off' ? 'apagado'
+                     : val === 'enrich' ? 'enriquecido'
+                     : val === 'live' ? 'en vivo'
+                     : 'ambos';
+      toast(`Modo profesor: ${niceName}`);
+    } catch (e) {
+      toast('Error al cambiar modo: ' + e.message);
+      TTS_STATE.profesorMode = prev;
+      ttsSavePrefs();
+      document.getElementById('tts-profesor-mode').value = prev;
+    }
   }
 }
 
